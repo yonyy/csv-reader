@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="main.css">
+	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Raleway:600">
+	<title>Upload and Print</title>
+</head>
+<body>
+	<h1>Press "Choose File" and select a file to print contents</h1>
+	<div id="outerContainer">
+		<div id="fileContainer">
+			<div id="fileButton">
+				<input type="file" multiple id="myFile" onchange="javascipt:readUpload()">
+			</div>
+			<div id="fileInfo"></div>
+			<script type="text/javascript" src="readFile.js"></script>	
+		</div>
+		<div id="outputField">
+			<h3>Content</h3>
+			<output id="output"></output>
+		</div>
+	</div>
+</body>
+</html>

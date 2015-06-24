@@ -1,0 +1,20 @@
+h1, h3 {
+	font-family: 'Raleway', sans-serif
+}
+
+div {
+	margin-bottom: 10px;
+}
+
+#fileInfo {
+	border-width: thin;
+	border-radius: 10px;
+	border-style: dashed;
+	border-color: black;
+	background-color: white;
+	text-align: left;
+}
+
+ul {
+	text-align: left;
+}

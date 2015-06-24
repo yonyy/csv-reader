@@ -1,0 +1,8 @@
+{
+  "name": "csv-file-reader",
+  "version": "0.0.1",
+  "description": "reads and prints the contents of a csf file",
+  "dependencies": {
+    "express": "^4.12.4"
+  }
+}
