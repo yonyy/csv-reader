@@ -8,10 +8,20 @@
 <body>
 	<h1>Press "Choose File" and select a file to print contents</h1>
 	<div id="outerContainer">
-		<div id="fileContainer">
-			<div id="fileButton">
-				<input type="file" multiple id="myFile" onchange="javascipt:readUpload()">
+		<div id="formContainer">
+			<div id="form">
+				<form action="classroom.html" method="get">
+					Height of Classroom: <input type="text" name="height"><br>
+					Width of Classroom: <input type="text" name="width"><br>
+					Select File of Students: <input type="file" multiple id="myFile" onchange="javascipt:readUpload()"><br>
+					<input type="submit" value="Submit" onclick="javascript:readForm(this.form)">
+				</form>
+				<script type="text/javascript" src="classroom.js"></script>
 			</div>
+		</div>
+		<div id="fileContainer">
+<!-- 			<div id="fileButton">
+				</div> -->
 			<div id="fileInfo"></div>
 			<script type="text/javascript" src="readFile.js"></script>	
 		</div>

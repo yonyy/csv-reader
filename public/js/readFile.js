@@ -24,7 +24,6 @@ function readUpload() {
 		var fileDate = "last modified: " + selectedFile.lastModifiedDate;
 		var fileInfo = "<li><strong>" + fileName + fileType + fileSize + fileDate + "</li>";
 		console.log(fileInfo);
-//		document.getElementById("fileI").innerHTML += "<div id=\"fileInfo\"><div id=\"fileInfoContainer\"></div></div>"
 		document.getElementById("fileInfo").innerHTML = "<ul>" + fileInfo + "</ul>";
 		
 		var reader = new FileReader();
@@ -62,7 +61,7 @@ function printContent(roster) {
 		var email = "<li><strong>Email: </strong>" + roster[i]["email"] + "</li>";
 		info.push("<li><ul>" + name + email + "</ul></li>");
 	}
-	document.getElementById('output').innerHTML = "<ol>" + info.join('') + "</ol>";
+	document.getElementById('output').innerHTML = "<ol id=\"roster\">" + info.join('') + "</ol>";
 }
 
 window.onload = function () {
