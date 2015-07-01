@@ -15,10 +15,10 @@ html
 			//- Create height x width table cell classroom
 			- for (var row = 1; row <= height; row++) {
 				div(class='row_#{row}')
-				- for (var col = 1; col <= width; col++) {
-					div(class='square seat#{row}_#{col}') 
-				- }
-			- }
+					- for (var col = 1; col <= width; col++) {
+						div(class='square seat#{row}_#{col}') 
+					- 	}
+				-	}
 		div#bottom
 			p If you want to edit dimensions click below:
 			b
