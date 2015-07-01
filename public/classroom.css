@@ -8,8 +8,8 @@ body {
     position: relative;
     display: inline-block;
     white-space: nowrap;
-    width: auto;
-    padding-bottom : 30%; /* = width for a 1:1 aspect ratio */
+    width: 1%;
+    padding-bottom : 13%; /* = width for a 1:1 aspect ratio */
     margin:1.66%;
     background-position:center center;
     background-repeat:no-repeat;
