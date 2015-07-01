@@ -1,0 +1,29 @@
+html
+	head
+		title Upload and Print
+		link(href='main.css', rel='stylesheet')
+		link(href='http://fonts.googleapis.com/css?family=Raleway:600', rel='stylesheet')
+	body
+		div#header
+			h1 Press "Choose File" and Select a file to print contents
+		div#outerContainer
+			div#formContainer
+				div#formContainer
+					script(src="classroom.js")
+					form(name="dimensions",action="/classroom", method="get")
+						| Height of the classroom 
+						input(type="number", name="height")
+						br
+						| Width of the classroom 
+						input(type="number", name="width")
+						br
+						| Select file of the students 
+						input(type="file", id="myFile", onchange="readUpload()")
+						br
+						input(type="submit", value="Submit" onclick="readForm(this.form)")
+		div#fileContainer
+			div#fileInfo
+				script(src="readFile.js")
+		div#outputField
+			h3 Contents
+			output#output

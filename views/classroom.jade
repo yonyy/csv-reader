@@ -1,0 +1,28 @@
+html
+	head
+		title Classroom
+		link(href="classroom.css" rel="stylesheet")
+		link(href='http://fonts.googleapis.com/css?family=Raleway:600', rel='stylesheet')
+		script(src="classroom.js")
+		script
+			window.onload
+	body
+		h1 Generating Classroom
+		div#dimensions
+			p Height: #{height}
+			p Width: #{width}
+			- var total = height*width
+			p Cells: #{total}
+		div#grid
+			//- Create height x width table cell classroom
+			- for (var row = 1; row <= height; row++) {
+				div(class='row_#{row}')
+				- for (var col = 1; col <= width; col++) {
+					div(class='square seat#{row}_#{col}') 
+				- }
+			- }
+		div#bottom
+			p If you want to edit dimensions click below:
+			b
+				a(href="javascript:history.back()") 
+					| Edit
