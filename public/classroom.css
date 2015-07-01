@@ -2,14 +2,25 @@ body {
 	font-family: 'Raleway', sans-serif
 }
 
+#grid {
+	width: 70%;
+	height: auto;
+	bottom: 0;
+	top: 0;
+	left: 0;
+	right: 0;
+	position: relative;
+	margin: auto;
+	padding-bottom: 13%;
+}
 
 .square {
     float:left;
     position: relative;
     display: inline-block;
     white-space: nowrap;
-    width: 1%;
-    padding-bottom : 13%; /* = width for a 1:1 aspect ratio */
+    width: 7%;
+    padding-bottom : 7%; /* = width for a 1:1 aspect ratio */
     margin:1.66%;
     background-position:center center;
     background-repeat:no-repeat;
