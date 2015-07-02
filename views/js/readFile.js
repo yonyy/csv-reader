@@ -16,7 +16,7 @@ function createTable(dataArr) {
 
 /* Read the contents of the file and beging parsing it */
 function readUpload() {
-	var selectedFile = document.getElementById('myFile').files[0];
+	var selectedFile = document.getElementById('fileInsert').files[0];
 	if (selectedFile) {
 		var fileName = selectedFile.name + "</strong> (";
 		var fileType = selectedFile.type + ") - ";
@@ -65,5 +65,5 @@ function printContent(roster) {
 }
 
 window.onload = function () {
-	document.getElementById('myFile').addEventListener('change',readUpload,false);
+	document.getElementById('fileInsert').addEventListener('change',readUpload,false);
 }

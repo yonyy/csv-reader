@@ -1,60 +1,50 @@
-body {
-	font-family: 'Raleway', sans-serif
+.dimensionsContainer {
+	width:100%; 
+    display:inline-block;
+    position:relative;
 }
 
-#grid {
-	width: 70%;
-	height: auto;
-	bottom: 0;
-	top: 0;
-	left: 0;
-	right: 0;
+#space {
+	height: 10px;
+}
+
+#grid, #gridContainer{
 	position: relative;
-	margin: auto;
-	padding-bottom: 13%;
+  	top: 0;
+  	bottom: 0;
+  	right: 0;
+  	left: 0;
+  	margin: auto;
+  	width: 700px;
+  	height: 100%;
 }
 
-.square {
-    float:left;
-    position: relative;
-    display: inline-block;
-    white-space: nowrap;
-    width: 7%;
-    padding-bottom : 7%; /* = width for a 1:1 aspect ratio */
-    margin:1.66%;
-    background-position:center center;
-    background-repeat:no-repeat;
-    background-size: contain; /* you change this to "contain" if you don't want the images to be cropped */
-	background-image: url("https://cdn3.iconfinder.com/data/icons/school-solid-icons-vol-2/96/093-512.png");
+.grid--item{
+  font-size: 5em;
+  font-weight: bold;
+  background-color: #D3411F;
+  border-radius: 5px;
+  overflow: hidden;
+  transition: all 200ms ease-out;
 }
 
-.square:hover {
-    background:#ECECEC;
-    border:1px solid #fff;
+.grid--item:hover {
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
+  background-color: #2098d1;
+  color: white; 
 }
-
-.square:active {
-	background-color: #FFA000;
-}
-
-
 
 /*  following just for the demo */
-
-
 body {
     font-size:20px;
-    font-family: 'Lato',verdana, sans-serif;
+	font-family: 'Raleway', sans-serif;
     color: black;
     text-align:center;
     background:#ECECEC;
 }
 
 #bottom {
-    clear:both;
-    margin:0 1.66%;
-    width:89.68%;
-    padding: 3.5%;
     background-color:#1E1E1E;
     color: #fff;
 }
@@ -78,4 +68,8 @@ body {
 #bottom a:hover{
     background:#ECECEC;
     border:1px solid #fff;
+}
+
+input {
+	color: black;
 }

@@ -1,29 +1,37 @@
-html
-	head
-		title Classroom
-		link(href="classroom.css" rel="stylesheet")
-		link(href='http://fonts.googleapis.com/css?family=Raleway:600', rel='stylesheet')
-		script(src="classroom.js")
-	body
-		h1 Generating Classroom
-		div#dimensions
-			p Height: #{height}
-			p Width: #{width}
-			- var total = height*width
-			p Cells: #{total}
-		div#grid
-			//- Create height x width table cell classroom
-			- for (var row = 1; row <= height; row++) {
-				div(class='row_#{row}')
-					- for (var col = 1; col <= width; col++) {
-						div(class='square seat#{row}_#{col}') 
-					- 	}
-				-	}
+extends ./layout.jade
+block append link
+	link(href="classroom.css" rel="stylesheet")
+block append script
+	script(src="classroom.js")
+block content
+	body(onload="alignGrid('grid', #{width}, 100, 100, 10)")
+		div.headContainer
+			h1 Generating Classroom
+		div.contentContainer
+			div.dimensionsContainer
+				div.dimensions
+					p Height: #{height} Width: #{width}
+					- var total = height*width
+						| Cells: #{total}
+					p Select Cells to mark as Left-Handed Seats or as Ghost Seats
+					p Select tiles in the grid by using CMD/CTRL to select multiple tiles, SHIFT to select a range of tiles, or drag to select all tiles within an area.
+			div#space
+			div#gridContainer
+				div#grid.grid
+					//- Create height x width table cell classroom
+					//- - for (var row = 1; row <= height; row++) {
+					//- 	div(class='row row_#{row}')
+					//- 		- for (var col = 1; col <= width; col++) {
+					//- 			div(class='square seat#{row}_#{col}') 
+					//- 		- 	}
+					//- 	-	}
+					- for (var seats = 1; seats <= width*height; seats++) {
+						div(class='grid--item', id='seat#{seats}')
+					- }
 		div#bottom
 			p If you want to edit dimensions click below:
 			b
-				a(onclick="displayDim()") 
+				a(onclick="displayDim(#{width},#{height})") 
 					| Edit
-			div
-				div#width
-				div#height
+			div.editDimensions
+				div.displayDim
