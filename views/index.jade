@@ -3,7 +3,8 @@ block append link
 		link(href='main.css', rel='stylesheet')
 block content
 	div#header
-		h1 Press "Choose File" and Select a file to print contents
+		h3 Press "Choose File" and Select a file to print contents
+		h3 Enter dimensions for the classroom
 	div#outerContainer
 		div#formContainer
 			div#formContainer
@@ -23,5 +24,7 @@ block content
 		div#fileInfo
 			script(src="readFile.js")
 	div#outputField
-		h3 Contents
-		output#output
+		div.content
+			h3 Contents
+		div.fileOutput
+			output#output

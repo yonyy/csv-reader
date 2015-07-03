@@ -1,3 +1,7 @@
+p.instructions, p.currentDim {
+  font-size: 20px;
+
+}
 .dimensionsContainer {
 	width:100%; 
     display:inline-block;
@@ -19,7 +23,13 @@
   	height: 100%;
 }
 
-.grid--item{
+.seat_number, .seat_alphabet {
+  font-size: 12px;
+  text-align: center;
+  margin-top: 15px;
+} 
+
+.seat_item{
   font-size: 5em;
   font-weight: bold;
   background-color: #D3411F;
@@ -28,7 +38,7 @@
   transition: all 200ms ease-out;
 }
 
-.grid--item:hover {
+.seat_item:hover {
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
   background-color: #2098d1;
@@ -37,8 +47,8 @@
 
 /*  following just for the demo */
 body {
-    font-size:20px;
-	font-family: 'Raleway', sans-serif;
+    font-size: 10px;
+    font-family: 'Raleway', sans-serif;
     color: black;
     text-align:center;
     background:#ECECEC;
@@ -47,6 +57,8 @@ body {
 #bottom {
     background-color:#1E1E1E;
     color: #fff;
+    width: 100%;
+    display: inline-block;
 }
 #bottom p{
     text-align:center;
@@ -72,4 +84,14 @@ body {
 
 input {
 	color: black;
+}
+
+#dimensions {
+  width: 100px;
+  display: inline-table;
+  margin-left: 10px;
+}
+
+button {
+  margin-top: 55px;
 }

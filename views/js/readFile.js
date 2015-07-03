@@ -1,6 +1,8 @@
 /* Given an array of student info create student objects of it 
  * Returns an array of student objects */
-function createTable(dataArr) {
+var all_students = [];
+
+function createClass(dataArr) {
 	//var table = ""
 	var studentsArr = [];
 	for (var i = 0; i < dataArr.length; i++) {
@@ -30,11 +32,12 @@ function readUpload() {
 		reader.onload = function(e) {
 			var content = reader.result;
 			var data = content.split('\n');
-			var table = createTable(data);
-			printContent(table);
+			all_students = createClass(data);
+			printContent(all_students);
 			//document.getElementById('output').innerHTML = table;
 		}
 		reader.readAsText(selectedFile);
+		sessionStorage.setItem('all_students',all_students);
 	}
 }
 
@@ -49,7 +52,10 @@ function createStudent(studentInfo) {
 	return {
 		lastname : studentInfo[0],
 		firstname : studentInfo[1],
-		email: studentInfo[2]
+		email: studentInfo[2],
+		isLeftHanded: false,
+		isOSD: false,
+		seat: ""
 	};
 }
 

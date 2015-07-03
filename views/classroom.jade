@@ -3,18 +3,21 @@ block append link
 	link(href="classroom.css" rel="stylesheet")
 block append script
 	script(src="classroom.js")
+	script(src="seat.js")
 block content
-	body(onload="alignGrid('grid', #{width}, 100, 100, 10)")
+	- var total_width = parseInt(width,10) + 1
+	- var total_height = parseInt(height,10) + 1
+	body(onload="alignGrid('grid', #{total_width}, 50, 50, 10)")
 		div.headContainer
 			h1 Generating Classroom
 		div.contentContainer
 			div.dimensionsContainer
 				div.dimensions
-					p Height: #{height} Width: #{width}
+					p.currentDim Height: #{height} Width: #{width}
 					- var total = height*width
-						| Cells: #{total}
-					p Select Cells to mark as Left-Handed Seats or as Ghost Seats
-					p Select tiles in the grid by using CMD/CTRL to select multiple tiles, SHIFT to select a range of tiles, or drag to select all tiles within an area.
+					p.currentDim Cells: #{total}
+					p.instructions Select Cells to mark as Left-Handed Seats or as Ghost Seats
+					p.instructions Select tiles in the grid by using CMD/CTRL to select multiple tiles, SHIFT to select a range of tiles, or drag to select all tiles within an area.
 			div#space
 			div#gridContainer
 				div#grid.grid
@@ -25,13 +28,28 @@ block content
 					//- 			div(class='square seat#{row}_#{col}') 
 					//- 		- 	}
 					//- 	-	}
-					- for (var seats = 1; seats <= width*height; seats++) {
-						div(class='grid--item', id='seat#{seats}')
-					- }
+					- var alp = 0;
+					- for (var seats = 1; seats <= total_width*total_height; seats++)
+						- if (seats <= total_width)
+							- if (seats == total_width)
+								div(class='grid--item cornerGrid')
+							- else
+								div(class='grid--item seat_number') #{seats}
+						- else if (seats % total_width == 0)
+							- var chr = String.fromCharCode(65 + alp)
+							- alp++
+							div(class='grid--item seat_alphabet') #{chr}
+						- else
+							- var id = "seat" + String.fromCharCode(65 + Math.floor((seats-total_width)/total_width)) + (seats%total_width).toString()
+							- console.log(id)
+							div(class='grid--item seat_item', id='#{id}', onclick="updateSeat($(this).attr('id'))")
 		div#bottom
-			p If you want to edit dimensions click below:
-			b
-				a(onclick="displayDim(#{width},#{height})") 
-					| Edit
+			div.displayMessage
+				div.message
+					p If you want to edit dimensions click below:
+					b
+					div.reedit
+						a(onclick="displayDim(#{width},#{height})") 
+							| Edit
 			div.editDimensions
 				div.displayDim
