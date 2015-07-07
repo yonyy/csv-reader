@@ -1,0 +1,9 @@
+extends ./layout.jade
+block append link
+	link(href="seating_chart.css", rel="stylesheet")
+block append script
+	script(src="classroom.js")
+	script(src="seat.js")
+block content
+	body
+		h1 Seating Chart for #{title}

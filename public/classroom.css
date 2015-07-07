@@ -8,19 +8,24 @@ p.instructions, p.currentDim {
     position:relative;
 }
 
+.settings {
+  display: inline-block;
+  margin-left: 10px;
+}
+
 #space {
 	height: 10px;
 }
 
 #grid, #gridContainer{
 	position: relative;
-  	top: 0;
-  	bottom: 0;
-  	right: 0;
-  	left: 0;
-  	margin: auto;
-  	width: 700px;
-  	height: 100%;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  margin: auto;
+  width: 700px;
+  height: 100%;
 }
 
 .seat_number, .seat_alphabet {
@@ -59,6 +64,7 @@ body {
     color: #fff;
     width: 100%;
     display: inline-block;
+
 }
 #bottom p{
     text-align:center;
@@ -93,5 +99,10 @@ input {
 }
 
 button {
-  margin-top: 55px;
+  margin-top: 15px;
+  margin-left: 10px;
+}
+
+.edit_submit {
+  margin-top: 15px;
 }

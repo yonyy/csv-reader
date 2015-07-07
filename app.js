@@ -18,7 +18,8 @@ app.use(methodOverride('_method'));
 
 /* Send home page file */
 app.get('/', site.index);
-app.get('/classroom', classroom_module.view)
+app.get('/classroom', classroom_module.view);
+app.get('/classroom/seating_chart', classroom_module.view_chart)
 
 http.listen(app.get("port"), app.get("ipaddr"), function() {
   console.log("Server up and running. Go to http://" + app.get("ipaddr") + ":" + app.get("port"));

@@ -1,6 +1,7 @@
 /* Given an array of student info create student objects of it 
  * Returns an array of student objects */
 var all_students = [];
+var total_students = 0;
 
 function createClass(dataArr) {
 	//var table = ""
@@ -13,6 +14,9 @@ function createClass(dataArr) {
 		//table += "<p>"+studentInfo.join(' ')+"</p>";
 	}
 	//console.log(studentsArr);
+	total_students = all_students.length;
+	console.log("total_students: " + total_students);
+	sessionStorage.setItem('all_students', all_students);
 	return studentsArr;
 }
 
@@ -25,7 +29,6 @@ function readUpload() {
 		var fileSize = selectedFile.size + " bytes, " 
 		var fileDate = "last modified: " + selectedFile.lastModifiedDate;
 		var fileInfo = "<li><strong>" + fileName + fileType + fileSize + fileDate + "</li>";
-		console.log(fileInfo);
 		document.getElementById("fileInfo").innerHTML = "<ul>" + fileInfo + "</ul>";
 		
 		var reader = new FileReader();
@@ -37,7 +40,6 @@ function readUpload() {
 			//document.getElementById('output').innerHTML = table;
 		}
 		reader.readAsText(selectedFile);
-		sessionStorage.setItem('all_students',all_students);
 	}
 }
 

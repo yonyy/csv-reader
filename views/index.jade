@@ -1,15 +1,20 @@
 extends ./layout.jade
 block append link
 		link(href='main.css', rel='stylesheet')
+block append script
+	script(src="classroom.js")
+	script(src="readFile.js")
 block content
 	div#header
 		h3 Press "Choose File" and Select a file to print contents
 		h3 Enter dimensions for the classroom
 	div#outerContainer
 		div#formContainer
-			div#formContainer
-				script(src="classroom.js")
-				form(name="dimensions",action="/classroom", method="get")
+			div.innerformContainer
+				form(class="form", name="dimensions",action="/classroom", method="get", onsubmit="return validateForm(this.form)")
+					div(class="form-group")
+						label(for="className") Name
+						input(type="text", class="form-control", name="name", id="className")
 					div(class="form-group")
 						label(for="heightInsert") Height
 						input(type="number", class="form-control", name="height", id="heightInsert", placeholder="10")
@@ -18,11 +23,10 @@ block content
 						input(type="number", class="form-control", name="width", id="widthInsert", placeholder="12")
 					div(class="form-group")
 						label(for="fileInsert") File Input
-						input(type="file", id="fileInsert", onchange="readUpload()")
-					button(type="submit", class="btn btn-default", onclick="readForm(this.form)") Submit
+						input(type="file", id="fileInsert", name="fileInput", onchange="readUpload()")
+					button(type="submit", class="btn btn-default") Submit
 	div#fileContainer
 		div#fileInfo
-			script(src="readFile.js")
 	div#outputField
 		div.content
 			h3 Contents

@@ -1,4 +1,4 @@
-h1, h3 {
+h1, h3, .error {
 	font-family: 'Raleway', sans-serif
 }
 
@@ -20,6 +20,10 @@ h1 {
 	padding-top: 30px;
 }
 
+.error {
+	margin-left: 10px;
+	font-size: 17px;
+}
 #fileInfo {
 	border-width: thin;
 	border-radius: 10px;
