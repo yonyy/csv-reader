@@ -5,22 +5,15 @@ body {
     background:#ECECEC;
 }
 
-p.instructions, p.currentDim {
-  font-size: 20px;
-
-}
-.informationContainer, .checkboxesContainer, h1 {
+h1 {
   text-align: center;
 }
 
-.settings {
-  display: inline-block;
-  margin-left: 10px;
+.outerDivs {
+  margin-top: 50px;
 }
-
-
-.gridContainer {
-  margin-top: 10px;
+.finalGridContainer {
+  margin-top: 20px;
   text-align: center;
 }
 
@@ -46,6 +39,7 @@ p.instructions, p.currentDim {
 .seat_item {
   background: #D3411F;
 }
+
 .seat_alphabet, .cornerGrid {
   position: absolute;
 }
@@ -76,14 +70,58 @@ p.col, p.chr {
   color: white; 
 }
 
-/*  following just for the demo */
+/* pop-up text */
 
-.bottomPage {
+/* pop-up text */
+.grid--item span {
+  margin-bottom: 5px;
+  color:#666;
+  position:absolute;
+  bottom:0;
+  left:-20px;
+  right:-20px;
+  padding:5px 7px;
+  z-index:-1;
+  font-size:12px;
+  font-family: 'Raleway', sans-serif;
+  border-radius:5px;
+  background:#fff;
+  visibility:hidden;
+  width: 200px;
+  -o-transition:all .5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  -webkit-transition: all .5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  -moz-transition: all .5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  transition: all .5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* pop-up text arrow */
+.grid--item span:before {
+  content:'';
+  width: 0; 
+  height: 0; 
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #fff;
+  position:absolute;
+  bottom:-5px;
+  left:40px;
+}
+
+/* text pops up when icon is in hover state */
+.grid--item:hover span {
+  bottom:50px;
+  visibility:visible;
+  z-index: 1;
+}
+
+.bottomContainer {
     margin-top: 15px;
     background-color:#1E1E1E;
     color: #fff;
     width: 100%;
     display: inline-block;
     text-align:center;
+    padding-bottom: 5px;
+    padding-top: 5px;
 /*    line-height:2em;*/
 }

@@ -1,9 +1,18 @@
 extends ./layout.jade
 block append link
-	link(href="seating_chart.css", rel="stylesheet")
+	link(href="../seatingChart.css" rel="stylesheet")
 block append script
-	script(src="classroom.js")
-	script(src="seat.js")
+	script(src="../student.js")
+	script(src="../seat.js")
+	script(src="../finalClassroom.js")
 block content
-	body
-		h1 Seating Chart for #{title}
+	body(onload="loadGrid()")
+		div.pageContainer
+			div.headingContainer.outerDivs
+				h1 Seating Chart for #{title}
+			div.finalGridContainer.outerDivs
+			div.bottomContainer
+				div.downloadMessage
+					p Click below to download #{title}.pdf
+				div.downloadButton
+					input(class="btn btn-default", type="button", value="Input")

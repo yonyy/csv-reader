@@ -4,19 +4,14 @@ var all_students = [];
 var total_students = 0;
 
 function createClass(dataArr) {
-	//var table = ""
 	var studentsArr = [];
 	for (var i = 0; i < dataArr.length; i++) {
 		var studentInfo = dataArr[i].split(',');
 		if (studentInfo.length == 1) continue;
 		console.log("studentInfo: " + studentInfo + " " + studentInfo.length);
-		studentsArr.push(createStudent(studentInfo)); 
-		//table += "<p>"+studentInfo.join(' ')+"</p>";
+		studentsArr.push(new Student(studentInfo[0],studentInfo[1],studentInfo[2],false,false,null)); 
 	}
-	//console.log(studentsArr);
 	total_students = all_students.length;
-	console.log("total_students: " + total_students);
-	sessionStorage.setItem('all_students', all_students);
 	return studentsArr;
 }
 
@@ -37,29 +32,11 @@ function readUpload() {
 			var data = content.split('\n');
 			all_students = createClass(data);
 			printContent(all_students);
-			//document.getElementById('output').innerHTML = table;
 		}
 		reader.readAsText(selectedFile);
 	}
 }
 
-/* Defined student object will have 
-	{
-		lastname: "string",
-		firstname: "string",
-		email: "string"
-	}
-*/
-function createStudent(studentInfo) {
-	return {
-		lastname : studentInfo[0],
-		firstname : studentInfo[1],
-		email: studentInfo[2],
-		isLeftHanded: false,
-		isOSD: false,
-		seat: ""
-	};
-}
 
 /* Given an array of student objects, it prints it out to the HTML page */
 function printContent(roster) {

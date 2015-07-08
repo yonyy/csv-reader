@@ -1,6 +1,7 @@
 var classroom = {}
 
-function createClassObject(width, height) {
+// k: seat[letter][number] v: Seat Obj
+function createClassObject() {
 	$(".seat_item").each(function(index, element){
 		var seatId = $(element).attr('id');
 		var seat = new Seat(false, false, null, false, seatId);
@@ -51,7 +52,7 @@ function validateForm(form) {
 }
 
 function alignGrid(id,cols,cellWidth,cellHeight,padding) {
-    var x = 0;
+/*    var x = 0;
     var y = 0;
     var count = 1;
     
@@ -75,12 +76,13 @@ function alignGrid(id,cols,cellWidth,cellHeight,padding) {
             
             count++;
         });
-    });
+    });*/
 
-    createClassObject(cols);
+    createClassObject();
+    console.log(classroom)
 }
 
-function displayDim(oldW,oldH) {
+/*function displayDim(oldW,oldH) {
 	console.log(oldH + " " + oldW);
 	$('.displayDim').html("<form class=\"form-inline newDim\"></form>");
 	$(".newDim").attr({
@@ -123,4 +125,4 @@ function updateDim() {
 	var newWidth = $("#width").val();
 	var newHeight = $("#height").val();
 	console.log(newWidth + " " + newHeight);
-}
+}*/

@@ -3,10 +3,7 @@ var isLeftHanded = false;
 var ghostColor = "FFFFFF";
 var leftColor = "#76FF03";
 var rightColor = "D3411F";
-var ghostSeats = {};
-var leftSeats = {};
-var rightSeats = {};
-
+var finalGridContainer = "";
 
 function Seat(isGhost,isLeftHanded,student,isEmpty,seatPosition) {
 	this.isGhost = isGhost;

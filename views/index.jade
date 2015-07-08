@@ -4,6 +4,7 @@ block append link
 block append script
 	script(src="classroom.js")
 	script(src="readFile.js")
+	script(src="student.js")
 block content
 	div#header
 		h3 Press "Choose File" and Select a file to print contents
@@ -24,7 +25,11 @@ block content
 					div(class="form-group")
 						label(for="fileInsert") File Input
 						input(type="file", id="fileInsert", name="fileInput", onchange="readUpload()")
-					button(type="submit", class="btn btn-default") Submit
+					button(type="submit", class="btn btn-default submitForm") Submit
+			script.
+				$('.submitForm').click(function() {
+					sessionStorage.setItem('all_students', JSON.stringify(all_students));
+				})
 	div#fileContainer
 		div#fileInfo
 	div#outputField
