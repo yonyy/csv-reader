@@ -1,0 +1,113 @@
+body {
+    font-size: 10px;
+    font-family: 'Raleway', sans-serif;
+    color: black;
+    background:#ECECEC;
+}
+
+h1 {
+  text-align: center;
+}
+
+.outerDivs {
+  margin-top: 50px;
+}
+.finalGridContainer {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.grid--item {
+  display: inline-block;
+  margin-left: 5px;
+  margin-top: 5px;
+  width: 50px;
+  height: 50px;
+  color:#fff;
+  border-radius:5px;
+  text-align:center;
+  text-decoration:none;
+  font-family:fontawesome;
+  position: relative;
+  -o-transition:all 200ms ease-out;
+  -webkit-transition: all 200ms ease-out;
+  -moz-transition: all .200ms ease-out;
+  transition: all 200ms ease-out;
+   -webkit-font-smoothing: antialiased;
+}
+
+.seat_item {
+  background: #FF5722;
+}
+
+.seat_alphabet, .cornerGrid {
+  position: absolute;
+}
+
+p.col, p.chr {
+  font-family: 'Raleway', sans-serif;
+  font-size: 12px;
+  margin-top: 15px;
+  color: black;
+}
+
+.seat_item:hover {
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
+  background-color: #FF8A65;
+  color: white; 
+}
+
+/* pop-up text */
+.grid--item span {
+  margin-bottom: 5px;
+  color:#666;
+  position:absolute;
+  bottom:0;
+  left:-20px;
+  right:-20px;
+  padding:5px 7px;
+  z-index:-1;
+  font-size:12px;
+  font-family: 'Raleway', sans-serif;
+  border-radius:5px;
+  background:#fff;
+  visibility:hidden;
+  width: 200px;
+  -o-transition:all .5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  -webkit-transition: all .5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  -moz-transition: all .5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  transition: all .5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* pop-up text arrow */
+.grid--item span:before {
+  content:'';
+  width: 0; 
+  height: 0; 
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #fff;
+  position:absolute;
+  bottom:-5px;
+  left:40px;
+}
+
+/* text pops up when icon is in hover state */
+.grid--item:hover span {
+  bottom:50px;
+  visibility:visible;
+  z-index: 1;
+}
+
+.bottomContainer {
+    margin-top: 15px;
+    background-color:#1E1E1E;
+    color: #fff;
+    width: 100%;
+    display: inline-block;
+    text-align:center;
+    padding-bottom: 5px;
+    padding-top: 5px;
+/*    line-height:2em;*/
+}
