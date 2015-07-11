@@ -1,0 +1,56 @@
+extends ./layout.jade
+block append script
+	script(src="filterSearchStudent.js")
+	script(src="student.js")
+block content
+	div(class="container", ng-app="sortApp", ng-controller="mainController")
+		h1 #{title}
+		div(class="input-group")
+			span(class="input-group-addon")
+				span(class="glyphicon glyphicon-search")
+			input(type="text" class="form-control", placeholder="Search Student", ng-model="searchStudent")
+		table(class="table table-bordered table-striped")
+			thead
+				tr
+					td
+						a(href="#", ng-click="sortType = 'lastname'; sortReverse = !sortReverse") Last Name 
+							span(ng-show="sortType == 'lastname' && !sortReverse" class="fa fa-caret-down")
+							span(ng-show="sortType == 'lastname' && sortReverse" class="fa fa-caret-up")
+					td
+						a(href="#", ng-click="sortType = 'firstname'; sortReverse = !sortReverse") First Name 
+							span(ng-show="sortType == 'firstname' && !sortReverse" class="fa fa-caret-down")
+							span(ng-show="sortType == 'firstname' && sortReverse" class="fa fa-caret-up")
+					td
+						a(href="#", ng-click="sortType = 'email'; sortReverse = !sortReverse") Email
+							span(ng-show="sortType == 'email' && !sortReverse" class="fa fa-caret-down")
+							span(ng-show="sortType == 'email' && sortReverse" class="fa fa-caret-up")
+					td
+						a(href="#", ng-click="sortType = 'isLeftHanded'; sortReverse = !sortReverse") Left Handed
+							span(ng-show="sortType == 'isLeftHanded' && !sortReverse" class="fa fa-caret-down")
+							span(ng-show="sortType == 'isLeftHanded' && sortReverse" class="fa fa-caret-up")
+					td
+						a(href="#", ng-click="sortType = 'isOSD'; sortReverse = !sortReverse") isOSD
+							span(ng-show="sortType == 'isOSD' && !sortReverse" class="fa fa-caret-down")
+							span(ng-show="sortType == 'isOSD' && sortReverse" class="fa fa-caret-up")
+			tbody
+				tr(ng-repeat="student in roster | orderBy:sortType:sortReverse | filter:searchStudent", ng-attr-id="{{ student.lastname + student.firstname}}")
+					td {{ student.lastname }}
+					td {{ student.firstname }}
+					td {{ student.email }}
+					td
+						select(class="form-control isLeftHanded", id="{{ student.email }}", onchange="updateRoster($(this).attr('id'))")
+							option(selected="selected") false
+							option true
+					td
+						select(class="form-control isOSD", id="{{ student.email }}", onchange="updateRoster($(this).attr('id'))")
+							option(selected="selected", value="false") false
+							option(value="true") true
+		form(class="form", name="submit", action="/classroom", method="get")
+			button(type="submit", class="btn btn-default submitRoster") Submit
+			input(type="hidden", name ="width", value="#{width}")
+			input(type="hidden", name="height", value="#{height}")
+			input(type="hidden", name="name", value="#{classname}")
+		script.
+			$('.submitRoster').click(function() {
+				sessionStorage.setItem('all_students', JSON.stringify(roster));
+			})

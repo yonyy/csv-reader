@@ -1,21 +1,22 @@
 extends ./layout.jade
 block append link
-		link(href='main.css', rel='stylesheet')
+	link(href='main.css', rel='stylesheet')
 block append script
 	script(src="classroom.js")
 	script(src="readFile.js")
 	script(src="student.js")
 block content
-	div#header
-		h3 Press "Choose File" and Select a file to print contents
-		h3 Enter dimensions for the classroom
-	div#outerContainer
-		div#formContainer
-			div.innerformContainer
-				form(class="form", name="dimensions",action="/classroom", method="get", onsubmit="return validateForm(this.form)")
+	div.pageContainer
+		div#header
+			h3 Press "Choose File" and Select a file to print contents
+			h3 Enter dimensions for the classroom
+		div#outerContainer
+			div#formContainer
+				div.innerformContainer
+				form(class="form", name="dimensions", action="/student", method="get", onsubmit="return validateForm(this.form)")
 					div(class="form-group")
 						label(for="className") Name
-						input(type="text", class="form-control", name="name", id="className")
+						input(type="text", class="form-control", name="classname", id="className")
 					div(class="form-group")
 						label(for="heightInsert") Height
 						input(type="number", class="form-control", name="height", id="heightInsert", placeholder="10")
@@ -30,10 +31,39 @@ block content
 				$('.submitForm').click(function() {
 					sessionStorage.setItem('all_students', JSON.stringify(all_students));
 				})
-	div#fileContainer
-		div#fileInfo
-	div#outputField
-		div.content
-			h3 Contents
-		div.fileOutput
-			output#output
+		div#fileContainer
+			div#fileInfo
+		//- div(class="container", ng-app="sortApp", ng-controller="mainController")
+		//- 	div(class="input-group")
+		//- 		span(class="input-group-addon")
+		//- 			span(class="glyphicon glyphicon-search")
+		//- 		input(type="text" class="form-control", placeholder="Search Student", ng-model="searchStudent")
+		//- 	table(class="table table-bordered table-striped")
+		//- 		thead
+		//- 			tr
+		//- 				td
+		//- 					a(href="#", ng-click="sortType = 'firstname'; sortReverse = !sortReverse") Last Name 
+		//- 						span(ng-show="sortType == 'firstname' && !sortReverse" class="fa fa-caret-down")
+		//- 						span(ng-show="sortType == 'firstname' && sortReverse" class="fa fa-caret-up")
+		//- 				td
+		//- 					a(href="#", ng-click="sortType = 'lastname'; sortReverse = !sortReverse") First Name 
+		//- 						span(ng-show="sortType == 'lastname' && !sortReverse" class="fa fa-caret-down")
+		//- 						span(ng-show="sortType == 'lastname' && sortReverse" class="fa fa-caret-up")
+		//- 				td
+		//- 					a(href="#", ng-click="sortType = 'email'; sortReverse = !sortReverse") Email
+		//- 						span(ng-show="sortType == 'email' && !sortReverse" class="fa fa-caret-down")
+		//- 						span(ng-show="sortType == 'email' && sortReverse" class="fa fa-caret-up")
+		//- 				td
+		//- 					a(href="#", ng-click="sortType = 'isLeftHanded'; sortReverse = !sortReverse") Hand
+		//- 						span(ng-show="sortType == 'isLeftHanded' && !sortReverse" class="fa fa-caret-down")
+		//- 						span(ng-show="sortType == 'isLeftHanded' && sortReverse" class="fa fa-caret-up")
+		//- 				td
+		//- 					a(href="#", ng-click="sortType = 'isOSD'; sortReverse = !sortReverse") isOSD
+		//- 						span(ng-show="sortType == 'isOSD' && !sortReverse" class="fa fa-caret-down")
+		//- 						span(ng-show="sortType == 'isOSD' && sortReverse" class="fa fa-caret-up")
+		//- 		tbody
+		//- 			tr(ng-repeat="student in roster | orderBy:sortType:sortReverse | filter:searchStudent")
+		//- 				td {{ student.lastname }}
+		//- 				td {{ student.firstname }}
+		//- 				td {{ student.email }}
+		//- 				td {{ student.isOSD }}
