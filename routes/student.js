@@ -10,7 +10,7 @@ router.get('/', function(req, res, next) {
 		title: 'Customize your Roster',
 		width: width,
 		height: height,
-		classname : className
+		className : className,
 	});
 });
 

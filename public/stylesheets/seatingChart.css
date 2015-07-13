@@ -111,3 +111,69 @@ p.col, p.chr {
     padding-top: 5px;
 /*    line-height:2em;*/
 }
+
+/* Pop up */
+.pop-up-button:hover{
+  background:#dfdfdf;
+}
+
+.pop-up {
+  height:100px;
+  width:50%;
+  margin: auto;
+  background:#fff;
+  position:absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  z-index:1;
+  border-radius:10px;
+  color: black;
+}
+
+.ex {
+  border-radius:0 0 30px 30px;
+  margin-left:90%;
+  background:#000;
+  color:#fff;
+  font-size:20px;
+  height:10px;
+  padding:0 5px;
+  cursor:pointer;
+}
+.pop-up-text {
+  box-sizing:border-box;
+  padding:20px;
+  background: white;
+}
+
+.radio {
+  text-align: left;
+  margin-left: 45%;
+}
+
+.blurPage {
+  background-color: black;
+  width: 100%;
+  height: 100%;
+  display: inline;
+  -webkit-filter: blur(5px);
+  filter: blur(5px);
+  -webkit-filter: opacity(.2);
+  filter: opacity(.2);
+  z-index: -1;
+
+}
+
+#downloadRoster {
+  margin-left: 45%;
+}
+
+.rosterFileName {
+  margin-left: 40%;
+}
+
+#rosterName {
+  width: 200px;
+}

@@ -6,7 +6,7 @@ var gridRow = sessionStorage.getItem('height');
 var seatArr = []	// Array of the seats
 
 function loadGrid() {
-	$('.finalGridContainer').html(grid);
+	$('.finalGridContainer').append(grid);
 	$('.seat_item').attr("onclick","displaySeatInfo($(this).attr('id'))");
 	assignSeats();
 	attachInfo();
@@ -22,15 +22,16 @@ function attachInfo() {
 		}
 		else {
 			var studentObj = seatObj.student;
-			console.log(seatObj);
+/*			console.log(seatObj);*/
 			var name = "<p>"+ "Name: "+ studentObj.lastname + ", " + studentObj.firstname+"</p>";
 			var email = "<p>Email: " + studentObj.email + "</p>";
+			var studentID = "<p>ID: " + studentObj.studentID + "</p>";
 			var seatID = "<p>Seat: " + studentObj.seat.seatPosition + "</p>";
 			var hand = studentObj.isLeftHanded ? "<p>Left-Handed</p>" : "<p>Right Handed</p>"
-			var studentProfile = "<span>" + name + email + seatID + hand + "</span>"
+			var studentProfile = "<span>" + name + email + studentID + seatID + hand + "</span>"
 			$(element).append(studentProfile);
-			if (studentObj.isLeftHanded) 
-				console.log("Left-Handed");
+/*			if (studentObj.isLeftHanded) 
+				console.log("Left-Handed");*/
 		}
 	})
 }
@@ -106,7 +107,7 @@ function assignSeats() {
 		var s = seatArr[i];
 		if(s.isGhost) { continue; }
 		if(s.student == null) { 
-			var emptyStudent = new Student("EMPTY", "EMPTY", "", false, false, null);
+			var emptyStudent = new Student("EMPTY", "EMPTY", "", "", false, false, null);
 			s.isEmpty = true;
 			emptyStudent.seat = s;
 			s.student = emptyStudent; 

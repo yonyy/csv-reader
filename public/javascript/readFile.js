@@ -9,7 +9,7 @@ function createClass(dataArr) {
 		var studentInfo = dataArr[i].split(',');
 		if (studentInfo.length == 1) continue;
 		console.log("studentInfo: " + studentInfo + " " + studentInfo.length);
-		studentsArr.push(new Student(studentInfo[0],studentInfo[1],studentInfo[2],false,false,null)); 
+		studentsArr.push(new Student(studentInfo[0],studentInfo[1],studentInfo[2],studentInfo[3],false,false,null)); 
 	}
 	total_students = all_students.length;
 	return studentsArr;
