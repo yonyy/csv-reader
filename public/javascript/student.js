@@ -2,7 +2,7 @@ function Student(lastname, firstname, email, id, isLH, isOSD, seat)	{
 	this.lastname = lastname.replace(/"/g, '');
 	this.firstname = firstname.replace(/"/g, '');
 	this.email = email;
-	this.studentID = id.replace(/(\r\n|\n|\r)/gm,"");
+	this.studentID = id.length > 0 ? parseInt(id.replace(/(\r\n|\n|\r)/gm,""),10) : "";
 	this.isLeftHanded = isLH;
 	this.isOSD = isOSD;
 	this.seat = seat;
@@ -40,7 +40,7 @@ function assignOSD(id, isOSD) {
 }
 
 function createString(student) {
-	var id = student.studentID;
+	var id = student.studentID.toString();
 	if (id.length == 2)
 		id = "0"+id;
 	else if (id.length == 1)

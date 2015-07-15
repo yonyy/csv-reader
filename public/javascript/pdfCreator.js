@@ -2,7 +2,7 @@ var row_gap = 5;
 var col_gap = 50;
 var title_marginLeft = 70;
 var title_marginTop = 10;
-var end_X = 460
+var end_X = 200;
 var end_Y = 290;
 var rosterFontSize = 6;
 var startX = 5;
@@ -76,6 +76,15 @@ function generatePDF(format, filename, title) {
   for(var i = 0; i < emptySeats.length; i++) {
     doc.text(currentX, currentY, emptySeats[i].toString());
     currentY+= row_gap;
+    if (currentY > end_Y) {
+      currentY = startY;
+      currentX += col_gap;
+    }
+    if (currentX > end_X) {
+      doc.addPage();
+      currentX = startX;
+      currentY = startY;
+    }
   }
 
   /* Writing class info to pdf */
@@ -85,16 +94,20 @@ function generatePDF(format, filename, title) {
   var expectedEmptyStr = "Expected Empty Seats: " + (totalSeats - students.length + removedStudents).toString();
   var actualEmptyStr = "Actual Empty Seats: ______";
   
-  doc.text(currentX, currentY, totalStudentStr);
-  currentY += row_gap;
-  checkCoord(currentX,currentY,doc);
-  doc.text(currentX, currentY, totalSeatsStr);
-  currentY += row_gap;
-  checkCoord(currentX,currentY,doc);
-  doc.text(currentX, currentY, expectedEmptyStr);
-  currentY += row_gap;
-  checkCoord(currentX,currentY,doc);
-  doc.text(currentX, currentY, actualEmptyStr);
+  var bottomInfo = [totalStudentStr, totalSeatsStr, expectedEmptyStr, actualEmptyStr];
+  for (var i = 0; i < bottomInfo.length; i++) {
+    doc.text(currentX, currentY, bottomInfo[i]);
+    currentY += row_gap;
+    if (currentY > end_Y) {
+      currentY = startY;
+      currentX += col_gap;
+    }
+    if (currentX > end_X) {
+      doc.addPage();
+      currentX = startX;
+      currentY = startY;
+    }
+  }
   doc.save(downloadString)
 }
 

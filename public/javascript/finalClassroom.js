@@ -64,7 +64,11 @@ function assignSeats() {
 	for(var i = 1; i < gridCol; i+=2) {
 		for(var j = gridRow - 1; j >= 0; j--) {
 			var tempStudent;
-			var seat = seatArr[j*gridCol+i]; 
+			var seat = seatArr[j*gridCol+i];
+			console.log("i: " + i + " j: " + j + " index: " + (j*gridCol+i))
+			console.log("rightIndex: " + rightIndex + " " + "leftIndex: " + leftIndex);
+			console.log("leftStudents.length: " + leftStudents.length + " " + "rightStudents.length: " + rightStudents.length)
+			console.log(seat)
 			if(seat.isGhost) {continue;}
 			if(seat.isLeftHanded)
 				if(leftIndex < leftStudents.length)
@@ -76,8 +80,11 @@ function assignSeats() {
 					tempStudent = rightStudents[rightIndex++]
 				else
 					tempStudent = leftStudents[leftIndex++]
-			seat.student = tempStudent;
-			tempStudent.seat = seat;
+			if (rightIndex + leftIndex <= tempList.length) {
+				console.log(tempStudent)
+				seat.student = tempStudent;
+				tempStudent.seat = seat;
+			}
 		}
 	}
 
@@ -98,8 +105,10 @@ function assignSeats() {
 					tempStudent = rightStudents[rightIndex++]
 				else
 					tempStudent = leftStudents[leftIndex++]
-			seat.student = tempStudent;
-			tempStudent.seat = seat;
+			if (rightIndex + leftIndex <= tempList.length) {
+				seat.student = tempStudent;
+				tempStudent.seat = seat;
+			}
 		}
 	}
 

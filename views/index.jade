@@ -13,20 +13,20 @@ block content
 		div#outerContainer
 			div#formContainer
 				div.innerformContainer
-				form(class="form", name="dimensions", action="/student", method="get", onsubmit="return validateForm(this.form)")
-					div(class="form-group")
-						label(for="className") Classroom Name
-						input(type="text", class="form-control", name="classname", id="className")
-					div(class="form-group")
-						label(for="heightInsert") Height
-						input(type="number", class="form-control", name="height", id="heightInsert", placeholder="10")
-					div(class="form-group")
-						label(for="widthInsert") Width
-						input(type="number", class="form-control", name="width", id="widthInsert", placeholder="12")
-					div(class="form-group")
-						label(for="fileInsert") File Input
-						input(type="file", id="fileInsert", name="fileInput", onchange="readUpload()")
-					button(type="submit", class="btn btn-default submitForm") Submit
+					form(class="form", name="dimensions", action="/student", method="get", onsubmit="return validateForm(this.form)")
+						div(class="form-group")
+							label(for="className") Classroom Name
+							input(type="text", class="form-control", name="classname", id="className")
+						div(class="form-group")
+							label(for="heightInsert") Height
+							input(type="number", class="form-control", name="height", id="heightInsert", placeholder="10")
+						div(class="form-group")
+							label(for="widthInsert") Width
+							input(type="number", class="form-control", name="width", id="widthInsert", placeholder="12")
+						div(class="form-group")
+							label(for="fileInsert") File Input
+							input(type="file", id="fileInsert", name="fileInput", onchange="readUpload()")
+						button(type="submit", class="btn btn-default submitForm") Submit
 			script.
 				$('.submitForm').click(function() {
 					sessionStorage.setItem('all_students', JSON.stringify(all_students));
