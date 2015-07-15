@@ -1,0 +1,9 @@
+extends ./layout.jade
+block content
+	- if (status == "success")
+		div.success
+			h3 Email Successfully Sent
+	- else
+		div.error
+			h3 Error. 
+			p Check that you correctly inputted a valid email/password 

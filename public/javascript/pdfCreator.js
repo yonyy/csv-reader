@@ -3,19 +3,19 @@ var col_gap = 50;
 var title_marginLeft = 70;
 var title_marginTop = 10;
 var end_X = 460
-var end_Y = 300;
+var end_Y = 290;
 var rosterFontSize = 6;
-var startX = 10;
+var startX = 5;
 var startY = 15;
 var pdfFileName = "";
 
 /*console.log(students);*/
 function generatePDF(format, filename) {
-  if (format == "row")
+  if (format == "RowSorted")
     students.sort(sortByRow);
-	if (format == "column")
+	if (format == "ColumnSorted")
     students.sort(sortByColumns);
-	if (format == "sorted")
+	if (format == "NameSorted")
     students.sort(sortByName);
   
   var doc = new jsPDF();

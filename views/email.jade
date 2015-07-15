@@ -1,0 +1,41 @@
+extends ./layout.jade
+block append link
+	link(href="email.css", rel="stylesheet")
+block append script
+	script(src="email.js")
+block content
+	body(onload="fillEmailForm(#{roster})")
+		div.pageContainer
+			div.jumbotron
+				form(class="form-horizontal", name="studentMessages", action="/email/send", method="post",onsubmit="return validateEmailForm(this.form)")
+					div(class="form-group emailContainer")
+						label(for="inputEmail", class="col-sm-2 control-label") Email address
+						div(class="col-sm-10")
+							input(type="email", class="form-control email", id="inputEmail", placeholder="Email", name="userEmail")
+					div(class="form-group passwordContainer")
+						label(for="inputPassword1", class="col-sm-2 control-label") Password
+						div(class="col-sm-10")
+							input(type="password" class="form-control password" id="inputPassword" placeholder="Password", name="userPass")
+					div(class="form-group toContainer")
+						label(for="inputReciever", class="col-sm-2 control-label") To
+						div(class="col-sm-10")
+							input(type="text", class="col-sm-2 form-control to", id="inputReciever", name="userRecievers")
+					div(class="form-group subjectContainer")
+						label(for="inputSubject", class="col-sm-2 control-label") Subject
+						div(class="col-sm-10")
+							input(type="text", class="col-sm-2 form-control subject", id="inputSubject", name="userSubject")
+					div(class="form-group legend") 
+						h3 Syntax
+						p #[code [fullname]] To enter a student's fullname
+						p #[code [lastname]] To enter a student's last name
+						p #[code [id]] To enter a student's id number
+						p #[code [seat]] To enter a student's seat number
+					div(class="form-group messageContainer")
+						label(for="inputMessage", class="col-sm-2 control-label") Message
+						div(class="col-sm-10")
+							textarea(class="col-sm-2 form-control message", id="inputMessage", rows="17",name="userBody")
+					div(class="form-group submitContainer")
+						div(class="col-sm-offset-2 col-sm-10")
+							button(type="submit" class="btn btn-default") Send
+					input(type="hidden", name="roster", value="#{roster}")
+

@@ -1,0 +1,26 @@
+body {
+	text-align: center;
+}
+
+.emailContainer, .passwordContainer, .toContainer, .subjectContainer, .messageContainer {
+	margin-left: 30%;
+}
+
+.legend {
+	margin-left: 40%;
+}
+
+.jumbotron {
+
+}
+
+.email, .password, .to, .subject{
+	width: 400px;
+}
+
+.message {
+	width: 500px;
+}
+.submit {
+	margin-left: 50%;
+}

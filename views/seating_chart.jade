@@ -3,10 +3,12 @@ block append link
 	link(href="../seatingChart.css", rel="stylesheet")
 block append script
 	script(src="//mrrio.github.io/jsPDF/dist/jspdf.debug.js")
+	script(src="../jquery.redirect.js")
 	script(src="../student.js")
 	script(src="../seat.js")
 	script(src="../finalClassroom.js")
 	script(src="../pdfCreator.js")
+	script(src="../email.js")
 block content
 	body(onload="loadGrid()")
 		div.pageContainer
@@ -34,6 +36,7 @@ block content
 							input(type="radio", name="format", id="sorted", class="format", value="NameSorted") 
 							|Sorted order
 					a(class="btn btn-default", id="downloadRoster", role="button") Download
+					a(class="btn btn-default", id="emailRoster", role="button") Email Students
 					//- a(class="btn btn-default", id="downloadRoster", role="button", href="roster.pdf" download="#{roster}+seatingChart") Download
 				script.
 					$("input[type='radio']").on('change', function() {
@@ -41,6 +44,9 @@ block content
 					})
 					$('#downloadRoster').click(function() {
 						generatePDF($("input[type='radio']:checked").val(), $('#rosterName').val())
+					})
+					$('#emailRoster').click(function() {
+						emailRoster("Sample")
 					})
 			div.finalGridContainer.outerDivs
 			div.bottomContainer
