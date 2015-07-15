@@ -12,7 +12,6 @@ block append script
 block content
 	body(onload="loadGrid()")
 		div.pageContainer
-			div.blurPage
 			div.headingContainer.outerDivs
 				h1 Seating Chart for #{className}
 			div.pop-up
@@ -22,7 +21,10 @@ block content
 					form(class="form-horizontal rosterFileName")
 						div(class="form-group")
 							label(for="rosterName" class="col-sm-2 control-label") PDF Name
-							input(type="text", class="form-control", id="rosterName", placeholder="CSE100Quiz5SeatingChart")
+							input(type="text", class="form-control", id="rosterName", placeholder="CSE100Quiz5SeatingChart", style="width: 200px;")
+						div(class="form-group")
+							label(for="pdfTitle" class="col-sm-2 control-label") PDF Title
+							input(type="text", class="form-control", id="pdfTitle", placeholder="Pepper Canyon 106 - Quiz 5 Thursday, June 4th -5pm", style="width: 400px;")
 					div.radio
 						label
 							input(type="radio", name="format", id="row", class="format", value="RowSorted", checked) 
@@ -43,7 +45,7 @@ block content
 						$("input[type='radio']").not(this).prop('checked', false);
 					})
 					$('#downloadRoster').click(function() {
-						generatePDF($("input[type='radio']:checked").val(), $('#rosterName').val())
+						generatePDF($("input[type='radio']:checked").val(), $('#rosterName').val(), $('#pdfTitle').val())
 					})
 					$('#emailRoster').click(function() {
 						emailRoster("Sample")

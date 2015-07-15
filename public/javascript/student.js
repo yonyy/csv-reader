@@ -40,5 +40,13 @@ function assignOSD(id, isOSD) {
 }
 
 function createString(student) {
-	return student.studentID + " ______ " + student.seat.seatPosition + " " + student.lastname + ", " + student.firstname;
+	var id = student.studentID;
+	if (id.length == 2)
+		id = "0"+id;
+	else if (id.length == 1)
+		id = "00"+id
+	var seatPos = student.seat.seatPosition;
+	if (seatPos.length == 2)
+		seatPos = seatPos + " ";
+	return id + " ______ " + seatPos + " " + student.lastname + ", " + student.firstname;
 }

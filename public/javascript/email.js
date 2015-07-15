@@ -36,7 +36,7 @@ function fillEmailForm(studentstoEmail) {
 	var toList = "";
 	$('#inputSubject').val("Quiz Seating Assignment");
 	for(var i = 0; i < studentstoEmail.length; i++) {
-		toList += studentstoEmail[i].email + ", ";
+		toList += studentstoEmail[i].email + ",";
 	}
 	$('#inputReciever').val(toList);
 	 var sampleAddressText = "Dear [fullname], \n\n"

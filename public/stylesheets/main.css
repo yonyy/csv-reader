@@ -30,6 +30,9 @@ div input {
 	text-align: left;
 }
 
+#className {
+	width: 200px;
+}
 ul {
 	text-align: left;
 	margin-top: 10px;

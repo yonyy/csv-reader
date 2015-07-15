@@ -54,7 +54,7 @@ block content
 			//- Contains grid of the classroom
 			div.gridContainer
 				//- Create height x width table cell classroom
-				- var alp = 0;
+				- var alp = total_height - 1;
 				- for (var row = 1; row <= total_height; row++)												
 					div(class='row row_#{row}')
 						- for (var col = 1; col <= total_width; col++)
@@ -66,12 +66,19 @@ block content
 										p.col #{col}
 							- else
 								- if (col == total_width)
-									- var chr = String.fromCharCode(65 + alp)
-									- alp++
+									- var ascii = 65 + alp
+									- var chr = String.fromCharCode(ascii)
+									- if (ascii <= 73)
+										- chr = String.fromCharCode(ascii-1)
+									- alp--
 									div(class="grid--item seat_alphabet")
 										p.chr #{chr}
 								- else
-									- var id = String.fromCharCode(65 + row - 2) + (col).toString()
+									- var ascii = (65 + parseInt(total_height,10)) - (row - 1)
+									- var rowID = String.fromCharCode(ascii)
+									- if (ascii <= 73)
+										- rowID = String.fromCharCode(ascii-1)
+									- var id = rowID + (col).toString()
 									- console.log(id)
 									div(class="grid--item seat_item", id="#{id}", onclick="updateSeat($(this).attr('id'))")
 			//- Contains submit button

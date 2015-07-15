@@ -27,8 +27,8 @@ router.post('/', function(req, res, next) {
 });
 
 router.post('/send',function(req, res, next){
-	var rosterArr = req.body.roster;
-	console.log(rosterArr);
+	var rosterArr = JSON.parse(req.body.roster);
+	//console.log(rosterArr);
 	var rosterMap = {}
 	for (var i = 0; i < rosterArr.length; i++) {
 		rosterMap[rosterArr[i].email] = rosterArr[i];
@@ -50,23 +50,24 @@ router.post('/send',function(req, res, next){
 	}));
 
 	for(var i = 0; i < toList.length; i++) {
-		var mailOptions = {
-			from: userEmail, // sender address
-			to: toList[i], // list of receivers
-			subject: subject, // Subject line
-			text: textParser.parseText(text, rosterMap[toList[i]]) // plaintext body
-		};
-		console.log(toList[i]);
-		console.log(rosterMap[toList[i]]);
-		// send mail with defined transport object
-/*		transporter.sendMail(mailOptions, function(error, info){
-			if(error) {
-				status = false;
-				console.log(error);
-		    } else {
-		        console.log('Message sent: ' + info.response);
-		    }
-		});*/
+		console.log(toList[i])
+		if (toList[i] != "") {
+			var mailOptions = {
+				from: userEmail, // sender address
+				to: toList[i], // list of receivers
+				subject: subject, // Subject line
+				text: textParser.parseText(text, rosterMap[toList[i]]) // plaintext body
+			};
+			// send mail with defined transport object
+			transporter.sendMail(mailOptions, function(error, info){
+				if(error) {
+					status = false;
+					console.log(error);
+			    } else {
+			        console.log('Message sent: ' + info.response);
+			    }
+			});
+		}
 	}
 
 	if(status) {

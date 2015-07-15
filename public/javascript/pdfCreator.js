@@ -10,7 +10,7 @@ var startY = 15;
 var pdfFileName = "";
 
 /*console.log(students);*/
-function generatePDF(format, filename) {
+function generatePDF(format, filename, title) {
   if (format == "RowSorted")
     students.sort(sortByRow);
 	if (format == "ColumnSorted")
@@ -21,13 +21,16 @@ function generatePDF(format, filename) {
   var doc = new jsPDF();
   var emptySeats = [];
   var numEmpty = 0;
-
+  console.log(filename)
+  console.log(title)
   var totalSeats = countSeats(); 
   var removedStudents = 0;
   var currentX = startX;
   var currentY = startY;
   if (filename == "") filename = "SeatingChart"
-  var titleString = filename+format;
+  if (title == "") title = "Seating Chart"
+  var titleString = title+ " " + format;
+  var downloadString = filename + format;
   console.log(titleString);
 
   doc.setFont("helvetica");
@@ -92,7 +95,7 @@ function generatePDF(format, filename) {
   currentY += row_gap;
   checkCoord(currentX,currentY,doc);
   doc.text(currentX, currentY, actualEmptyStr);
-  doc.save(titleString)
+  doc.save(downloadString)
 }
 
 function checkCoord(x,y,doc) {

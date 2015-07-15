@@ -4,13 +4,19 @@ var lastname = "lastname";
 var firstname = "firstname";
 var seat = "seat";
 
-module.parseText = function(text, student) {
+exports.parseText = function(text, student) {
+	console.log(student);
 	var parsedText = "";
 	var leftBracket = false;
 	var rightBracket = false;
 	var syntax = ""
+	var firstname = ""
+	var firstNameArr = student.firstname.split(' ');
+	for (var i = 0; i < firstNameArr.length; i++) {
+		firstname += firstNameArr[i] + " "
+	};
 	var info = {
-		fullname : student.firstname + student.lastname,
+		fullname : firstname + student.lastname,
 		lastname : student.lastname,
 		firstname : student.firstname,
 		id : student.studentID,

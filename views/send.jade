@@ -1,9 +1,13 @@
 extends ./layout.jade
+block append link
+	link(href="../send.css", rel="stylesheet")
 block content
 	- if (status == "success")
-		div.success
+		div.success.status
 			h3 Email Successfully Sent
+		dv.links
+			a(class="btn btn-default" href="/" role="button") Home
 	- else
-		div.error
+		div.error.status
 			h3 Error. 
 			p Check that you correctly inputted a valid email/password 
