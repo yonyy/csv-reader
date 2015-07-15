@@ -13,6 +13,8 @@ function Seat(isGhost,isLeftHanded,student,isEmpty,seatPosition) {
 	this.seatPosition = seatPosition;
 }
 
+/* Updates the seat as left handed, empty, or ghost based off the checkbox
+ * selected */
 function updateSeat(id) { 
 	var seatObj = classroom[id];
 	console.log(id);

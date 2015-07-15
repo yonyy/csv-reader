@@ -1,3 +1,8 @@
+/* loops through the array of students that was generated previously and
+ * construct a new map, k: student email V: object containing information to construct email
+ * It then uses a JQuery plugin to send the array through a POST request and to
+ * redirect the view to '/email'
+ */
 function emailRoster(className) {
 	studentsInfo = [];
 	for(var i = 0; i < students.length; i++) {
@@ -32,6 +37,9 @@ function emailRoster(className) {
 	});*/
 }
 
+/* A function to automatically load email form with the information passed 
+ * Generates the list of recievers, sample subject text, sample body text
+ */
 function fillEmailForm(studentstoEmail) {
 	var toList = "";
 	$('#inputSubject').val("Quiz Seating Assignment");
@@ -51,6 +59,7 @@ function fillEmailForm(studentstoEmail) {
 
 }
 
+/* Reads the input from email form a makes sure the appropriate text fields are filled */
 function validateEmailForm(form) {
 	$('.error').remove();
 	if ($('#inputEmail').val() == ""){

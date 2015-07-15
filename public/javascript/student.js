@@ -8,7 +8,7 @@ function Student(lastname, firstname, email, id, isLH, isOSD, seat)	{
 	this.seat = seat;
 }
 
-function updateRoster(id) {
+/*function updateRoster(id) {
 	console.log($('.isLeftHanded').val());
 	roster[rosterMap[id]].isLeftHanded = ($('.isLeftHanded').val() == "true") ? true : false;
 	roster[rosterMap[id]].isOSD = ($('.isOSD').val() == "true") ? true : false;
@@ -17,8 +17,10 @@ function updateRoster(id) {
 	}
 	else
 		console.log(roster[rosterMap[id]].firstname + " NOT isLeftHanded");	
-}
+}*/
 
+/* A function that assigns the selected student as left handed or not based of the
+ * value selected */
 function assignHand(id, isLH) {
 	console.log(isLH);
 	roster[rosterMap[id]].isLeftHanded = (isLH == "true") ? true : false;
@@ -29,6 +31,8 @@ function assignHand(id, isLH) {
 		console.log(roster[rosterMap[id]].firstname + " NOT isLeftHanded");	
 }
 
+/* A function that assigns the selected student as OSD or not based of the
+ * value selected */
 function assignOSD(id, isOSD) {
 	console.log(isOSD);
 	roster[rosterMap[id]].isOSD = (isOSD == "true") ? true : false;
@@ -39,6 +43,8 @@ function assignOSD(id, isOSD) {
 		console.log(roster[rosterMap[id]].firstname + " NOT isOSD");	
 }
 
+/* Uses the properties of a Student object to generate a string. This function
+ * will be used when generating the PDF */
 function createString(student) {
 	var id = student.studentID.toString();
 	if (id.length == 2)

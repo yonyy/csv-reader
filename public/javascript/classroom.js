@@ -1,6 +1,9 @@
 var classroom = {}
 
 // k: seat[letter][number] v: Seat Obj
+/*  Function that loops through each div containing the class .seat_item
+    and generates a seat based of the divs' id and default parameters
+*/
 function createClassObject() {
 	$(".seat_item").each(function(index, element){
 		var seatId = $(element).attr('id');
@@ -10,6 +13,13 @@ function createClassObject() {
 	})
 }
 
+/* Reads the input of the form in view index.jade and determines if the inputs
+    are valid
+        1. The dimensions can contain the students.
+        2. A file in uploaded
+        3. A width and height are inputed 
+    If there is an invalid input, a proper error will display
+*/
 function validateForm(form) {
 	var width = parseInt($('#widthInsert').val(),10);
 	var height = parseInt($('#heightInsert').val(),10);

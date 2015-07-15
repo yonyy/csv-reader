@@ -1,10 +1,13 @@
-var grid = sessionStorage.getItem('finalGridContainer');
+var grid = sessionStorage.getItem('finalGridContainer');	// HTML body that contains the classroom
 var seatMap = JSON.parse(sessionStorage.getItem('all_seats'));	// Hashmap of Seats K: id V: seat
 var students = JSON.parse(sessionStorage.getItem('all_students'));	// Array of students
-var gridCol = sessionStorage.getItem('width');
-var gridRow = sessionStorage.getItem('height');
+var gridCol = sessionStorage.getItem('width');		// Value containing the classroom width
+var gridRow = sessionStorage.getItem('height');		// Value containing the classroom height
 var seatArr = []	// Array of the seats
 
+/* Function that executes once the HTML body loads. Appends the grid HTML,
+ * updates the onclick function, and begins assigning the students to a seat,
+ * and attaching info */
 function loadGrid() {
 	$('.finalGridContainer').append(grid);
 	$('.seat_item').attr("onclick","displaySeatInfo($(this).attr('id'))");
@@ -12,6 +15,8 @@ function loadGrid() {
 	attachInfo();
 }
 
+/* Creates a span element, and inside it contains the student's information.
+ * This can be seen when the user hovers over the seat */
 function attachInfo() {
 	$('.seat_item').each(function(index, element) {
 		var seatObj = seatMap[$(element).attr('id')];
@@ -40,19 +45,23 @@ function displaySeatInfo(id) {
 	console.log(seatMap[id]);
 }
 
+/* Assigns the students to a seat */
 function assignSeats() {
-	var leftStudents = []
-	var rightStudents = []
+	var leftStudents = []	// an array to hold the students who are left handed
+	var rightStudents = []	// an array to hold the students who are right handed
 	var tempList = students;
-	var rightIndex = 0;
-	var leftIndex = 0;
-	shuffle(tempList);
+	var rightIndex = 0;	// index containing how many students have been assigned in the left handed array
+	var leftIndex = 0;	// index containing how many students have been assigned in the right handed array
+	shuffle(tempList);	// Shuffles the list of students
+	
+	// Copies over the map of seats and pushes it into an array in order to loop through it
 	for (var key in seatMap) {
 		if (seatMap.hasOwnProperty(key)) {
 			seatArr.push(seatMap[key])
 		}
 	}
 
+	// Goes through the shuffles student array and begins dividing it into left and right handed students
 	for(var i = 0; i < tempList.length; i++) {
 		if (tempList[i].isLeftHanded)
 			leftStudents.push(tempList[i])
@@ -70,16 +79,25 @@ function assignSeats() {
 			console.log("leftStudents.length: " + leftStudents.length + " " + "rightStudents.length: " + rightStudents.length)
 			console.log(seat)
 			if(seat.isGhost) {continue;}
-			if(seat.isLeftHanded)
+			if(seat.isLeftHanded) {
+				// If the students is left handed choose from the left handed array
+				// only if there are any left handed students left otherwise choose from
+				// the right handed array
 				if(leftIndex < leftStudents.length)
 					tempStudent = leftStudents[leftIndex++]
 				else
 					tempStudent = rightStudents[rightIndex++]
-			else
+			}
+			else {
+				// If the student is right handed choose from the right handed array
+				// only if there are any right handed students left otherwise choose from
+				// the left handed array
 				if(rightIndex < rightStudents.length)	
 					tempStudent = rightStudents[rightIndex++]
 				else
 					tempStudent = leftStudents[leftIndex++]
+			}
+			// Add studens to seats only if there are students to add
 			if (rightIndex + leftIndex <= tempList.length) {
 				console.log(tempStudent)
 				seat.student = tempStudent;
@@ -89,6 +107,7 @@ function assignSeats() {
 	}
 
 	//assign all the even columns
+	// Follows the same logic as assignign odd columns
 	for(var i = 0; i < gridCol; i+=2) {
 		for(var j = gridRow - 1; j >= 0; j--) {
 			var seat = seatArr[j*gridCol+i]; 
@@ -112,6 +131,7 @@ function assignSeats() {
 		}
 	}
 
+	// Fill the remaining seats with empty students
 	for(var i = 0; i < seatArr.length; i++) {
 		var s = seatArr[i];
 		if(s.isGhost) { continue; }
@@ -125,6 +145,7 @@ function assignSeats() {
 	}
 }
 
+// Function that shuffles the array
 function shuffle(array) {
   var currentIndex = array.length
   var temporaryValue

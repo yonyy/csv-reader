@@ -1,3 +1,6 @@
+/* JS file that controls the pop up window when clicking
+ * the 'Download' button
+ */
 $('.pop-up').hide(0);
 
 $('.pop-up-button').click(function(){

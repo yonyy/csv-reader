@@ -1,16 +1,17 @@
-var row_gap = 5;
-var col_gap = 50;
-var title_marginLeft = 70;
-var title_marginTop = 10;
-var end_X = 200;
-var end_Y = 290;
-var rosterFontSize = 6;
-var startX = 5;
-var startY = 15;
+var row_gap = 5;  // The gap between each column
+var col_gap = 50; // the gap between each row
+var title_marginLeft = 70;  // The x coord of the title
+var title_marginTop = 10; // The y coord of the title
+var end_X = 200;  // The maximum x coord
+var end_Y = 290;  // the maximum y coord
+var rosterFontSize = 6; // font size to use for the students
+var startX = 5; // The x coord to begin writing the table of students
+var startY = 15;  // The y coord to begin writing the table of students
 var pdfFileName = "";
 
 /*console.log(students);*/
 function generatePDF(format, filename, title) {
+  // Sorts the students array based off the option selected
   if (format == "RowSorted")
     students.sort(sortByRow);
 	if (format == "ColumnSorted")
@@ -48,23 +49,22 @@ function generatePDF(format, filename, title) {
   
   /* Writing roster */
   for (var i = 0; i < students.length; i++) {
-    if (currentY <= end_Y) {
+    if (currentY <= end_Y) {  // Add students in the current column
       console.log(createString(students[i]));
-      if (students[i] == null) continue;
-      if (students[i].studentID == "") {
+      if (students[i] == null) continue;  // Dont write null students
+      if (students[i].studentID == "") {  // If it is an empty student push it to the array
         emptySeats.push(createString(students[i]));
-        removedStudents++;
+        removedStudents++;  // Increment the number of empty students
       }
-      else {
+      else {  // If not an empty student write it to the pdf
         doc.text(currentX, currentY, createString(students[i]))
-        currentY += row_gap;
+        currentY += row_gap;  // Go down one row
       }
-/*      checkCoord(currentX,currentY,doc);*/
-    }
+    } /* If the current y coord is greater than y-max, go back to the top and shift one column */
     if (currentY > end_Y) {
       currentY = startY;
       currentX += col_gap;
-    }
+    } /* If the current x is greater than the x-max, add new page */
     if (currentX > end_X) {
       doc.addPage();
       currentX = startX;
@@ -75,7 +75,7 @@ function generatePDF(format, filename, title) {
   /* Writing the empty students to the pdf */
   for(var i = 0; i < emptySeats.length; i++) {
     doc.text(currentX, currentY, emptySeats[i].toString());
-    currentY+= row_gap;
+    currentY+= row_gap; // Same logic as above
     if (currentY > end_Y) {
       currentY = startY;
       currentX += col_gap;
@@ -95,6 +95,8 @@ function generatePDF(format, filename, title) {
   var actualEmptyStr = "Actual Empty Seats: ______";
   
   var bottomInfo = [totalStudentStr, totalSeatsStr, expectedEmptyStr, actualEmptyStr];
+  
+  // Adding classroom and updating x coord and y coord
   for (var i = 0; i < bottomInfo.length; i++) {
     doc.text(currentX, currentY, bottomInfo[i]);
     currentY += row_gap;
@@ -108,21 +110,12 @@ function generatePDF(format, filename, title) {
       currentY = startY;
     }
   }
+
+  // Save and dowload
   doc.save(downloadString)
 }
 
-function checkCoord(x,y,doc) {
-  if (y > end_Y) {
-    y = startY;
-    x += col_gap;
-  }
-  if (x > end_X) {
-    doc.addPage();
-    x = startX;
-    y = startY;
-  }
-}
-
+// Counts the number of seats in the classroom
 function countSeats() {
   var expectedSeats = gridCol * gridRow;
   for(var i = 0; i < seatArr.length; i++) {
@@ -133,7 +126,7 @@ function countSeats() {
   return expectedSeats;
 }
 
-/* Comparison functions */
+/* Comparison functions to sort by lastname */
 function sortByName(stud1, stud2) {
   if (stud1.lastname < stud2.lastname)
     return -1;
@@ -142,6 +135,7 @@ function sortByName(stud1, stud2) {
   return 0;
 }
 
+/* Comparison function to sort by row */
 function sortByRow(stud1, stud2) {
   var seatPos1 = stud1.seat.seatPosition;
   var seatPos2 = stud2.seat.seatPosition;
@@ -171,6 +165,7 @@ function sortByRow(stud1, stud2) {
     return 1;
 }
 
+/* Comparison function to sort by column */
 function sortByColumns(stud1, stud2) {
   var seatPos1 = stud1.seat.seatPosition;
   var seatPos2 = stud2.seat.seatPosition;
