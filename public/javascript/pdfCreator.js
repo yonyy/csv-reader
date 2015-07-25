@@ -1,6 +1,6 @@
 var row_gap = 5;  // The gap between each column
 var col_gap = 50; // the gap between each row
-var title_marginLeft = 70;  // The x coord of the title
+var title_marginLeft = 50;  // The x coord of the title
 var title_marginTop = 10; // The y coord of the title
 var end_X = 200;  // The maximum x coord
 var end_Y = 290;  // the maximum y coord
@@ -12,12 +12,19 @@ var pdfFileName = "";
 /*console.log(students);*/
 function generatePDF(format, filename, title) {
   // Sorts the students array based off the option selected
-  if (format == "RowSorted")
+  var formatStr = ""
+  if (format == "RowSorted"){
     students.sort(sortByRow);
-	if (format == "ColumnSorted")
+    formatStr = "Row Sorted"
+  }
+	if (format == "ColumnSorted") {
     students.sort(sortByColumns);
-	if (format == "NameSorted")
+    formatStr = "Column Sorted"
+  }
+	if (format == "NameSorted") {
     students.sort(sortByName);
+    formatStr = "Name Sorted"
+  }
   
   var doc = new jsPDF();
   var emptySeats = [];
@@ -30,7 +37,7 @@ function generatePDF(format, filename, title) {
   var currentY = startY;
   if (filename == "") filename = "SeatingChart"
   if (title == "") title = "Seating Chart"
-  var titleString = title+ " " + format;
+  var titleString = title+ " " + formatStr;
   var downloadString = filename + format;
   console.log(titleString);
 
@@ -42,6 +49,7 @@ function generatePDF(format, filename, title) {
       author: 'Online Seating Chart Generator'
   });
 
+  doc.setFontSize(8)
   /* Writing the heading of the pdf */
   doc.text(title_marginLeft,title_marginTop, titleString);
   doc.setFontSize(rosterFontSize);

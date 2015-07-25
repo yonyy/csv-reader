@@ -42,27 +42,31 @@ router.post('/send',function(req, res, next){
 	var toList = reciever.split(',');
 	var status = true;
 	var transporter = nodemailer.createTransport(smtpPool({
-		service : "gmail",
-		auth : {
+		service: "gmail",
+		auth: {
 			user: userEmail,
-			pass: userPass,
-		}
+			pass: userPass
+    	}
 	}));
 
+	var parsedBodyText = "";
 	for(var i = 0; i < toList.length; i++) {
-		console.log(toList[i])
 		if (toList[i] != "") {
+			parsedBodyText = textParser.parseText(text, rosterMap[toList[i]]);
+			console.log(toList[i]);
 			var mailOptions = {
 				from: userEmail, // sender address
 				to: toList[i], // list of receivers
 				subject: subject, // Subject line
-				text: textParser.parseText(text, rosterMap[toList[i]]) // plaintext body
+				text: parsedBodyText // plaintext body
 			};
+			
 			// send mail with defined transport object
 			transporter.sendMail(mailOptions, function(error, info){
 				if(error) {
 					status = false;
 					console.log(error);
+					console.log(status);
 			    } else {
 			        console.log('Message sent: ' + info.response);
 			    }
@@ -70,7 +74,7 @@ router.post('/send',function(req, res, next){
 		}
 	}
 
-	if(status) {
+	if(status == true) {
 		res.render('send', {
 			status : "success"
 		});

@@ -5,7 +5,6 @@ var firstname = "firstname";
 var seat = "seat";
 
 exports.parseText = function(text, student) {
-	console.log(student);
 	var parsedText = "";
 	var leftBracket = false;
 	var rightBracket = false;
@@ -40,6 +39,5 @@ exports.parseText = function(text, student) {
 			syntax += text[i]
 	}
 
-	console.log(parsedText);
 	return parsedText;
 }

@@ -1,4 +1,4 @@
-.status {
+div {
 	margin: auto;
 	left: 0;
 	right: 0;
@@ -6,12 +6,18 @@
 	top: 0;
 	position: absolute;
 	border-radius: 10px;
-	background-color: #76FF03;
 	text-align: center;
 	height: 100px;
 	width: 300px;
 }
 
+.success{
+	background-color: #76FF03;
+}
+
+.error {
+	background-color: #F44336;
+}
 .links {
 	margin-top: 15%;
 	position: absolute;
