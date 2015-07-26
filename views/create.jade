@@ -1,0 +1,98 @@
+extends ./layout.jade
+block append link
+	link(href='sb-admin.css', rel='stylesheet')
+block append script
+	script(src="classroom.js")
+	script(src="readFile.js")
+	script(src="student.js")
+block createActive
+	li(class="active")
+		a(href="/create")
+			i(class="fa fa-fw fa-edit")
+			|  Create
+block content
+	div(id='page-wrapper', class="pageContainer", style="height:100%;")
+		div(class="container-fluid")
+			div(class="row")
+				div(class="col-lg-12")
+					h1(class="page-header") Create #[small Begin making your own seating chart]
+					ol(class="breadcrumb")
+						li
+							i(class="fa fa-dashboard")
+							a(href="/index")  Dashboard
+						li(class="active")
+							i(class="fa fa-edit")
+							|  Create
+					p(class="lead") Press "Choose File" to upload a roster (.csv)
+					p(class="lead") Enter dimensions for the classroom
+			div(class="row")
+				div(class="col-lg-6 errorMessage")
+			div(class="row")
+				form(class="form", name="dimensions", action="/student", method="get", onsubmit="return validateForm(this.form)")
+					div(class="row")
+						div(class="col-lg-6")
+							div(class="form-group")
+								label(for="className") Classroom Name
+								input(type="text", class="form-control", name="classname", id="className")
+							div(class="form-group")
+								label(for="heightInsert") Height
+								input(type="number", class="form-control", name="height", id="heightInsert", placeholder="10")
+							div(class="form-group")
+								label(for="widthInsert") Width
+								input(type="number", class="form-control", name="width", id="widthInsert", placeholder="12")
+						div(class="col-lg-6")
+							div(class="form-group")
+								label Existing classrooms
+								select(multiple class="form-control existingClass")
+									option(selected="selected" id="op0" value='0') --Select--
+									option(id="op1" value='1') WLH 2004
+									option(id="op2" value='2') PCYH 124
+									option(id="op3" value='3') SOLIS 110
+					div(class="row")
+						div(class="col-lg-6")
+							div(class="form-group")
+								label(for="fileInsert") File Input
+								input(type="file", accept=".csv", id="fileInsert", name="fileInput", onchange="readUpload()")
+						div(class="col-lg-6")
+							div(class="form-group")
+								label Existing rosters
+								select(multiple class="form-control existingRoster")
+									option(selected="selected" id="r0", value='0') --Select--
+									option(id="r1" value='1') CSE 15L W14 Section 002
+									option(id="r2" value='2') CSE 12 W14 Section 001
+					div(class="col-md-offset-6")
+						button(type="submit", class="btn btn-default submitForm") Submit
+				script.
+					$('#className, #heightInsert, #widthInsert').keyup(function(){
+						if (!$('#className').val() && !$('#heightInsert').val() && !$('#widthInsert').val()) {
+							$('.existingClass').attr('disabled', false)
+						}
+						else {
+							$('.existingClass').attr('disabled',true)
+						}
+					});
+					$('#heightInsert, #widthInsert').change(function() {
+						if (!$('#className').val() && !$('#heightInsert').val() && !$('#widthInsert').val()) {
+							$('.existingClass').attr('disabled', false)
+						}
+						else {
+							$('.existingClass').attr('disabled',true)
+						}
+					})
+					$('.existingClass').change(function(){
+						if($(this).val() != 0) {
+							$('#className').attr('disabled', true)
+							$('#heightInsert').attr('disabled', true)
+							$('#widthInsert').attr('disabled', true)
+						}
+						else {
+							$('#className').attr('disabled', false)
+							$('#heightInsert').attr('disabled', false)
+							$('#widthInsert').attr('disabled', false)
+						}
+					})
+					$('.submitForm').click(function() {
+						sessionStorage.setItem('all_students', JSON.stringify(all_students));
+					})
+			div#fileContainer
+				div#fileInfo

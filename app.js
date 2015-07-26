@@ -13,6 +13,7 @@ var routes = require('./routes/index');
 var classroom = require('./routes/classroom');
 var student = require('./routes/student');
 var email = require('./routes/email');
+var create = require('./routes/create');
 
 var http = require('http').createServer(app);
 var methodOverride = require('method-override');
@@ -37,6 +38,7 @@ app.use(methodOverride('_method'));
 
 /* Send home page file */
 app.use('/', routes);
+app.use('/create', create)
 app.use('/classroom', classroom);
 app.use('/student', student);
 app.use('/email', email);

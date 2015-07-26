@@ -1,60 +1,83 @@
 extends ./layout.jade
+block append link
+	link(href='sb-admin.css', rel='stylesheet')
 block append script
 	script(src="filterSearchStudent.js")
 	script(src="student.js")
+block createActive
+	li(class="active")
+		a(href="/create")
+			i(class="fa fa-fw fa-edit")
+			|  Create
 block content
-	div(class="container", ng-app="sortApp", ng-controller="mainController")
-		h1 #{title}
-		div(class="input-group")
-			span(class="input-group-addon")
-				span(class="glyphicon glyphicon-search")
-			input(type="text" class="form-control", placeholder="Search Student", ng-model="searchStudent")
-		table(class="table table-bordered table-striped")
-			thead
-				tr
-					td
-						a(href="#", ng-click="sortType = 'lastname'; sortReverse = !sortReverse") Last Name 
-							span(ng-show="sortType == 'lastname' && !sortReverse" class="fa fa-caret-down")
-							span(ng-show="sortType == 'lastname' && sortReverse" class="fa fa-caret-up")
-					td
-						a(href="#", ng-click="sortType = 'firstname'; sortReverse = !sortReverse") First Name 
-							span(ng-show="sortType == 'firstname' && !sortReverse" class="fa fa-caret-down")
-							span(ng-show="sortType == 'firstname' && sortReverse" class="fa fa-caret-up")
-					td
-						a(href="#", ng-click="sortType = 'email'; sortReverse = !sortReverse") Email
-							span(ng-show="sortType == 'email' && !sortReverse" class="fa fa-caret-down")
-							span(ng-show="sortType == 'email' && sortReverse" class="fa fa-caret-up")
-					td
-						a(href="#", ng-click="sortType = 'studentID'; sortReverse = !sortReverse") ID
-							span(ng-show="sortType == 'studentID' && !sortReverse" class="fa fa-caret-down")
-							span(ng-show="sortType == 'studentID' && sortReverse" class="fa fa-caret-up")
-					td
-						a(href="#", ng-click="sortType = 'isLeftHanded'; sortReverse = !sortReverse") Left Handed
-							span(ng-show="sortType == 'isLeftHanded' && !sortReverse" class="fa fa-caret-down")
-							span(ng-show="sortType == 'isLeftHanded' && sortReverse" class="fa fa-caret-up")
-					td
-						a(href="#", ng-click="sortType = 'isOSD'; sortReverse = !sortReverse") isOSD
-							span(ng-show="sortType == 'isOSD' && !sortReverse" class="fa fa-caret-down")
-							span(ng-show="sortType == 'isOSD' && sortReverse" class="fa fa-caret-up")
-			tbody
-				tr(ng-repeat="student in roster | orderBy:sortType:sortReverse | filter:searchStudent", ng-attr-id="{{ student.lastname + student.firstname}}")
-					td {{ student.lastname }}
-					td {{ student.firstname }}
-					td {{ student.email }}
-					td {{ student.studentID }}
-					td
-						select(class="form-control isLeftHanded", id="{{ student.email }}", onchange="assignHand($(this).attr('id'), $(this).val())")
-							option(selected="selected", value="false") false
-							option(value="true") true
-					td
-						select(class="form-control isOSD", id="{{ student.email }}", onchange="assignOSD($(this).attr('id'), $(this).val())")
-							option(selected="selected", value="false") false
-							option(value="true") true
-		form(class="form", name="submit", action="/classroom", method="get")
-			button(type="submit", class="btn btn-default submitRoster") Submit
-			input(type="hidden", name ="width", value="#{width}")
-			input(type="hidden", name="height", value="#{height}")
-			input(type="hidden", name="classname", value="#{className}")
+	div(id="page-wrapper", class="pageContainer")
+		div(class="container-fluid", ng-app="sortApp", ng-controller="mainController")
+			div(class="row")
+				div(class="col-lg-12")		
+					h1(class="page-header") Customize Roster #[small Begin assigning students as left-handed or right-handed]
+					ol(class="breadcrumb")
+						li
+							i(class="fa fa-dashboard")
+							a(href="/index")  Dashboard
+						li(class="active")
+							i(class="fa fa-edit")
+							|  Create
+			div(class="row")
+				div(class="col-lg-12")
+					div(class="input-group")
+						span(class="input-group-addon")
+							span(class="glyphicon glyphicon-search")
+						input(type="text" class="form-control", placeholder="Search Student", ng-model="searchStudent")
+			div(class="row")
+				div(class="col-lg-12")
+					table(class="table table-bordered table-striped")
+						thead
+							tr
+								td
+									a(href="#", ng-click="sortType = 'lastname'; sortReverse = !sortReverse") Last Name 
+										span(ng-show="sortType == 'lastname' && !sortReverse" class="fa fa-caret-down")
+										span(ng-show="sortType == 'lastname' && sortReverse" class="fa fa-caret-up")
+								td
+									a(href="#", ng-click="sortType = 'firstname'; sortReverse = !sortReverse") First Name 
+										span(ng-show="sortType == 'firstname' && !sortReverse" class="fa fa-caret-down")
+										span(ng-show="sortType == 'firstname' && sortReverse" class="fa fa-caret-up")
+								td
+									a(href="#", ng-click="sortType = 'email'; sortReverse = !sortReverse") Email
+										span(ng-show="sortType == 'email' && !sortReverse" class="fa fa-caret-down")
+										span(ng-show="sortType == 'email' && sortReverse" class="fa fa-caret-up")
+								td
+									a(href="#", ng-click="sortType = 'studentID'; sortReverse = !sortReverse") ID
+										span(ng-show="sortType == 'studentID' && !sortReverse" class="fa fa-caret-down")
+										span(ng-show="sortType == 'studentID' && sortReverse" class="fa fa-caret-up")
+								td
+									a(href="#", ng-click="sortType = 'isLeftHanded'; sortReverse = !sortReverse") Left Handed
+										span(ng-show="sortType == 'isLeftHanded' && !sortReverse" class="fa fa-caret-down")
+										span(ng-show="sortType == 'isLeftHanded' && sortReverse" class="fa fa-caret-up")
+								td
+									a(href="#", ng-click="sortType = 'isOSD'; sortReverse = !sortReverse") isOSD
+										span(ng-show="sortType == 'isOSD' && !sortReverse" class="fa fa-caret-down")
+										span(ng-show="sortType == 'isOSD' && sortReverse" class="fa fa-caret-up")
+						tbody
+							tr(ng-repeat="student in roster | orderBy:sortType:sortReverse | filter:searchStudent", ng-attr-id="{{ student.lastname + student.firstname}}")
+								td {{ student.lastname }}
+								td {{ student.firstname }}
+								td {{ student.email }}
+								td {{ student.studentID }}
+								td
+									select(class="form-control isLeftHanded", id="{{ student.email }}", onchange="assignHand($(this).attr('id'), $(this).val())")
+										option(selected="selected", value="false") false
+										option(value="true") true
+								td
+									select(class="form-control isOSD", id="{{ student.email }}", onchange="assignOSD($(this).attr('id'), $(this).val())")
+										option(selected="selected", value="false") false
+										option(value="true") true
+		div(class="row")
+			div(class="col-md-offset-6")		
+						form(class="form", name="submit", action="/classroom", method="get")
+							button(type="submit", class="btn btn-default submitRoster") Submit
+							input(type="hidden", name ="width", value="#{width}")
+							input(type="hidden", name="height", value="#{height}")
+							input(type="hidden", name="classname", value="#{className}")
 		script.
 			$('.submitRoster').click(function() {
 				sessionStorage.setItem('all_students', JSON.stringify(roster));

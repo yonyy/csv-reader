@@ -8,10 +8,40 @@ html
 		block link
 			link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css")
 			link(href='http://fonts.googleapis.com/css?family=Raleway:600', rel='stylesheet')
+			link(href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css")
 		block script
 			script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js")
 			script(src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js")
 			script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular.min.js")
 
-	block content
+	block bodyLink
 		body
+			block bodyHTML
+				div(id="wrapper")
+					nav(class="navbar navbar-inverse navbar-fixed-top" role="navigation")
+						div(class="navbar-header")
+							a(class="navbar-brand" href="/") Generate Your Own Seating Chart</a>
+						div(class="collapse navbar-collapse navbar-ex1-collapse")
+							ul(class="nav navbar-nav side-nav")
+								block indexActive
+									li
+										a(href="/index")
+											i(class="fa fa-fw fa-dashboard")
+											|  Home
+								block createActive
+									li
+										a(href="/create")
+											i(class="fa fa-fw fa-edit")
+											|  Create
+								block tableActive
+									li
+										a(href="#")
+											i(class="fa fa-fw fa-table") 
+											|  Tables
+								block formActive
+									li
+										a(href="#")
+											i(class="fa fa-fw fa-edit")
+											|  Form
+					block content
+						div(id="page-wrapper")
