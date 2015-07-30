@@ -1,19 +1,43 @@
 extends ./layout.jade
 block append link
-	link(href="../seatingChart.css", rel="stylesheet")
+	link(href="seatingChart.css", rel="stylesheet")
+	link(href='sb-admin.css', rel='stylesheet')
 block append script
 	script(src="//mrrio.github.io/jsPDF/dist/jspdf.debug.js")
-	script(src="../jquery.redirect.js")
-	script(src="../student.js")
-	script(src="../seat.js")
-	script(src="../finalClassroom.js")
-	script(src="../pdfCreator.js")
-	script(src="../email.js")
-block content
+	script(src="jquery.redirect.js")
+	script(src="student.js")
+	script(src="seat.js")
+	script(src="finalClassroom.js")
+	script(src="pdfCreator.js")
+	script(src="email.js")
+block prepend bodyLink
 	body(onload="loadGrid()")
-		div.pageContainer
-			div.headingContainer.outerDivs
-				h1 Seating Chart for #{className}
+block createActive
+	li(class="active")
+		a(href="/create")
+			i(class="fa fa-fw fa-edit")
+			|  Create
+block content
+	div(id='page-wrapper', class="pageContainer")
+		div(class="container-fluid")
+			div(class="row")
+				div(class="col-lg-12")
+					h1(class="page-header") Final #[small Your seating chart is finalized]
+					ol(class="breadcrumb")
+						li
+							i(class="fa fa-dashboard")
+							a(href="/index")  Dashboard
+						li(class="active")
+							i(class="fa fa-edit")
+							|  Create
+					p(class="lead") Hover over a cell to see its information
+					p(class="lead") Click "Download" to download a pdf of the seating chart
+			div(class="row")
+				div(class="col-lg-12")
+					ol(class="breadcrumb")
+						li(class="active")
+							span(class="glyphicon glyphicon-th-list")
+							|  Classroom seating chart
 			div.pop-up
 				span(class="ex") x
 				div.pop-up-text
@@ -39,7 +63,6 @@ block content
 							|Sorted order
 					a(class="btn btn-default", id="downloadRoster", role="button") Download
 					a(class="btn btn-default", id="emailRoster", role="button") Email Students
-					//- a(class="btn btn-default", id="downloadRoster", role="button", href="roster.pdf" download="#{roster}+seatingChart") Download
 				script.
 					$("input[type='radio']").on('change', function() {
 						$("input[type='radio']").not(this).prop('checked', false);
@@ -50,22 +73,25 @@ block content
 					$('#emailRoster').click(function() {
 						emailRoster("Sample")
 					})
-			div.finalGridContainer.outerDivs
-			div.bottomContainer
-				div.downloadMessage
-					p Click below to download PDF version of the classroom
-				div.downloadButton
+			div(class="row")
+				div(class="col-lg-12")
+					div(class="panel panel-default")
+						div(class="panel-heading")
+							h3(class="panel-title")
+								span(class="glyphicon glyphicon-th")
+								|  #{className}
+						div(class="panel-body")
+							div(class="finalGridContainer")
+			div(class="row")
+				div(class="col-md-offset-6 col-lg-4")
 					button(class="btn btn-default pop-up-button") Download
 					script.
-						$('.blurPage').hide(0);
 						$('.pop-up').hide(0);
 						$('.pop-up-button').click(function(){
-							$('blurPage').show(0);
 							$('.pop-up').fadeIn(300);
 							$('.pop-up-button').hide(0);
 						});
 						$('.pop-up .ex').click(function() {
-							$('.blurPage').hide(0);
 							$('.pop-up').hide(0);
 							$('.pop-up-button').show(0);
 						});

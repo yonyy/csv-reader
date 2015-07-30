@@ -1,14 +1,31 @@
 extends ./layout.jade
 block append link
 	link(href="../send.css", rel="stylesheet")
+block prepend bodyLink
+	body
+block createActive
+	li(class="active")
+		a(href="/create")
+			i(class="fa fa-fw fa-edit")
+			|  Create
 block content
-	- if (status == "success")
-			div.success.status
-				h3 Email Successfully Sent
-			dv.links
-				a(class="btn btn-default" href="/" role="button") Home
-	- else
-			div.error.status
-				h3 Error. 
-				p Check that you correctly inputted a valid email/password
-				p Press back button an try again 
+	div(id="page-wrapper")
+		div(class="container-fluid")
+			div(class="row")
+				div(class="col-lg-12")
+					h1(class="page-header") Email #[small Begin constructing your email and send them to your students]
+					ol(class="breadcrumb")
+						li
+							i(class="fa fa-dashboard")
+							a(href="/index")  Dashboard
+						li(class="active")
+							i(class="fa fa-edit")
+							|  Create
+			div(class="row")
+				div(class="col-lg-12")
+					- if (status == "success")
+							div(class="alert alert-success" role="alert") #[strong Email Successfully Sent]
+								a(class="btn btn-default" href="/" role="button") Home
+					- else
+							div(class="alert alert-danger" role="alert") #[strong Error!] Check that you correctly inputted a valid email/password
+								p Press back button an try again 

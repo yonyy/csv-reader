@@ -19,13 +19,6 @@ function createClass(dataArr) {
 function readUpload() {
 	var selectedFile = document.getElementById('fileInsert').files[0];
 	if (selectedFile) {
-		var fileName = selectedFile.name + "</strong> (";
-		var fileType = selectedFile.type + ") - ";
-		var fileSize = selectedFile.size + " bytes, " 
-		var fileDate = "last modified: " + selectedFile.lastModifiedDate;
-		var fileInfo = "<li><strong>" + fileName + fileType + fileSize + fileDate + "</li>";
-		document.getElementById("fileInfo").innerHTML = "<ul>" + fileInfo + "</ul>";
-		
 		var reader = new FileReader();
 		reader.onload = function(e) {
 			var content = reader.result;

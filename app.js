@@ -11,6 +11,7 @@ var seats = require('./model/seat');
 
 var routes = require('./routes/index');
 var classroom = require('./routes/classroom');
+var seatingchart = require('./routes/seatingcharts')
 var student = require('./routes/student');
 var email = require('./routes/email');
 var create = require('./routes/create');
@@ -42,6 +43,7 @@ app.use('/create', create)
 app.use('/classroom', classroom);
 app.use('/student', student);
 app.use('/email', email);
+app.use('/seating_chart', seatingchart)
 
 http.listen(app.get("port"), app.get("ipaddr"), function() {
   console.log("Server up and running. Go to http://" + app.get("ipaddr") + ":" + app.get("port"));

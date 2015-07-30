@@ -3,39 +3,65 @@ block append link
 	link(href="email.css", rel="stylesheet")
 block append script
 	script(src="email.js")
-block content
+block prepend bodyLink
 	body(onload="fillEmailForm(#{roster})")
-		div.pageContainer
-			div.jumbotron
-				form(class="form-horizontal", name="studentMessages", action="/email/send", method="post",onsubmit="return validateEmailForm(this.form)")
-					div(class="form-group emailContainer")
-						label(for="inputEmail", class="col-sm-2 control-label") Email address
-						div(class="col-sm-10")
-							input(type="email", class="form-control email", id="inputEmail", placeholder="Email", name="userEmail")
-					div(class="form-group passwordContainer")
-						label(for="inputPassword1", class="col-sm-2 control-label") Password
-						div(class="col-sm-10")
-							input(type="password" class="form-control password" id="inputPassword" placeholder="Password", name="userPass")
-					div(class="form-group toContainer")
-						label(for="inputReciever", class="col-sm-2 control-label") To
-						div(class="col-sm-10")
-							input(type="text", class="col-sm-2 form-control to", id="inputReciever", name="userRecievers")
-					div(class="form-group subjectContainer")
-						label(for="inputSubject", class="col-sm-2 control-label") Subject
-						div(class="col-sm-10")
-							input(type="text", class="col-sm-2 form-control subject", id="inputSubject", name="userSubject")
-					div(class="form-group legend") 
-						h3 Syntax
-						p #[code [fullname]] To enter a student's fullname
-						p #[code [lastname]] To enter a student's last name
-						p #[code [id]] To enter a student's id number
-						p #[code [seat]] To enter a student's seat number
-					div(class="form-group messageContainer")
-						label(for="inputMessage", class="col-sm-2 control-label") Message
-						div(class="col-sm-10")
-							textarea(class="col-sm-2 form-control message", id="inputMessage", rows="17",name="userBody")
-					div(class="form-group submitContainer")
-						div(class="col-sm-offset-2 col-sm-10")
-							button(type="submit" class="btn btn-default") Send
-					input(type="hidden", name="roster", value="#{roster}")
+block createActive
+	li(class="active")
+		a(href="/create")
+			i(class="fa fa-fw fa-edit")
+			|  Create
+block content
+	div(id="page-wrapper")
+		div(class="container-fluid")
+			div(class="row")
+				div(class="col-lg-12")
+					h1(class="page-header") Email #[small Begin constructing your email and send them to your students]
+					ol(class="breadcrumb")
+						li
+							i(class="fa fa-dashboard")
+							a(href="/index")  Dashboard
+						li(class="active")
+							i(class="fa fa-edit")
+							|  Create
+			div(class="row")
+				div(class="col-lg-12")
+					form(class="form", name="studentMessages", action="/email/send", method="post",onsubmit="return validateEmailForm(this.form)")
+						div(class="row")
+							div(class="form-group emailContainer")
+								label(for="inputEmail", class="col-lg-2 control-label") Email address
+								div(class="col-lg-4")
+									input(type="email", class="form-control email", id="inputEmail", placeholder="Email", name="userEmail")
+						div(class="row")
+							div(class="form-group passwordContainer")
+								label(for="inputPassword1", class="col-lg-2 control-label") Password
+								div(class="col-lg-4")
+									input(type="password" class="form-control password" id="inputPassword" placeholder="Password", name="userPass")
+						div(class="row")
+							div(class="form-group toContainer")
+								label(for="inputReciever", class="col-lg-2 control-label") To
+								div(class="col-lg-6")
+									input(type="text", class="form-control to", id="inputReciever", name="userRecievers")
+						div(class="row")
+							div(class="form-group subjectContainer")
+								label(for="inputSubject", class="col-lg-2 control-label") Subject
+								div(class="col-lg-6")
+									input(type="text", class="form-control subject", id="inputSubject", name="userSubject")
+						div(class="row")
+							div(class="col-lg-offset-4 col-lg-8")
+								div(class="form-group legend") 
+									h3 Syntax
+									p #[code [fullname]] To enter a student's fullname
+									p #[code [lastname]] To enter a student's last name
+									p #[code [id]] To enter a student's id number
+									p #[code [seat]] To enter a student's seat number
+						div(class="row")
+							div(class="form-group messageContainer")
+								label(for="inputMessage", class="col-lg-2 control-label") Message
+								div(class="col-lg-6")
+									textarea(class="form-control message", id="inputMessage", rows="17",name="userBody")
+						div(class="row")
+							div(class="form-group submitContainer")
+								div(class="col-lg-offset-5 col-lg-6")
+									button(type="submit" class="btn btn-default") Send
+							input(type="hidden", name="roster", value="#{roster}")
 

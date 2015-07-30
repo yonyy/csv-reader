@@ -16,11 +16,11 @@ router.get('/', function(req, res, next) {
 
 });
 
-router.get('/seating_chart', function(req, res, next) {
+/*router.get('/seating_chart', function(req, res, next) {
 	var className = req.query.classname;
 	res.render('seating_chart', {
 		className: className,
 	});
-});
+});*/
 
 module.exports = router;

@@ -1,92 +1,115 @@
 extends ./layout.jade
 block append link
+	link(href='sb-admin.css', rel='stylesheet')
 	link(href="classroom.css" rel="stylesheet")
 block append script
 	script(src="classroom.js")
 	script(src="seat.js")
+block prepend bodyLink
+	body(onload="createClassObject()")
+block createActive
+	li(class="active")
+		a(href="/create")
+			i(class="fa fa-fw fa-edit")
+			|  Create
 block content
 	- var total_width = parseInt(width,10) + 1
 	- var total_height = parseInt(height,10) + 1
-	body(onload="createClassObject()")
-		div.pageContainer
-			//- Top of page
-			//- Info and checkboxes
-			div.headerContainer
-				div.heading
-					h1 Generating #{className}
-				div.informationContainer
-					div.dimensionContainer
-						div.dimensions
-							p.currentDim Height: #{height} Width: #{width}
-							- var total = height*width
-							p.currentDim Cells: #{total}
-							p.instructions Select Checkboxes to mark cells as Left handed or "Ghost"
-				div.checkboxesContainer
-					div#isGhostSetting.settings
-						div.checkbox
-							label
-								input(type="checkbox", id="ghost_option", class="option")
-								| Ghost Seat
-					div#isLeftSetting.settings
-						div.checkbox
-							label
-								input(type="checkbox", id="left-handed_option", class="option")
-								| Left-Handed Seat
-					script.
-						$('input.option').on('change', function() {
-							$('input.option').not(this).prop('checked', false);
-							console.log($(this).attr('id'));
-							if ($(this).attr('id') == "ghost_option") {
-								if (isGhost)
-									isGhost = false
-								else 
-									isGhost = true;
-								isLeftHanded = false;
-							}
-							else {
-								if (isLeftHanded)
-									isLeftHanded = false
-								else 
-									isLeftHanded = true;
-								isGhost = false;
-							}
-						});
-			//- Contains grid of the classroom
-			div.gridContainer
-				//- Create height x width table cell classroom
-				- var alp = total_height - 1;
-				- for (var row = 1; row <= total_height; row++)												
-					div(class='row row_#{row}')
-						- for (var col = 1; col <= total_width; col++)
-							- if (row == 1)
-								- if (col == total_width)
-									div(class='grid--item cornerGrid')
-								- else
-									div(class='grid--item seat_number') 
-										p.col #{col}
-							- else
-								- if (col == total_width)
-									- var ascii = 65 + alp
-									- var chr = String.fromCharCode(ascii)
-									- if (ascii <= 73)
-										- chr = String.fromCharCode(ascii-1)
-									- alp--
-									div(class="grid--item seat_alphabet")
-										p.chr #{chr}
-								- else
-									- var ascii = (65 + parseInt(total_height,10)) - (row - 1)
-									- var rowID = String.fromCharCode(ascii)
-									- if (ascii <= 73)
-										- rowID = String.fromCharCode(ascii-1)
-									- var id = rowID + (col).toString()
-									- console.log(id)
-									div(class="grid--item seat_item", id="#{id}", onclick="updateSeat($(this).attr('id'))")
+	div(id="page-wrapper")
+		div(class="container-fluid")
+			div(class="row")
+				div(class="col-lg-12")
+					h1(class="page-header") Design #[small Begin designing your classroom]
+					ol(class="breadcrumb")
+						li
+							i(class="fa fa-dashboard")
+							a(href="/index")  Dashboard
+						li(class="active")
+							i(class="fa fa-edit")
+							|  Create
+					p(class="lead") Select "Ghost Seat" to mark a ghost seat
+					p(class="lead") Select "Left-Handed" to mark a left-handed seat
+			div(class="row")
+				div(class="col-lg-12")
+					ol(class="breadcrumb")
+						li(class="active") 
+							span(class="glyphicon glyphicon-wrench")
+							|  Classroom Information
+					p(class="lead currentDim") Height: #{height} Width: #{width}
+					- var total = height*width
+					p(class="lead currentDim") Total Seats: #{total}
+					p(class="lead instructions") Select Checkboxes to mark cells as Left handed or "Ghost"
+			div(class="row")
+				div(class="col-md-offset-3 col-lg-3")
+					label
+						input(type="checkbox", id="ghost_option", class="option")
+						|  Ghost Seat
+				div(class="col-lg-3")
+					label
+						input(type="checkbox", id="left-handed_option", class="option")
+						|  Left-Handed Seat
+				script.
+					$('input.option').on('change', function() {
+						$('input.option').not(this).prop('checked', false);
+						console.log($(this).attr('id'));
+						if ($(this).attr('id') == "ghost_option") {
+							if (isGhost)
+								isGhost = false
+							else 
+								isGhost = true;
+							isLeftHanded = false;
+						}
+						else {
+							if (isLeftHanded)
+								isLeftHanded = false
+							else 
+								isLeftHanded = true;
+							isGhost = false;
+						}
+					});
+
+			div(class="row")
+				div(class="col-lg-12")
+					div(class="panel panel-default")
+						div(class="panel-heading")
+							h3(class="panel-title")
+								span(class="glyphicon glyphicon-th")
+								|  #{className}
+						//- Contains grid of the classroom
+						div(class="panel-body")
+							div.gridContainer
+								//- Create height x width table cell classroom
+								- var alp = total_height - 1;
+								- for (var row = 1; row <= total_height; row++)												
+									div(class='row row_#{row}')
+										- for (var col = 1; col <= total_width; col++)
+											- if (row == 1)
+												- if (col == total_width)
+													div(class='grid--item cornerGrid')
+												- else
+													div(class='grid--item seat_number') 
+														p.col #{col}
+											- else
+												- if (col == total_width)
+													- var ascii = 65 + alp
+													- var chr = String.fromCharCode(ascii)
+													- if (ascii <= 73)
+														- chr = String.fromCharCode(ascii-1)
+													- alp--
+													div(class="grid--item seat_alphabet")
+														p.chr #{chr}
+												- else
+													- var ascii = (65 + parseInt(total_height,10)) - (row - 1)
+													- var rowID = String.fromCharCode(ascii)
+													- if (ascii <= 73)
+														- rowID = String.fromCharCode(ascii-1)
+													- var id = rowID + (col).toString()
+													- console.log(id)
+													div(class="grid--item seat_item", id="#{id}", onclick="updateSeat($(this).attr('id'))")
 			//- Contains submit button
-			div.bottomPage
-				div.message
-					p Click to submit classroom
-				div.reedit_submit
-					form(class="form-inline", name="edit_submit", action="/classroom/seating_chart", method="get")
+			div(class="row")
+				div(class="col-md-offset-6 col-lg-4")
+					form(class="form", name="edit_submit", action="/seating_chart", method="get")
 						input(id="hidden_field", name="classname", type="hidden", value="#{className}")
 						button(type="submit", class="btn btn-default submitClass") Submit
 					script.

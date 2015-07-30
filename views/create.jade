@@ -5,13 +5,15 @@ block append script
 	script(src="classroom.js")
 	script(src="readFile.js")
 	script(src="student.js")
+block prepend bodyLink
+	body
 block createActive
 	li(class="active")
 		a(href="/create")
 			i(class="fa fa-fw fa-edit")
 			|  Create
 block content
-	div(id='page-wrapper', class="pageContainer", style="height:100%;")
+	div(id='page-wrapper', class="pageContainer")
 		div(class="container-fluid")
 			div(class="row")
 				div(class="col-lg-12")
@@ -31,14 +33,14 @@ block content
 				form(class="form", name="dimensions", action="/student", method="get", onsubmit="return validateForm(this.form)")
 					div(class="row")
 						div(class="col-lg-6")
-							div(class="form-group")
+							div(class="form-group classroomName")
 								label(for="className") Classroom Name
 								input(type="text", class="form-control", name="classname", id="className")
-							div(class="form-group")
+							div(class="form-group classHeight")
 								label(for="heightInsert") Height
 								input(type="number", class="form-control", name="height", id="heightInsert", placeholder="10")
 							div(class="form-group")
-								label(for="widthInsert") Width
+								label(for="widthInsert classWidth") Width
 								input(type="number", class="form-control", name="width", id="widthInsert", placeholder="12")
 						div(class="col-lg-6")
 							div(class="form-group")
@@ -94,5 +96,3 @@ block content
 					$('.submitForm').click(function() {
 						sessionStorage.setItem('all_students', JSON.stringify(all_students));
 					})
-			div#fileContainer
-				div#fileInfo

@@ -1,26 +1,4 @@
-body {
-    font-size: 10px;
-    font-family: 'Raleway', sans-serif;
-    color: black;
-    background:#ECECEC;
-}
-
-p.instructions, p.currentDim {
-  font-size: 20px;
-
-}
-.informationContainer, .checkboxesContainer, h1 {
-  text-align: center;
-}
-
-.settings {
-  display: inline-block;
-  margin-left: 10px;
-}
-
-
 .gridContainer {
-  margin-top: 10px;
   text-align: center;
 }
 
@@ -78,12 +56,3 @@ p.col, p.chr {
 
 /*  following just for the demo */
 
-.bottomPage {
-    margin-top: 15px;
-    background-color:#1E1E1E;
-    color: #fff;
-    width: 100%;
-    display: inline-block;
-    text-align:center;
-/*    line-height:2em;*/
-}

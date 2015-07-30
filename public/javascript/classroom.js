@@ -27,44 +27,40 @@ function validateForm(form) {
     console.log(total_students);
     var fileVal = $('#fileInsert').val();
     $('.alert').remove();
-    if($('#className').val() == '') {
-        $('.errorMessage').prepend("<div class=\'alert alert-danger\' id=\'errorName\'> Please provide a classroom name </div>")
-        $('form div:nth-child(1)').addClass('has-error')
+    if ($('#className').val() == '') {
+        $('.errorMessage').prepend("<div class=\'alert alert-danger\' id=\'errorName\'> <strong>Error!</strong> Please provide a classroom name </div>")
+        $('.form div:nth-child(1) div:nth-child(1) div:nth-child(1)').addClass('has-error')
         return false;        
     } else {;
-        $('form div:nth-child(1)').removeClass('has-error')
-    }        
+        $('.form div:nth-child(1) div:nth-child(1) div:nth-child(1)').removeClass('has-error')
     }
     if ($('#heightInsert').val() == '' || height <= 0) {
-        $('.errorMessage').prepend("<div class=\'alert alert-danger\' id=\'errorHeight\'> Invalid height </div>")
-        $('form div:nth-child(2)').addClass('has-error')
+        $('.errorMessage').prepend("<div class=\'alert alert-danger\' id=\'errorHeight\'> <strong>Error!</strong> Invalid height </div>")
+        $('.form div:nth-child(1) div:nth-child(1) div:nth-child(2)').addClass('has-error')
         return false;        
     } else {;
-        $('form div:nth-child(2)').removeClass('has-error')
+        $('.form div:nth-child(1) div:nth-child(1) div:nth-child(2)').removeClass('has-error')
     }
     if ($('#widthInsert').val() == '' || width <= 0) {
-        $('.innerformContainer').remove('.error');
-        $('.innerformContainer').prepend("<div class=\'alert alert-danger\' id=\'errorWidth\'> Invalid width </div>")
-        $('form div:nth-child(3)').addClass('has-error')
+        $('.errorMessage').prepend("<div class=\'alert alert-danger\' id=\'errorWidth\'> <strong>Error!</strong> Invalid width </div>")
+        $('.form div:nth-child(1) div:nth-child(1) div:nth-child(3)').addClass('has-error')
         return false;
 
     } else {
-        $('form div:nth-child(3)').removeClass('has-error')
+        $('.form div:nth-child(1) div:nth-child(1) div:nth-child(3)').removeClass('has-error')
     }
     if (height*width <= total_students) {
-        $('.innerformContainer').remove('.error');
-        $('.innerformContainer').prepend("<div class=\'alert alert-danger\' id=\'errorArea\'> Not a big enough classroom </div>")
-        $('form div:nth-child(3)').addClass('has-error')
-        $('form div:nth-child(2)').addClass('has-error')
+        $('.errorMessage').prepend("<div class=\'alert alert-danger\' id=\'errorArea\'> <strong>Error!</strong> Not a big enough classroom </div>")
+        $('.form div:nth-child(1) div:nth-child(1) div:nth-child(2)').addClass('has-error')
+        $('.form div:nth-child(1) div:nth-child(1) div:nth-child(3)').addClass('has-error')
         return false;        
     } else {
-        $('form div:nth-child(2)').removeClass('has-error')
-        $('form div:nth-child(3)').removeClass('has-error')
+        $('.form div:nth-child(1) div:nth-child(1) div:nth-child(2)').removeClass('has-error')
+        $('.form div:nth-child(1) div:nth-child(1) div:nth-child(3)').removeClass('has-error')
     }
 
     if (fileVal == '') {
-        $('.innerformContainer').remove('.error');
-        $('.innerformContainer').prepend("<div class=\'alert alert-danger\' id=\'errorFile\'> No file input </div>")
+        $('.errorMessage').prepend("<div class=\'alert alert-danger\' id=\'errorFile\'> <strong>Error!</strong> No file input </div>")
         return false;
     }
 }

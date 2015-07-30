@@ -1,19 +1,4 @@
-body {
-    font-size: 10px;
-    font-family: 'Raleway', sans-serif;
-    color: black;
-    background:#ECECEC;
-}
-
-h1 {
-  text-align: center;
-}
-
-.outerDivs {
-  margin-top: 50px;
-}
 .finalGridContainer {
-  margin-top: 20px;
   text-align: center;
 }
 
@@ -100,17 +85,6 @@ p.col, p.chr {
   z-index: 1;
 }
 
-.bottomContainer {
-    margin-top: 15px;
-    background-color:#1E1E1E;
-    color: #fff;
-    width: 100%;
-    display: inline-block;
-    text-align:center;
-    padding-bottom: 5px;
-    padding-top: 5px;
-/*    line-height:2em;*/
-}
 
 /* Pop up */
 .pop-up-button:hover{
@@ -118,7 +92,8 @@ p.col, p.chr {
 }
 
 .pop-up {
-  height:100px;
+  margin-left: 45%;
+  height: 370px;
   width:50%;
   margin: auto;
   background:#fff;
@@ -134,7 +109,7 @@ p.col, p.chr {
 
 .ex {
   border-radius:0 0 30px 30px;
-  margin-left:90%;
+  margin-left:97%;
   background:#000;
   color:#fff;
   font-size:20px;
@@ -146,16 +121,12 @@ p.col, p.chr {
   box-sizing:border-box;
   padding:20px;
   background: white;
+  text-align: center;
 }
 
 .radio {
   text-align: left;
   margin-left: 45%;
-}
-
-#downloadRoster {
-  margin-left: 40%;
-  margin-right: 5px;
 }
 
 .rosterFileName {
@@ -167,4 +138,8 @@ p.col, p.chr {
 }
 #pdfTitle {
   width: 300px;
+}
+
+#downloadRoster, #emailRoster {
+  margin-left: 5px;
 }
