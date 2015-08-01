@@ -34,8 +34,8 @@ function validateForm(form) {
     } else {;
         $('.form div:nth-child(1) div:nth-child(1) div:nth-child(1)').removeClass('has-error')
     }
-    if ($('#heightInsert').val() == '' || height <= 0) {
-        $('.errorMessage').prepend("<div class=\'alert alert-danger\' id=\'errorHeight\'> <strong>Error!</strong> Invalid height </div>")
+    if ($('#heightInsert').val() == '' || height <= 0 || height > 25) {
+        $('.errorMessage').prepend("<div class=\'alert alert-danger\' id=\'errorHeight\'> <strong>Error!</strong> Invalid height. Must be within 1-26 </div>")
         $('.form div:nth-child(1) div:nth-child(1) div:nth-child(2)').addClass('has-error')
         return false;        
     } else {;

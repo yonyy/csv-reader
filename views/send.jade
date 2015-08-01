@@ -1,6 +1,6 @@
 extends ./layout.jade
 block append link
-	link(href="../send.css", rel="stylesheet")
+	link(href="send.css", rel="stylesheet")
 block prepend bodyLink
 	body
 block createActive
@@ -25,7 +25,6 @@ block content
 				div(class="col-lg-12")
 					- if (status == "success")
 							div(class="alert alert-success" role="alert") #[strong Email Successfully Sent]
-								a(class="btn btn-default" href="/" role="button") Home
 					- else
 							div(class="alert alert-danger" role="alert") #[strong Error!] Check that you correctly inputted a valid email/password
 								p Press back button an try again

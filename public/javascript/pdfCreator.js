@@ -37,7 +37,7 @@ function generatePDF(format, filename, title) {
   var currentY = startY;
   if (filename == "") filename = "SeatingChart"
   if (title == "") title = "Seating Chart"
-  var titleString = title+ " " + formatStr;
+  var titleString = title + " " + formatStr;
   var downloadString = filename + format;
   console.log(titleString);
 
@@ -53,7 +53,7 @@ function generatePDF(format, filename, title) {
   /* Writing the heading of the pdf */
   doc.text(title_marginLeft,title_marginTop, titleString);
   doc.setFontSize(rosterFontSize);
-/*  doc.text(currentX, currentY, createString(students[0]))*/
+
   
   /* Writing roster */
   for (var i = 0; i < students.length; i++) {
@@ -61,7 +61,14 @@ function generatePDF(format, filename, title) {
       console.log(createString(students[i]));
       if (students[i] == null) continue;  // Dont write null students
       if (students[i].studentID == "") {  // If it is an empty student push it to the array
-        emptySeats.push(createString(students[i]));
+        /* Display the empty students along with all students for row and for column charts
+         * For alphabetic charts, keep them at the end */
+        if (format == "NameSorted")
+          emptySeats.push(createString(students[i]));
+        else {
+          doc.text(currentX, currentY, "000" + createString(students[i]))
+          currentY += row_gap
+        }
         removedStudents++;  // Increment the number of empty students
       }
       else {  // If not an empty student write it to the pdf
@@ -126,6 +133,7 @@ function generatePDF(format, filename, title) {
 // Counts the number of seats in the classroom
 function countSeats() {
   var expectedSeats = gridCol * gridRow;
+  
   for(var i = 0; i < seatArr.length; i++) {
     if (seatArr[i].isGhost) {
       expectedSeats--;
@@ -151,6 +159,7 @@ function sortByRow(stud1, stud2) {
   var row2 = seatPos2[0]
   var pos1 = "";
   var pos2 = "";
+  
   for (var i = 1; i < seatPos1.length; i++) {
     pos1 += seatPos1[i]
   }
@@ -158,6 +167,7 @@ function sortByRow(stud1, stud2) {
   for (var i = 1; i < seatPos2.length; i++) {
     pos2 += seatPos2[i];
   }
+  
   var int_pos1 = parseInt(pos1,10);
   var int_pos2 = parseInt(pos2,10);
 
@@ -188,6 +198,7 @@ function sortByColumns(stud1, stud2) {
   for (var i = 1; i < seatPos2.length; i++) {
     pos2 += seatPos2[i];
   }
+  
   var int_pos1 = parseInt(pos1,10);
   var int_pos2 = parseInt(pos2,10);
 

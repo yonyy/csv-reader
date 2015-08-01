@@ -15,6 +15,7 @@ var seatingchart = require('./routes/seatingcharts')
 var student = require('./routes/student');
 var email = require('./routes/email');
 var create = require('./routes/create');
+var send = require('./routes/send')
 
 var http = require('http').createServer(app);
 var methodOverride = require('method-override');
@@ -44,6 +45,7 @@ app.use('/classroom', classroom);
 app.use('/student', student);
 app.use('/email', email);
 app.use('/seating_chart', seatingchart)
+app.use('/send', send)
 
 http.listen(app.get("port"), app.get("ipaddr"), function() {
   console.log("Server up and running. Go to http://" + app.get("ipaddr") + ":" + app.get("port"));
