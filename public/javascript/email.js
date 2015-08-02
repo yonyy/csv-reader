@@ -2,6 +2,7 @@
  * construct a new map, k: student email V: object containing information to construct email
  * It then uses a JQuery plugin to send the array through a POST request and to
  * redirect the view to '/email'
+ * Used because JSON.stringify() causes an error since it has circular structure
  */
 function emailRoster(className) {
 	studentsInfo = [];
@@ -61,19 +62,19 @@ function fillEmailForm(studentstoEmail) {
 
 /* Reads the input from email form a makes sure the appropriate text fields are filled */
 function validateEmailForm(form) {
-	$('.error').remove();
+	$('.alert').remove();
 	if ($('#inputEmail').val() == ""){
-		$('form div:nth-child(1)').addClass('has-error');
-		$('.jumbotron').prepend("<p class=\'error\' id=\'errorEmail\', style=\'color:red\'> Please insert an email/password </p>")
+		$('form div:nth-child(1) div:nth-child(1)').addClass('has-error');
+		$('.errorMessage').append("<div class=\'alert alert-danger\' id=\'errorNamePass\'> <strong>Error!</strong> Please provide an email/password </div>")
 		return false;
 	} else {
-		$('form div:nth-child(1)').removeClass('has-error');
+		$('form div:nth-child(1) div:nth-child(1)').removeClass('has-error');
 	}
 	if ($('#inputPassword').val() == "") {
-		$('form div:nth-child(2)').addClass('has-error');
-		$('.jumbotron').prepend("<p class=\'error\' id=\'errorEmail\', style=\'color:red\'> Please insert an email/password </p>")
+		$('form div:nth-child(2) div:nth-child(2)').addClass('has-error');
+		$('.errorMessage').append("<div class=\'alert alert-danger\' id=\'errorNamePass\'> <strong>Error!</strong> Please provide an email/password </div>")
 		return false;
 	} else {
-		$('form div:nth-child(2)').removeClass('has-error');
+		$('form div:nth-child(2) div:nth-child(2)').removeClass('has-error');
 	}
 }

@@ -24,6 +24,8 @@ block content
 							i(class="fa fa-edit")
 							|  Create
 			div(class="row")
+				div(class="col-md-offset-3 col-lg-6 errorMessage")
+			div(class="row")
 				div(class="col-lg-12")
 					form(class="form", name="studentMessages", action="/send", method="post",onsubmit="return validateEmailForm(this.form)")
 						div(class="row")
