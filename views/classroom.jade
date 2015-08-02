@@ -30,16 +30,18 @@ block content
 					p(class="lead") Select "Ghost Seat" to mark a ghost seat
 					p(class="lead") Select "Left-Handed" to mark a left-handed seat
 			div(class="row")
+				div(class="col-md-offset-3 col-lg-6 errorMessage")
+			div(class="row")
 				div(class="col-lg-12")
 					ol(class="breadcrumb")
 						li(class="active") 
 							span(class="glyphicon glyphicon-wrench")
 							|  Classroom Information
 					p(class="lead currentDim") Height: #{height} Width: #{width}
-					- var total = height*width
-					- var actualTotal = total
-					p(class="lead expectedTotal") Expected Total Seats: #{total}
-					p(class="lead actualTotal") Actual Total Seats: #{actualTotal}
+					- var totalSeats = height*width
+					p(class="lead expectedTotal") Expected Total Seats: #{totalSeats}
+					p(class="lead actualTotal") Actual Total Seats: #{totalSeats}
+					p(class="lead totalStudents") Total Students: #{totalStudents}
 					p(class="lead instructions") Select Checkboxes to mark cells as Left handed or "Ghost"
 			div(class="row")
 				div(class="col-md-offset-3 col-lg-3")
@@ -107,18 +109,27 @@ block content
 														- rowID = String.fromCharCode(ascii-1)
 													- var id = rowID + (col).toString()
 													- console.log(id)
-													div(class="grid--item seat_item", id="#{id}", onclick="updateSeat($(this).attr('id'),#{actualTotal})")
+													div(class="grid--item seat_item", id="#{id}", onclick="updateSeat($(this).attr('id'),#{totalSeats},#{totalStudents})")
 			//- Contains submit button
 			div(class="row")
 				div(class="col-md-offset-6 col-lg-4")
-					form(class="form", name="edit_submit", action="/seating_chart", method="get")
-						input(id="hidden_field", name="classname", type="hidden", value="#{className}")
+					form(class="form", name="edit_submit", action="/seating_chart", method="post")
+						input(name="className", type="hidden", value="#{className}")
+						input(name="totalStudents", type="hidden", value="#{totalStudents}")
+						input(name="totalSeats", type="hidden", value="parseInt(#{totalSeats} - numGhosts,10)")
+						input(name="width", type="hidden", value="#{width}")
+						input(name="height", type="hidden", value="#{height}")
+						input(name="students", class="students", type="hidden", value="JSON.stringify(#{students})")
+						input(name="gridHTML", class="gridHTML", type="hidden", value="")
+						input(name="classroom", class="classroom", type="hidden", value="")
 						button(type="submit", class="btn btn-default submitClass") Submit
 					script.
 						$('.submitClass').click(function() {
-							finalGridContainer = $('.gridContainer').html();
-							sessionStorage.setItem('all_seats', JSON.stringify(classroom));
-							sessionStorage.setItem('width', #{total_width}-1);
-							sessionStorage.setItem('height', #{total_height}-1);
-							sessionStorage.setItem('finalGridContainer', finalGridContainer);
+							var finalGridContainer = $('.gridContainer').html();
+							//- sessionStorage.setItem('all_seats', JSON.stringify(classroom));
+							//- sessionStorage.setItem('width', #{total_width}-1);
+							//- sessionStorage.setItem('height', #{total_height}-1);
+							//- sessionStorage.setItem('finalGridContainer', finalGridContainer);
+							$('.gridHTML').val(JSON.stringify(finalGridContainer))
+							$('.classroom').val(JSON.stringify(classroom))
 						});

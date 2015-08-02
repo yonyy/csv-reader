@@ -11,7 +11,7 @@ block append script
 	script(src="pdfCreator.js")
 	script(src="email.js")
 block prepend bodyLink
-	body(onload="loadGrid()")
+	body(onload="loadGrid(#{gridHTML}, #{width}, #{height}, #{classroom}, #{students})")
 block createActive
 	li(class="active")
 		a(href="/create")

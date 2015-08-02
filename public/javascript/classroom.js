@@ -49,7 +49,7 @@ function validateForm(form) {
     } else {
         $('.form div:nth-child(1) div:nth-child(1) div:nth-child(3)').removeClass('has-error')
     }
-    if (height*width <= total_students) {
+    if (height*width < total_students) {
         $('.errorMessage').prepend("<div class=\'alert alert-danger\' id=\'errorArea\'> <strong>Error!</strong> Not a big enough classroom </div>")
         $('.form div:nth-child(1) div:nth-child(1) div:nth-child(2)').addClass('has-error')
         $('.form div:nth-child(1) div:nth-child(1) div:nth-child(3)').addClass('has-error')

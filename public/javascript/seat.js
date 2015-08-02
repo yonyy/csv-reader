@@ -16,30 +16,35 @@ function Seat(isGhost,isLeftHanded,student,isEmpty,seatPosition) {
 
 /* Updates the seat as left handed, empty, or ghost based off the checkbox
  * selected */
-function updateSeat(id, numSeats) { 
+function updateSeat(id, numSeats, totalStud) { 
+	$('.alert').remove();
 	var seatObj = classroom[id];
 	console.log(id);
 	if (isGhost) {
 		$('#'+id).css("background-color", ghostColor);
+		if (!seatObj["isGhost"])
+			numGhosts++;
 		seatObj["isGhost"] = true;
 		seatObj["isLeftHanded"] = false;
-		numGhosts++;
 	}
 	else if (isLeftHanded) {
 		$('#'+id).css("background-color", leftColor);
+		if (numGhosts > 0 && seatObj["isGhost"])
+			numGhosts--
 		seatObj["isLeftHanded"] = true;
 		seatObj["isGhost"] = false;
-		if (numGhosts > 0)
-			isGhost--
 	}
 	else if (!isLeftHanded && !isGhost) {
 		$('#'+id).css("background-color", rightColor);
+		if (numGhosts > 0 && seatObj["isGhost"])
+			numGhosts--;
 		seatObj["isLeftHanded"] = false;
 		seatObj["isGhost"] = false;
-		if (numGhosts > 0)
-			isGhost--;
 	}
 	console.log(seatObj)
 	console.log($('#'+id).html());
-	$('.actualTotal').text('Actual Total Seats: ' + (numSeats - isGhost))
+	console.log(numGhosts)
+	$('p.actualTotal').text('Actual Total Seats: ' + (numSeats - numGhosts))
+	if ((numSeats - numGhosts) < parseInt(totalStud,10))
+		$('.errorMessage').prepend("<div class=\'alert alert-warning\' id=\'errorName\'> <strong>Warning!</strong> There are not enough seats for all the students. Please remove some ghost seats or begin a new and bigger classroom </div>")
 }

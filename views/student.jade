@@ -5,7 +5,7 @@ block append script
 	script(src="filterSearchStudent.js")
 	script(src="student.js")
 block prepend bodyLink
-	body
+	body(onload="setRoster(#{students})")
 block createActive
 	li(class="active")
 		a(href="/create")
@@ -13,9 +13,9 @@ block createActive
 			|  Create
 block content
 	div(id="page-wrapper", class="pageContainer")
-		div(class="container-fluid", ng-app="sortApp", ng-controller="mainController")
+		div(class="container-fluid")
 			div(class="row")
-				div(class="col-lg-12")		
+				div(class="col-lg-12")
 					h1(class="page-header") Customize Roster #[small Begin assigning students as left-handed or right-handed]
 					ol(class="breadcrumb")
 						li
@@ -26,61 +26,62 @@ block content
 							|  Create
 			div(class="row")
 				div(class="col-lg-12")
+					ol(class="breadcrumb")
+						li(class="active")
+							span(class="glyphicon glyphicon-th-list")
+							|  #{totalStudents} Total Students
+			div(class="row")
+				div(class="col-lg-12")
 					div(class="input-group")
 						span(class="input-group-addon")
 							span(class="glyphicon glyphicon-search")
-						input(type="text" class="form-control", placeholder="Search Student", ng-model="searchStudent")
+						input(type="text" class="form-control search", placeholder="Search Student")
 			div(class="row")
 				div(class="col-lg-12")
 					table(class="table table-bordered table-striped")
 						thead
 							tr
 								td
-									a(href="#", ng-click="sortType = 'lastname'; sortReverse = !sortReverse") Last Name 
-										span(ng-show="sortType == 'lastname' && !sortReverse" class="fa fa-caret-down")
-										span(ng-show="sortType == 'lastname' && sortReverse" class="fa fa-caret-up")
+									a(onclick="orderBy($(this).val())", value="last") Last Name 
 								td
-									a(href="#", ng-click="sortType = 'firstname'; sortReverse = !sortReverse") First Name 
-										span(ng-show="sortType == 'firstname' && !sortReverse" class="fa fa-caret-down")
-										span(ng-show="sortType == 'firstname' && sortReverse" class="fa fa-caret-up")
+									a(onclick="orderBy($(this).val())", value="first") First Name 
 								td
-									a(href="#", ng-click="sortType = 'email'; sortReverse = !sortReverse") Email
-										span(ng-show="sortType == 'email' && !sortReverse" class="fa fa-caret-down")
-										span(ng-show="sortType == 'email' && sortReverse" class="fa fa-caret-up")
+									a(onclick="orderBy($(this).val())", value="email") Email
 								td
-									a(href="#", ng-click="sortType = 'studentID'; sortReverse = !sortReverse") ID
-										span(ng-show="sortType == 'studentID' && !sortReverse" class="fa fa-caret-down")
-										span(ng-show="sortType == 'studentID' && sortReverse" class="fa fa-caret-up")
+									a(onclick="orderBy($(this).val())", value="studentID") ID
 								td
-									a(href="#", ng-click="sortType = 'isLeftHanded'; sortReverse = !sortReverse") Left Handed
-										span(ng-show="sortType == 'isLeftHanded' && !sortReverse" class="fa fa-caret-down")
-										span(ng-show="sortType == 'isLeftHanded' && sortReverse" class="fa fa-caret-up")
+									a Left Handed
 								td
-									a(href="#", ng-click="sortType = 'isOSD'; sortReverse = !sortReverse") isOSD
-										span(ng-show="sortType == 'isOSD' && !sortReverse" class="fa fa-caret-down")
-										span(ng-show="sortType == 'isOSD' && sortReverse" class="fa fa-caret-up")
+									a isOSD
 						tbody
-							tr(ng-repeat="student in roster | orderBy:sortType:sortReverse | filter:searchStudent", ng-attr-id="{{ student.lastname + student.firstname}}")
-								td {{ student.lastname }}
-								td {{ student.firstname }}
-								td {{ student.email }}
-								td {{ student.studentID }}
-								td
-									select(class="form-control isLeftHanded", id="{{ student.email }}", onchange="assignHand($(this).attr('id'), $(this).val())")
-										option(selected="selected", value="false") false
-										option(value="true") true
-								td
-									select(class="form-control isOSD", id="{{ student.email }}", onchange="assignOSD($(this).attr('id'), $(this).val())")
-										option(selected="selected", value="false") false
-										option(value="true") true
-		div(class="row")
-			div(class="col-md-offset-6")		
-						form(class="form", name="submit", action="/classroom", method="get")
-							button(type="submit", class="btn btn-default submitRoster") Submit
-							input(type="hidden", name ="width", value="#{width}")
-							input(type="hidden", name="height", value="#{height}")
-							input(type="hidden", name="classname", value="#{className}")
+							- for student in JSON.parse(students)
+								tr
+									td(class="lastname")=student.lastname
+									td(class="firstname")=student.firstname
+									td(class="email")=student.email
+									td(class="studentID")=student.studentID
+									td
+										select(class="form-control isLeftHanded", id="#{student.email}", onchange="assignHand($(this).attr('id'), $(this).val())")
+											option(selected="selected", value="false") false
+											option(value="true") true
+									td
+										select(class="form-control isOSD", id="#{student.email}", onchange="assignOSD($(this).attr('id'), $(this).val())")
+											option(selected="selected", value="false") false
+											option(value="true") true
+			div(class="row")
+				div(class="col-md-offset-6")
+							form(class="form", name="submit", action="/classroom", method="post")
+								button(type="submit", class="btn btn-default submitRoster") Submit
+								input(type="hidden", name ="width", value="#{width}")
+								input(type="hidden", name="height", value="#{height}")
+								input(type="hidden", name="className", value="#{className}")
+								input(type="hidden", id="students", name="students", value="")
+								input(type="hidden", name="totalStudents", value="#{totalStudents}")					
 		script.
+			$('.search').keyup(function(){
+				filterStudents()
+			})
 			$('.submitRoster').click(function() {
 				sessionStorage.setItem('all_students', JSON.stringify(roster));
+				$('#students').val(JSON.stringify(roster))
 			})

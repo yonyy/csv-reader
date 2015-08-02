@@ -1,15 +1,30 @@
-var grid = sessionStorage.getItem('finalGridContainer');	// HTML body that contains the classroom
-var seatMap = JSON.parse(sessionStorage.getItem('all_seats'));	// Hashmap of Seats K: id V: seat
-var students = JSON.parse(sessionStorage.getItem('all_students'));	// Array of students
+/*var grid = sessionStorage.getItem('finalGridContainer');	// HTML body that contains the classroom
 var gridCol = sessionStorage.getItem('width');		// Value containing the classroom width
 var gridRow = sessionStorage.getItem('height');		// Value containing the classroom height
-var seatArr = []	// Array of the seats
+var seatMap = JSON.parse(sessionStorage.getItem('all_seats'));	// Hashmap of Seats K: id V: seat
+var students = JSON.parse(sessionStorage.getItem('all_students'));	// Array of students
+var seatArr = []	// Array of the seats*/
+
+var grid = "";	// HTML body that contains the classroom
+var gridCol = 0;		// Value containing the classroom width
+var gridRow = 0;		// Value containing the classroom height
+var seatMap = {};		// Hashmap of Seats K: id V: seat
+var students = [];		// Array of students
+var seatArr = [];		// Array of the seats
 
 /* Function that executes once the HTML body loads. Appends the grid HTML,
  * updates the onclick function, and begins assigning the students to a seat,
  * and attaching info */
-function loadGrid() {
-	$('.finalGridContainer').append(grid);
+function loadGrid(gridHTML, width, height, classroom, studentsArr) {
+	grid = gridHTML
+	gridCol = width
+	gridRow = height
+	seatMap = classroom
+	students = JSON.parse(studentsArr)
+	
+	console.log(seatMap)
+	console.log(students)
+	$('.finalGridContainer').append(gridHTML);
 	$('.seat_item').attr("onclick","displaySeatInfo($(this).attr('id'))");
 	assignSeats();
 	attachInfo();
