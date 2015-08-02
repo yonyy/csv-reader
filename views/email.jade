@@ -4,7 +4,7 @@ block append link
 block append script
 	script(src="email.js")
 block prepend bodyLink
-	body(onload="fillEmailForm(#{roster})")
+	body(onload="fillEmailForm(#{roster}, #{className})")
 block createActive
 	li(class="active")
 		a(href="/create")

@@ -9,6 +9,7 @@ function setRoster(students) {
 	for(var i = 0; i < roster.length; i++) {
 	  rosterMap[roster[i].email] = i;
 	}
+	searchList()
 }
 
 function filterStudents() {
@@ -31,4 +32,37 @@ function filterStudents() {
 			}
 		}
 	})
+}
+
+/*This function implements jQuery autocomplete in the searchbox. */
+function searchList() {                
+    //array of list items
+    var listArray = [];
+  
+     $(".lastname").each(function() {
+     	var listText = $(this).text().trim();
+     	listArray.push(listText);
+    });
+
+	$(".firstname").each(function() {
+		var listText = $(this).text().trim();
+		listArray.push(listText);
+    });
+
+	$(".email").each(function() {
+		var listText = $(this).text().trim();
+		listArray.push(listText);
+    });
+    
+    var uniqueNames = [];
+    $.each(listArray, function(i, el){
+    	if($.inArray(el, uniqueNames) === -1)
+    		uniqueNames.push(el);
+    });
+
+    $('.search').autocomplete({
+        source: uniqueNames
+    });
+	
+	console.log(listArray)    
 }
