@@ -22,13 +22,15 @@ router.post('/', function(req, res, next) {
 	var height = req.body.height;
 	var students = req.body.students;
 	var totalStudents = req.body.totalStudents
+	var totalGhosts = req.body.totalGhosts
 	console.log(width + " " + height);
 	res.render('classroom', {
 		className : className,
 		height : height,
 		width : width,
 		students : students,
-		totalStudents : totalStudents
+		totalStudents : totalStudents,
+		totalGhosts : totalGhosts
 	});
 
 });

@@ -7,7 +7,7 @@ var logger = require('morgan');
 var db = require('./model/db');
 var classrooms = require('./model/classroom');
 var students = require('./model/student');
-var seats = require('./model/seat');
+var rosters = require('./model/roster');
 
 var routes = require('./routes/index');
 var classroom = require('./routes/classroom');

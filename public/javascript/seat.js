@@ -15,8 +15,8 @@ function Seat(isGhost,isLeftHanded,student,isEmpty,seatPosition) {
 }
 
 /* Updates the seat as left handed, empty, or ghost based off the checkbox
- * selected */
-function updateSeat(id, numSeats, totalStud) { 
+ * selected As well as update the number of non ghost seats */
+function updateSeat(id, expectedSeats, totalStud) { 
 	$('.alert').remove();
 	var seatObj = classroom[id];
 	console.log(id);
@@ -44,7 +44,9 @@ function updateSeat(id, numSeats, totalStud) {
 	console.log(seatObj)
 	console.log($('#'+id).html());
 	console.log(numGhosts)
-	$('p.actualTotal').text('Actual Total Seats: ' + (numSeats - numGhosts))
-	if ((numSeats - numGhosts) < parseInt(totalStud,10))
+	var actualTotal = expectedSeats - numGhosts
+	$('p.actualTotal').text('Actual Total Seats: ' + actualTotal)
+	if (actualTotal < parseInt(totalStud,10))
 		$('.errorMessage').prepend("<div class=\'alert alert-warning\' id=\'errorSeatTotal\'> <strong>Warning!</strong> There are not enough seats for all the students. Please remove some ghost seats or begin a new and bigger classroom </div>")
+	$('.totalSeats').val(parseInt(actualTotal))
 }

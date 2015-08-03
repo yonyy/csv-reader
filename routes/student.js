@@ -20,6 +20,7 @@ router.post('/', function(req, res, next) {
 	var className = req.body.className;
 	var students = req.body.students;	// array of students
 	var totalStudents = req.body.totalStudents;
+	var totalGhosts = parseInt(req.body.totalGhosts,10);
 
 /*	console.log(students);*/
 	console.log(totalStudents);
@@ -29,7 +30,8 @@ router.post('/', function(req, res, next) {
 		height: height,
 		className : className,
 		students : students,
-		totalStudents : totalStudents
+		totalStudents : totalStudents,
+		totalGhosts : totalGhosts
 	});
 });
 

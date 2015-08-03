@@ -64,13 +64,16 @@ block content
 							input(type="radio", name="format", id="sorted", class="format", value="NameSorted") 
 							|Sorted order
 					a(class="btn btn-default", id="downloadRoster", role="button") Download
-					a(class="btn btn-default", id="emailRoster", role="button", onclick="emailRoster(#{className})") Email Students
+					a(class="btn btn-default", id="emailRoster", role="button") Email Students
 				script.
 					$("input[type='radio']").on('change', function() {
 						$("input[type='radio']").not(this).prop('checked', false);
 					})
 					$('#downloadRoster').click(function() {
 						generatePDF($("input[type='radio']:checked").val(), $('#rosterName').val(), $('#pdfTitle').val())
+					})
+					$('#emailRoster').click(function() {
+						emailRoster("sample")
 					})
 			div(class="row")
 				div(class="col-lg-12")

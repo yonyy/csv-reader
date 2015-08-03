@@ -17,21 +17,22 @@ function filterStudents() {
 	var td = 6
 	var contains = false
 	console.log(text)
+	/* Look through each table data and check if any table data contains the text */
 	$('tbody tr td').each(function(index, element){
-		if (index % td == 0)
+		if (index % td == 0) /* Want to look through each row, since each row contains 6 td, reset bool */
 			contains = false;
-		if (index % td < td) {
+		if (index % td < td) {	/* If any table data in a row contains the text, do not make that row hidden */
 			if (!contains) {
 				if ($(element).text().toLowerCase().indexOf(text) == -1) {
 					$(element).parent().addClass('hidden')
 				}
-				else {
+				else {	/* ONLY mark a row as hidden if none of it's columns contains the text */
 					$(element).parent().removeClass('hidden')
 					contains = true;
 				}
 			}
 		}
-	})
+	});
 }
 
 /*This function implements jQuery autocomplete in the searchbox. */
