@@ -39,9 +39,12 @@ router.post('/', function(req, res, next) {
     	}
 	}));
 
+	var sentTotal = 0;
+	var totalRecievers = 0;
 	var parsedBodyText = "";
 	for(var i = 0; i < toList.length; i++) {
 		if (toList[i] != "") {
+			totalRecievers++;
 			parsedBodyText = textParser.parseText(text, rosterMap[toList[i]]);
 			console.log(toList[i]);
 			var mailOptions = {
@@ -58,12 +61,14 @@ router.post('/', function(req, res, next) {
 					console.log(error);
 					console.log(status);
 			    } else {
+			    	sentTotal++;
 			        console.log('Message sent: ' + info.response);
 			    }
 			});
 		}
 	}
 
+	console.log("sentTotal: " + sentTotal + " out of " + totalRecievers)
 	if(status == true) {
 		res.render('send', {
 			status : "success"

@@ -69,7 +69,7 @@ function attachStationInfo() {
 	$('.station_item').each(function(index, element) {
 		var stationObj = seatMap[$(element).attr('id')];
 		if (stationObj.isGhost) {
-			var info = "<p>Ghost Seat </p>";
+			var info = "<p class=\"objectInfo\">Ghost Seat </p>";
 			var studentProfile = "<span>" + info + "</span>"
 			$(element).append(studentProfile)
 		}
@@ -87,10 +87,9 @@ function attachStationInfo() {
 			names += "</p>"
 			emails += "</p>"
 			studentIDs += "</p>"
-			var seatID = "<p>Seat: " + studentObjs[0].seat.stationNum + "</p>";
+			var seatID = "<p>Seat: " + studentObjs[0].seat.seatPosition + "</p>";
 			var studentProfile = "<span class=\"objectInfo\">" + names + emails + studentIDs + seatID +"</span>"
 			$(element).append(studentProfile);
-			console.log(studentProfile)
 /*			if (studentObj.isLeftHanded) 
 				console.log("Left-Handed");*/
 		}
@@ -135,6 +134,7 @@ function assignSeats(seed) {
 			console.log("leftStudents.length: " + leftStudents.length + " " + "rightStudents.length: " + rightStudents.length)
 			console.log(seat)
 			if(seat.isGhost) {continue;}
+			if((rightIndex + leftIndex) >= tempList.length) { continue; }
 			if(seat.isLeftHanded) {
 				// If the students is left handed choose from the left handed array
 				// only if there are any left handed students left otherwise choose from
@@ -154,7 +154,7 @@ function assignSeats(seed) {
 					tempStudent = leftStudents[leftIndex++]
 			}
 			// Add studens to seats only if there are students to add
-			if (rightIndex + leftIndex <= tempList.length) {
+			if (rightIndex + leftIndex < tempList.length) {
 				console.log(tempStudent)
 				seat.student = tempStudent;
 				tempStudent.seat = seat;
@@ -180,7 +180,7 @@ function assignSeats(seed) {
 					tempStudent = rightStudents[rightIndex++]
 				else
 					tempStudent = leftStudents[leftIndex++]
-			if (rightIndex + leftIndex <= tempList.length) {
+			if (rightIndex + leftIndex < tempList.length) {
 				seat.student = tempStudent;
 				tempStudent.seat = seat;
 			}
@@ -205,6 +205,7 @@ function assignSeats(seed) {
 function assignStations(seed) {
 	var tempList = students;
 	var index = 0
+	var maxStudents = tempList.length;
 	shuffle(tempList,seed);	// Shuffles the list of students
 	console.log("lab")
 	// Copies over the map of seats and pushes it into an array in order to loop through it
@@ -216,7 +217,7 @@ function assignStations(seed) {
 
 	console.log("gridRow: " + gridRow + " gridCol: " + gridCol)
 	console.log("seatArr.length: " + seatArr.length)
-
+	var emptyCounter = 0;
 	//assign all the odd columns
 	for(var i = 1; i < gridCol; i+=2) {
 		for(var j = gridRow - 1; j >= 0; j--) {
@@ -224,23 +225,24 @@ function assignStations(seed) {
 			var partners = []
 			console.log("i: " + i + " j: " + j + " index: " + (j*gridCol+i))
 			if(seat.isGhost) {continue;}
-			for (var k = 0; k < seat.numPerStation; k++) {
-				if(index >= tempList.length) {
+			for (var k = 0; k < parseInt(seat.numPerStation,10); k++) {
+				console.log("index: " + index + "tempList.length "+ tempList.length)
+				if(index >= maxStudents) {
 					console.log("students.length: " + students.length)
 					var emptyStudent = new Student("EMPTY", "EMPTY", "", "", false, false, null);
+					emptyStudent.seat = seat;
 					partners.push(emptyStudent)
 					students.push(emptyStudent)
+					console.log(k)
+					emptyCounter++
 				}
 				else {
-					var tempStudent = students[index++]
+					var tempStudent = tempList[index++]
 					tempStudent.seat = seat;
 					partners.push(tempStudent)
 				}
 			}
-			console.log("partners: ")
-			console.log(partners)
 			seat.students = partners;
-			console.log(seat)
 		}
 	}
 
@@ -252,23 +254,23 @@ function assignStations(seed) {
 			var partners = []
 			console.log("i: " + i + " j: " + j + " index: " + (j*gridCol+i))
 			if(seat.isGhost) {continue;}
-			for (var k = 0; k < seat.numPerStation; k++) {
-				if(index >= tempList.length) {
-					console.log("students.length: " + students.length)
+			for (var k = 0; k < parseInt(seat.numPerStation,10); k++) {
+				console.log("index: " + index + "tempList.length "+ tempList.length)
+				if(index >= maxStudents) {
 					var emptyStudent = new Student("EMPTY", "EMPTY", "", "", false, false, null);
+					emptyStudent.seat = seat
 					partners.push(emptyStudent)
 					students.push(emptyStudent)
+					console.log(k)
+					emptyCounter++
 				}
 				else {
-					var tempStudent = students[index++]
+					var tempStudent = tempList[index++]
 					tempStudent.seat = seat;
 					partners.push(tempStudent)
 				}
 			}
-			console.log("partners: ")
-			console.log(partners)
 			seat.students = partners;
-			console.log(seat)
 		}
 	}
 
@@ -278,17 +280,21 @@ function assignStations(seed) {
 		if(s.isGhost) { continue; }
 		if(s.students == null) {
 			var partners = []
-			for (var k = 0; k < s.numPerStation; k++) {
+			for (var k = 0; k < parseInt(s.numPerStation,10); k++) {
 				console.log("students.length: " + students.length)
 				var emptyStudent = new Student("EMPTY", "EMPTY", "", "", false, false, null);
 				s.isEmpty = true;
 				emptyStudent.seat = s;
 				partners.push(emptyStudent)
 				students.push(emptyStudent);
+				console.log(k)
+				emptyCounter++
 			}
 			s.students = partners
 		}
 	}
+
+	console.log("EMPTY COUNTER: " + emptyCounter)
 }
 
 // Function that shuffles the array

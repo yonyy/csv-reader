@@ -13,12 +13,12 @@ var numGhosts = 0;
 var updatedStationNum = 1;
 var maxStations = 0;
 
-function Station(isGhost,numPerStation,students,isEmpty,stationNum, gridPos) {
+function Station(isGhost,numPerStation,students,isEmpty,seatPosition, gridPos) {
 	this.isGhost = isGhost;
 	this.numPerStation = parseInt(numPerStation,10);
 	this.students = students;
 	this.isEmpty = isEmpty;
-	this.stationNum = stationNum;
+	this.seatPosition = seatPosition;
 	this.gridPos = parseInt(gridPos,10)
 }
 
@@ -85,7 +85,7 @@ function clearClass() {
         var stationId = $(element).attr('id');
         var tempStation = classroom[stationId]
         var newID = ""
-        tempStation["stationNum"] = newID
+        tempStation["seatPosition"] = newID
         newMap[index+1] = tempStation
         
 		$(element).attr('id', index+1)
@@ -107,7 +107,7 @@ function manIncreaseStation(stationID) {
 
 	var newID = updatedStationNum
 	var tempStation = classroom[stationID]
-	tempStation["stationNum"] = newID
+	tempStation["seatPosition"] = newID
 	updatedStationNum++
 
 
@@ -161,7 +161,7 @@ function autoFillStation(w, h) {
         console.log("row: " + row)
         console.log("newID: " + newID)
         
-        tempStation["stationNum"] = newID
+        tempStation["seatPosition"] = newID
         newMap[newID] = tempStation
 
         $(element).attr('id', newID)

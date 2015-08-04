@@ -89,11 +89,17 @@ block content
 						div.radio
 							label
 								input(type="radio", name="format", id="grid", class="format", value="GridSorted" checked)
-								|By the layout
+								|By the room layout
+						div.radio
+							label
+								input(type="radio", name="format", id="station", class="format", value="StationSorted")
+								|By Station Number
 					div.radio
 						label
 							input(type="radio", name="format", id="sorted", class="format", value="NameSorted") 
 							|Sorted order
+					input(type="hidden", id="totalStudents", value="#{totalStudents}")
+					input(type="hidden", id="totalSeats", value="#{totalSeats}")
 					a(class="btn btn-default", id="downloadRoster", role="button") Download
 					a(class="btn btn-default", id="emailRoster", role="button") Email Students
 				script.
@@ -101,7 +107,7 @@ block content
 						$("input[type='radio']").not(this).prop('checked', false);
 					})
 					$('#downloadRoster').click(function() {
-						generatePDF($("input[type='radio']:checked").val(), $('#rosterName').val(), $('#pdfTitle').val())
+						generatePDF($("input[type='radio']:checked").val(), $('#rosterName').val(), $('#pdfTitle').val(), $('#totalSeats').val(), $('#totalStudents').val())
 					})
 					$('#emailRoster').click(function() {
 						emailRoster("sample")
