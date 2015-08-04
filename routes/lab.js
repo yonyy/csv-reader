@@ -16,28 +16,37 @@ router.use(methodOverride(function(req, res){
 
 router.post('/', function(req, res, next) {
 	var className = req.body.className;
-	var totalStudents = req.body.totalStudents;
-	var totalSeats = req.body.totalSeats;
+	if (className == '')
+		className = "Classroom"
 	var width = req.body.width;
 	var height = req.body.height;
 	var students = req.body.students;
-	var gridHTML = req.body.gridHTML;
-	var classroom = req.body.classroom;
+	var totalStudents = req.body.totalStudents
+	var totalGhosts = req.body.totalGhosts
 	var seed = req.body.seed
-	var classType = req.body.classType
-	console.log(totalSeats)
-	res.render('seating_chart', {
-		className: className,
-		totalStudents : totalStudents,
-		totalSeats : totalSeats,
-		width : width,
+	var numPerStation = req.body.numPerStation
+	var classType= req.body.classType
+
+	console.log(width + " " + height);
+	res.render('lab', {
+		className : className,
 		height : height,
+		width : width,
 		students : students,
-		gridHTML : gridHTML,
-		classroom : classroom,
+		totalStudents : totalStudents,
+		totalGhosts : totalGhosts,
 		seed : seed,
+		numPerStation : numPerStation,
 		classType : classType
 	});
+
 });
+
+/*router.get('/seating_chart', function(req, res, next) {
+	var className = req.query.classname;
+	res.render('seating_chart', {
+		className: className,
+	});
+});*/
 
 module.exports = router;

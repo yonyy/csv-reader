@@ -8,11 +8,29 @@ block append script
 	script(src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js")
 block prepend bodyLink
 	body(onload="setRoster(#{students})")
+block labActive
+	- if(classType == "lab")
+		li(class="active")
+			a(href="/createLab")
+				i(class="glyphicon glyphicon-console")
+				|  Create Lab
+	- else
+		li
+			a(href="/createLab")
+				i(class="glyphicon glyphicon-console")
+				|  Create Lab
 block createActive
-	li(class="active")
-		a(href="/create")
-			i(class="fa fa-fw fa-edit")
-			|  Create
+	- if(classType != "lab")
+		li(class="active")
+			a(href="/create")
+				i(class="fa fa-fw fa-edit")
+				|  Create
+	- else
+		li
+			a(href="/create")
+				i(class="fa fa-fw fa-edit")
+				|  Create
+
 block content
 	div(id="page-wrapper", class="pageContainer")
 		div(class="container-fluid")
@@ -72,14 +90,19 @@ block content
 											option(value="true") true
 			div(class="row")
 				div(class="col-md-offset-6")
-							form(class="form", name="submit", action="/classroom", method="post")
+							form(class="form", name="submit", action="/#{classType}", method="post")
 								button(type="submit", class="btn btn-default submitRoster") Submit
 								input(type="hidden", name ="width", value="#{width}")
 								input(type="hidden", name="height", value="#{height}")
 								input(type="hidden", name="className", value="#{className}")
 								input(type="hidden", id="students", name="students", value="")
 								input(type="hidden", name="totalStudents", value="#{totalStudents}")
-								input(type="hidden", name="totalGhosts", value="#{totalGhosts}")					
+								input(type="hidden", name="totalGhosts", value="#{totalGhosts}")
+								input(type="hidden", name="seed", value="#{seed}")
+								input(type="hidden", name="classType", value="#{classType}")
+								- if (classType == "lab")
+									input(type="hidden", name="numPerStation", value="#{numPerStation}")
+
 		script.
 			$('.search').keyup(function(){
 				filterStudents()

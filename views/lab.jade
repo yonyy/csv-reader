@@ -1,20 +1,20 @@
 extends ./layout.jade
 block append link
 	link(href='sb-admin.css', rel='stylesheet')
-	link(href="classroom.css" rel="stylesheet")
+	link(href="lab.css" rel="stylesheet")
 block append script
 	script(src="classroom.js")
-	script(src="seat.js")
+	script(src="station.js")
 block prepend bodyLink
-	body(onload="createClassObject()")
-block createActive
+	body(onload="createStationObject(#{numPerStation})")
+block labActive
 	li(class="active")
-		a(href="/create")
-			i(class="fa fa-fw fa-edit")
-			|  Create
+		a(href="/createLab")
+			i(class="glyphicon glyphicon-console")
+			|  Create Lab
 block content
-	- var total_width = parseInt(width,10) + 1
-	- var total_height = parseInt(height,10) + 1
+	- var total_width = parseInt(width,10)
+	- var total_height = parseInt(height,10)
 	- numGhosts = totalGhosts
 	div(id="page-wrapper")
 		div(class="container-fluid")
@@ -38,38 +38,93 @@ block content
 						li(class="active") 
 							span(class="glyphicon glyphicon-wrench")
 							|  Classroom Information
-					p(class="lead currentDim") Height: #{height} Width: #{width}
+					p(class="lead currentDim") Height: #[p.height #{height}] Width: #[p.width #{width}]
 					- var totalSeats = height*width
 					p(class="lead expectedTotal") Expected Total Seats: #{totalSeats}
 					p(class="lead actualTotal") Actual Total Seats: #{totalSeats}
+					p(class="lead numPerStation") Students per Station: #{numPerStation}
 					p(class="lead totalStudents") Total Students: #{totalStudents}
-					p(class="lead instructions") Select Checkboxes to mark cells as Left handed or "Ghost"
+					p(class="lead instructions") Select Checkboxes to manually number stations or to number stations automatically
 			div(class="row")
-				div(class="col-md-offset-3 col-lg-3")
+				div(class="col-md-offset-2 col-lg-2")
+					label
+						input(type="checkbox", id="increase_option", class="option")
+						|  Manually Number
+				div(class="col-lg-2")
 					label
 						input(type="checkbox", id="ghost_option", class="option")
-						|  Ghost Seat
-				div(class="col-lg-3")
+						|  Ghost
+				div(class="col-lg-2")
 					label
-						input(type="checkbox", id="left-handed_option", class="option")
-						|  Left-Handed Seat
+						input(type="checkbox", id="fill_option", class="option", checked)
+						|  Automatically Fill
+				div(class="col-lg-2")
+					label
+						input(type="checkbox", id="remove_option", class="option")
+						|  Remove Number
+				div(class="col-lg-2")
+					label
+						input(type="checkbox", id="removeAll_option", class="option")
+						|  Remove All Number
 				script.
 					$('input.option').on('change', function() {
 						$('input.option').not(this).prop('checked', false);
 						console.log($(this).attr('id'));
-						if ($(this).attr('id') == "ghost_option") {
+						if ($(this).attr('id') == "increase_option") {
+							if (manIncrease)
+								manIncrease = false
+							else {
+								if (!manualClass)
+									clearClass()
+								manIncrease = true;
+								manualClass = true;
+							}
+							isGhost = false;
+							autoFill = false;
+							remove = false;
+							removeAll = false;
+						} else if ($(this).attr('id') == "ghost_option"){
 							if (isGhost)
 								isGhost = false
 							else 
 								isGhost = true;
-							isLeftHanded = false;
-						}
-						else {
-							if (isLeftHanded)
-								isLeftHanded = false
-							else 
-								isLeftHanded = true;
+							manIncrease = false;
+							autoFill = false;
+							remove = false;
+							removeAll = false;
+						} else if ($(this).attr('id') == "fill_option"){
+							if (autoFill)
+								autoFill = false
+							else {
+								autoFill = true;
+								manualClass = false;
+								autoFillStation($('p.width').text(), $('p.height').text())
+							}
+							manIncrease = false;
 							isGhost = false;
+							remove = false;
+							removeAll = false;
+						} else if ($(this).attr('id') == "remove_option"){
+							if (remove)
+								remove = false
+							else {
+								remove = true;
+							}
+							manIncrease = false;
+							isGhost = false;
+							autoFill = false;
+							removeAll = false;
+						} else if ($(this).attr('id') == "removeAll_option"){
+							if (removeAll)
+								removeAll = false
+							else {
+								removeAll = true;
+								clearClass()
+							}
+							remove = false;
+							manIncrease = false;
+							isGhost = false;
+							autoFill = false;
 						}
 					});
 
@@ -84,46 +139,32 @@ block content
 						div(class="panel-body")
 							div.gridContainer
 								//- Create height x width table cell classroom
-								- var alp = total_height - 1;
-								- for (var row = 1; row <= total_height; row++)												
+								- for (var row = 1; row <= total_height; row++)
 									div(class='row row_#{row}')
+										- var offset = 0
 										- for (var col = 1; col <= total_width; col++)
-											- if (row == 1)
-												- if (col == total_width)
-													div(class='grid--item cornerGrid')
-												- else
-													div(class='grid--item seat_number') 
-														p.col #{col}
-											- else
-												- if (col == total_width)
-													- var ascii = 65 + alp
-													- var chr = String.fromCharCode(ascii)
-													- if (ascii <= 73)
-														- chr = String.fromCharCode(ascii-1)
-													- alp--
-													div(class="grid--item seat_alphabet")
-														p.chr #{chr}
-												- else
-													- var ascii = (65 + parseInt(total_height,10)) - (row - 1)
-													- var rowID = String.fromCharCode(ascii)
-													- if (ascii <= 73)
-														- rowID = String.fromCharCode(ascii-1)
-													- var id = rowID + (col).toString()
-													- console.log(id)
-													div(class="grid--item seat_item", id="#{id}", onclick="updateSeat($(this).attr('id'),#{totalSeats},#{totalStudents})")
+											- var id = ((row-1)*total_width) + col
+											- if (row % 2 == 0)
+												- id = ((row-1)*total_width) + total_width - offset
+												- offset++
+											- console.log(id)
+											div(class="grid--item station_item", id="#{id}", onclick="updateStation($(this).attr('id'),#{totalSeats},#{totalStudents}, #{numPerStation})")
+												span(class='stationNumber')=id
+
 			//- Contains submit button
 			div(class="row")
 				div(class="col-md-offset-6 col-lg-4")
-					form(class="form", name="edit_submit", action="/seating_chart", method="post")
+					form(class="form", name="edit_submit", action="/seating_chart", method="post", onsubmit="return checkEmptyStations()")
 						input(name="className", type="hidden", value="#{className}")
 						input(name="totalStudents", type="hidden", value="#{totalStudents}")
-						input(name="totalSeats", class="totalSeats", type="hidden", value="")
+						input(name="totalSeats", class="totalSeats", type="hidden", value="#{totalSeats}")
 						input(name="width", type="hidden", value="#{width}")
 						input(name="height", type="hidden", value="#{height}")
 						input(name="students", class="students", type="hidden", value="JSON.stringify(#{students})")
 						input(name="gridHTML", class="gridHTML", type="hidden", value="")
 						input(name="classroom", class="classroom", type="hidden", value="")
 						input(name="seed", type="hidden", value="#{seed}")
+						input(name="classType", type="hidden", value="#{classType}")
 						button(type="submit", class="btn btn-default submitClass") Submit
 					script.
 						$('.submitClass').click(function() {

@@ -11,10 +11,12 @@ var rosters = require('./model/roster');
 
 var routes = require('./routes/index');
 var classroom = require('./routes/classroom');
+var lab = require('./routes/lab')
 var seatingchart = require('./routes/seatingcharts')
 var student = require('./routes/student');
 var email = require('./routes/email');
 var create = require('./routes/create');
+var createLab = require('./routes/createLab')
 var send = require('./routes/send')
 
 var http = require('http').createServer(app);
@@ -41,7 +43,9 @@ app.use(methodOverride('_method'));
 /* Send home page file */
 app.use('/', routes);
 app.use('/create', create)
+app.use('/createLab', createLab)
 app.use('/classroom', classroom);
+app.use('/lab', lab)
 app.use('/student', student);
 app.use('/email', email);
 app.use('/seating_chart', seatingchart)

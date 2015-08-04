@@ -8,11 +8,18 @@ var rosterFontSize = 6; // font size to use for the students
 var startX = 5; // The x coord to begin writing the table of students
 var startY = 15;  // The y coord to begin writing the table of students
 var pdfFileName = "";
+var doc = null;
+var currentX = 0
+var currentY = 0
 
 /*console.log(students);*/
 function generatePDF(format, filename, title) {
   // Sorts the students array based off the option selected
   var formatStr = ""
+  var gridLayout = false;
+  if (filename == "") filename = "SeatingChart"
+  if (title == "") title = "Seating Chart"
+
   if (format == "RowSorted"){
     students.sort(sortByRow);
     formatStr = "Row Sorted"
@@ -25,24 +32,30 @@ function generatePDF(format, filename, title) {
     students.sort(sortByName);
     formatStr = "Name Sorted"
   }
-  
-  var doc = new jsPDF();
+  if (format == "GridSorted") {
+    seatArr.sort(sortByGrid);
+    gridLayout = true;
+    formatStr = "Grid Layout"
+
+  }
+
+  doc = new jsPDF();
+  if (gridLayout) 
+    doc = new jsPDF("l"); // Landscape orientatiokn for grid layout
+
   var emptySeats = [];
   var numEmpty = 0;
   console.log(filename)
   console.log(title)
   var totalSeats = countSeats(); 
   var removedStudents = 0;
-  var currentX = startX;
-  var currentY = startY;
-  if (filename == "") filename = "SeatingChart"
-  if (title == "") title = "Seating Chart"
+  currentX = startX;
+  currentY = startY;
   var titleString = title + " " + formatStr;
   var downloadString = filename + format;
   console.log(titleString);
 
   doc.setFont("helvetica");
-  doc.margins = 1;
   doc.setProperties({
       title: titleString,
       subject: 'Seating Chart',
@@ -50,60 +63,79 @@ function generatePDF(format, filename, title) {
   });
 
   doc.setFontSize(8)
+
   /* Writing the heading of the pdf */
   doc.text(title_marginLeft,title_marginTop, titleString);
   doc.setFontSize(rosterFontSize);
 
-  
-  /* Writing roster */
-  for (var i = 0; i < students.length; i++) {
-    if (currentY <= end_Y) {  // Add students in the current column
-      console.log(createString(students[i]));
-      if (students[i] == null) continue;  // Dont write null students
-      if (students[i].studentID == "") {  // If it is an empty student push it to the array
-        /* Display the empty students along with all students for row and for column charts
-         * For alphabetic charts, keep them at the end */
-        if (format == "NameSorted")
-          emptySeats.push(createString(students[i]));
-        else {
-          doc.text(currentX, currentY, "000" + createString(students[i]))
-          currentY += row_gap
+  if (!gridLayout) {  
+    /* Writing roster */
+    for (var i = 0; i < students.length; i++) {
+      if (currentY <= end_Y) {  // Add students in the current column
+        console.log(createString(students[i]));
+        if (students[i] == null) continue;  // Dont write null students
+        if (students[i].studentID == "") {  // If it is an empty student push it to the array
+          /* Display the empty students along with all students for row and for column charts
+           * For alphabetic charts, keep them at the end */
+          if (format == "NameSorted")
+            emptySeats.push(createString(students[i]));
+          else {
+            doc.text(currentX, currentY, "000" + createString(students[i]))
+            currentY += row_gap
+          }
+          removedStudents++;  // Increment the number of empty students
         }
-        removedStudents++;  // Increment the number of empty students
+        else {  // If not an empty student write it to the pdf
+          doc.text(currentX, currentY, createString(students[i]))
+          currentY += row_gap;  // Go down one row
+        }
       }
-      else {  // If not an empty student write it to the pdf
-        doc.text(currentX, currentY, createString(students[i]))
-        currentY += row_gap;  // Go down one row
-      }
-    } /* If the current y coord is greater than y-max, go back to the top and shift one column */
-    if (currentY > end_Y) {
-      currentY = startY;
-      currentX += col_gap;
-    } /* If the current x is greater than the x-max, add new page */
-    if (currentX > end_X) {
-      doc.addPage();
-      currentX = startX;
-      currentY = startY;
-    }
-  };
+      checkBoundaries(end_X, end_Y)
+    };
 
-  /* Writing the empty students to the pdf */
-  for(var i = 0; i < emptySeats.length; i++) {
-    doc.text(currentX, currentY, emptySeats[i].toString());
-    currentY+= row_gap; // Same logic as above
-    if (currentY > end_Y) {
-      currentY = startY;
-      currentX += col_gap;
+    /* Writing the empty students to the pdf */
+    for(var i = 0; i < emptySeats.length; i++) {
+      doc.text(currentX, currentY, emptySeats[i].toString());
+      currentY+= row_gap; // Same logic as above
+      checkBoundaries(end_X, end_Y)
     }
-    if (currentX > end_X) {
-      doc.addPage();
-      currentX = startX;
-      currentY = startY;
+  } /* Perform grid layout */
+  else {
+    //cellWidth = 40;
+    //cellHeight = 20
+    startX = 15;
+    end_Y = 280;  // changing value of end_y
+    end_X = 180
+    var cellWidth = Math.floor(end_Y/gridCol)
+    var cellHeight = Math.floor(end_X/gridRow) - 5
+    console.log(Math.floor(end_X/gridRow))
+    currentX = startY
+    currentY = startX
+    doc.cellInitialize();
+    for (var i = 0; i < gridRow; i++) {
+      for(var j = 0; j < gridCol; j++) {
+        var tempStation = seatArr[i*gridCol + j]
+        var cellContent = " "
+        console.log(tempStation)
+        console.log(partners)
+        if (!tempStation.isGhost) {
+          cellContent = tempStation.stationNum.toString() + "\n"
+          var partners = tempStation.students;
+          for (var k = 0; k < partners.length; k++) {
+            if (partners[k].studentID == "") removedStudents++
+            cellContent += partners[k].firstname + ", " + partners[k].lastname + "\n"
+          }
+        }
+        doc.cell(currentX,currentY,cellWidth,cellHeight, cellContent,i)
+        currentX += cellWidth
+      }
+      currentX = startX
+      currentY += cellHeight
     }
   }
 
   /* Writing class info to pdf */
-  currentY += 3*row_gap  
+  currentY += 3*row_gap
   var totalStudentStr = "Total Students: " + (students.length - removedStudents).toString();
   var totalSeatsStr = "Total Seats: " + totalSeats;
   var expectedEmptyStr = "Expected Empty Seats: " + (totalSeats - students.length + removedStudents).toString();
@@ -115,19 +147,24 @@ function generatePDF(format, filename, title) {
   for (var i = 0; i < bottomInfo.length; i++) {
     doc.text(currentX, currentY, bottomInfo[i]);
     currentY += row_gap;
-    if (currentY > end_Y) {
-      currentY = startY;
-      currentX += col_gap;
-    }
-    if (currentX > end_X) {
-      doc.addPage();
-      currentX = startX;
-      currentY = startY;
-    }
+    checkBoundaries(end_X, end_Y);
   }
 
   // Save and dowload
   doc.save(downloadString)
+}
+
+function checkBoundaries(endx, endy) {
+  /* Begin new column is reaches the end */
+  if (currentY > endy) {
+    currentY = startY;
+    currentX += col_gap;
+  } /* If the current x is greater than the x-max, add new page */
+  if (currentX > endx) {
+    doc.addPage();
+    currentX = startX;
+    currentY = startY;
+  }
 }
 
 // Counts the number of seats in the classroom
@@ -140,6 +177,15 @@ function countSeats() {
     }
   }
   return expectedSeats;
+}
+
+/* Comparison functions to sort seats by their grid layout */
+function sortByGrid(station1, station2) {
+  if (parseInt(station1.gridPos,10) < parseInt(station2.gridPos,10))
+    return -1;
+  if (parseInt(station1.gridPos,10) > parseInt(station2.gridPos,10))
+    return 1;
+  return 0;
 }
 
 /* Comparison functions to sort by lastname */

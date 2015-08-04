@@ -48,5 +48,6 @@ function updateSeat(id, expectedSeats, totalStud) {
 	$('p.actualTotal').text('Actual Total Seats: ' + actualTotal)
 	if (actualTotal < parseInt(totalStud,10))
 		$('.errorMessage').prepend("<div class=\'alert alert-warning\' id=\'errorSeatTotal\'> <strong>Warning!</strong> There are not enough seats for all the students. Please remove some ghost seats or begin a new and bigger classroom </div>")
-	$('.totalSeats').val(parseInt(actualTotal))
+	$('.totalSeats').val(parseInt(actualTotal,10))
+	$('.totalGhosts').val(parseInt(numGhosts,10))
 }

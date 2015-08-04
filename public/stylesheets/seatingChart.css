@@ -21,6 +21,23 @@
    -webkit-font-smoothing: antialiased;
 }
 
+/* CSS properties if classroom is a lab */
+.station_item {
+  font-size: 15;
+  font-family: 'Raleway', sans-serif;
+  background: #FF5722;
+}
+
+.stationNumber {
+  width: 100%;
+  position: absolute;
+  top: 15px;
+  display: block;
+  text-align: center;
+    
+}
+
+/* CSS Properties if classroom is standard */
 .seat_item {
   background: #FF5722;
 }
@@ -36,7 +53,10 @@ p.col, p.chr {
   color: black;
 }
 
-.seat_item:hover {
+
+
+/* CSS Properites a lab and standard classroom share */
+.seat_item:hover, .station_item:hover {
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
   background-color: #FF8A65;
@@ -44,7 +64,7 @@ p.col, p.chr {
 }
 
 /* pop-up text */
-.grid--item span {
+.grid--item .objectInfo {
   margin-bottom: 5px;
   color:#666;
   position:absolute;
@@ -66,7 +86,7 @@ p.col, p.chr {
 }
 
 /* pop-up text arrow */
-.grid--item span:before {
+.grid--item .objectInfo:before {
   content:'';
   width: 0; 
   height: 0; 
@@ -79,7 +99,7 @@ p.col, p.chr {
 }
 
 /* text pops up when icon is in hover state */
-.grid--item:hover span {
+.grid--item:hover .objectInfo {
   bottom:50px;
   visibility:visible;
   z-index: 1;

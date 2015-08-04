@@ -23,6 +23,7 @@ router.post('/', function(req, res, next) {
 	var students = req.body.students;
 	var totalStudents = req.body.totalStudents
 	var totalGhosts = req.body.totalGhosts
+	var seed = req.body.seed
 	console.log(width + " " + height);
 	res.render('classroom', {
 		className : className,
@@ -30,7 +31,8 @@ router.post('/', function(req, res, next) {
 		width : width,
 		students : students,
 		totalStudents : totalStudents,
-		totalGhosts : totalGhosts
+		totalGhosts : totalGhosts,
+		seed : seed
 	});
 
 });

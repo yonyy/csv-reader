@@ -21,6 +21,13 @@ router.post('/', function(req, res, next) {
 	var students = req.body.students;	// array of students
 	var totalStudents = req.body.totalStudents;
 	var totalGhosts = parseInt(req.body.totalGhosts,10);
+	var seed = req.body.seed
+	var classType = req.body.classType
+	var numPerStation
+	if (classType == "lab")
+		var numPerStation = req.body.numPerStation
+	else
+		numPerStation = 1
 
 /*	console.log(students);*/
 	console.log(totalStudents);
@@ -31,7 +38,10 @@ router.post('/', function(req, res, next) {
 		className : className,
 		students : students,
 		totalStudents : totalStudents,
-		totalGhosts : totalGhosts
+		totalGhosts : totalGhosts,
+		seed : seed,
+		classType : classType,
+		numPerStation : numPerStation
 	});
 });
 

@@ -10,26 +10,26 @@ block append script
 	script(src="//cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.0/seedrandom.min.js")
 block prepend bodyLink
 	body(onload="test()")
-block createActive
+block labActive
 	li(class="active")
-		a(href="/create")
-			i(class="fa fa-fw fa-edit")
-			|  Create
+		a(href="/createLab")
+			i(class="glyphicon glyphicon-console")
+			|  Create Lab
 block content
 	div(id='page-wrapper', class="pageContainer")
 		div(class="container-fluid")
 			div(class="row")
 				div(class="col-lg-12")
-					h1(class="page-header") Create #[small Begin making your own seating chart]
+					h1(class="page-header") Create #[small Begin making your own seating chart for a lab]
 					ol(class="breadcrumb")
 						li
 							i(class="fa fa-dashboard")
 							a(href="/index")  Dashboard
 						li(class="active")
-							i(class="fa fa-edit")
-							|  Create
+							i(class="glyphicon glyphicon-console")
+							|  Create Lab
 					p(class="lead") Press "Choose File" to upload a roster (.csv)
-					p(class="lead") Enter dimensions for the classroom
+					p(class="lead") Enter dimensions for the lab room
 			div(class="row")
 				div(class="col-md-offset-3 col-lg-6 errorMessage")
 			div(class="row")
@@ -37,25 +37,28 @@ block content
 					div(class="row")
 						div(class="col-lg-6")
 							div(class="form-group classroomName")
-								label(for="className") Classroom Name
+								label(for="className") Lab room Name
 								input(type="text", class="form-control", name="className", id="className")
-							div(class="form-group classHeight")
+							div(class="col-lg-3 form-group classHeight")
 								label(for="heightInsert") Height
 								input(type="number", class="form-control", name="height", id="heightInsert", placeholder="10")
-							div(class="form-group")
+							div(class="col-lg-3 form-group")
 								label(for="widthInsert") Width
 								input(type="number", class="form-control", name="width", id="widthInsert", placeholder="12")
+							div(class="col-lg-6 form-group")
+								label(for="perStationInsert") Number of people per station
+								input(type="number", class="form-control", name="numPerStation", id="perStationInsert", value="2")
 							div(class="form-group")
 								label(for="classSeed") Seed (Used to generate a random yet repeatable seating chart) [Optional]
-								input(type="number", class="form-control", name="seed", id="seedInsert", placeholder="3")
+								input(type="number", class="form-control", name="seed", id="seedInsert")
 						div(class="col-lg-6")
 							div(class="form-group")
-								label Existing classrooms
+								label Existing lab rooms
 								select(multiple class="form-control existingClass", name="className")
 									option(selected="selected" id="op0" value='0') --Select--
-									option(id="op1" value='1') WLH 2004
-									option(id="op2" value='2') PCYH 124
-									option(id="op3" value='3') SOLIS 110
+									option(id="op1" value='1') CSE B260
+									option(id="op2" value='2') CSE B250
+									option(id="op3" value='3') CSE B240
 					div(class="row")
 						div(class="col-lg-6")
 							div(class="form-group")
@@ -71,7 +74,7 @@ block content
 					input(type="hidden", name="students", id="students", value="")
 					input(type="hidden", name="totalStudents", id="totalStudents", value="")
 					input(type="hidden", name="totalGhosts", value = "0")
-					input(type="hidden", class="classType", name="classType", value="classroom")
+					input(type="hidden", class="classType", name="classType", value="lab")
 					div(class="col-md-offset-5                      ")
 						button(type="submit", class="btn btn-default submitForm") Submit
 				script.

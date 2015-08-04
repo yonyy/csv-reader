@@ -4,19 +4,44 @@ block append link
 	link(href='sb-admin.css', rel='stylesheet')
 block append script
 	script(src="//mrrio.github.io/jsPDF/dist/jspdf.debug.js")
+	script(src="//cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.0/seedrandom.min.js")
 	script(src="jquery.redirect.js")
 	script(src="student.js")
-	script(src="seat.js")
-	script(src="finalClassroom.js")
+	- if (classType == "lab")
+		script(src="station.js")
+	- else
+		script(src="seat.js")
+	script(src="finalSeatingChart.js")
 	script(src="pdfCreator.js")
 	script(src="email.js")
 block prepend bodyLink
-	body(onload="loadGrid(#{gridHTML}, #{width}, #{height}, #{classroom}, #{students})")
+	- if (classType == "lab")
+		body(onload="loadGrid(#{gridHTML}, #{width}, #{height}, #{classroom}, #{students}, #{seed}, \"lab\")")
+	- else
+		body(onload="loadGrid(#{gridHTML}, #{width}, #{height}, #{classroom}, #{students}, #{seed}, \"class\")")
+
+block labActive
+	- if(classType == "lab")
+		li(class="active")
+			a(href="/createLab")
+				i(class="glyphicon glyphicon-console")
+				|  Create Lab
+	- else
+		li
+			a(href="/createLab")
+				i(class="glyphicon glyphicon-console")
+				|  Create Lab
 block createActive
-	li(class="active")
-		a(href="/create")
-			i(class="fa fa-fw fa-edit")
-			|  Create
+	- if(classType != "lab")
+		li(class="active")
+			a(href="/create")
+				i(class="fa fa-fw fa-edit")
+				|  Create
+	- else
+		li
+			a(href="/create")
+				i(class="fa fa-fw fa-edit")
+				|  Create
 block content
 	div(id='page-wrapper', class="pageContainer")
 		div(class="container-fluid")
@@ -51,14 +76,20 @@ block content
 						div(class="form-group")
 							label(for="pdfTitle" class="col-sm-2 control-label") PDF Title
 							input(type="text", class="form-control", id="pdfTitle", placeholder="Pepper Canyon 106 - Quiz 5 Thursday, June 4th -5pm", style="width: 400px;")
-					div.radio
-						label
-							input(type="radio", name="format", id="row", class="format", value="RowSorted", checked) 
-							|By row
-					div.radio
-						label
-							input(type="radio", name="format", id="column", class="format", value="ColumnSorted")
-							|By column
+					- if (classType != "lab")
+						div.radio
+							label
+								input(type="radio", name="format", id="row", class="format", value="RowSorted", checked) 
+								|By row
+						div.radio
+							label
+								input(type="radio", name="format", id="column", class="format", value="ColumnSorted")
+								|By column
+					- else
+						div.radio
+							label
+								input(type="radio", name="format", id="grid", class="format", value="GridSorted" checked)
+								|By the layout
 					div.radio
 						label
 							input(type="radio", name="format", id="sorted", class="format", value="NameSorted") 

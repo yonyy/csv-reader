@@ -1,0 +1,59 @@
+.gridContainer {
+  text-align: center;
+}
+
+.grid--item {
+  display: inline-block;
+  margin-left: 5px;
+  margin-top: 5px;
+  width: 50px;
+  height: 50px;
+  color:#fff;
+  border-radius:5px;
+  text-align:center;
+  text-decoration:none;
+  font-family:fontawesome;
+  position: relative;
+  -o-transition:all 200ms ease-out;
+  -webkit-transition: all 200ms ease-out;
+  -moz-transition: all .200ms ease-out;
+  transition: all 200ms ease-out;
+   -webkit-font-smoothing: antialiased;
+}
+
+.station_item {
+  font-size: 15;
+  font-family: 'Raleway', sans-serif;
+  background: #FF5722;
+}
+
+.stationNumber {
+  width: 100%;
+  position: absolute;
+  top: 15px;
+  display: block;
+  text-align: center;
+    
+}
+
+/*.seat_number, .seat_alphabet {
+  font-size: 12px;
+} */
+
+/*.seat_item{
+  font-size: 5em;
+  font-weight: bold;
+  background-color: #D3411F;
+  border-radius: 5px;
+  overflow: hidden;
+  transition: all 200ms ease-out;
+}*/
+
+.station_item:hover {
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
+  background-color: #FF8A65;
+  color: white; 
+}
+
+/*  following just for the demo */
