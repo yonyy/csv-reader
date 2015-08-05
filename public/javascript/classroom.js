@@ -1,26 +1,10 @@
-var classroom = {}
-
-// k: seat[letter][number] v: Seat Obj
-/*  Function that loops through each div containing the class .seat_item
-    and generates a seat based of the divs' id and default parameters
-*/
-function createClassObject() {
-	$(".seat_item").each(function(index, element){
-        var seatId = $(element).attr('id');
-		var seat = new Seat(false, false, null, false, seatId);
-		classroom[seatId] = seat;
-		console.log(seat);
-	});
-}
-
-function createStationObject(num) {
-    var numPerStation = parseInt(num,10)
-    $(".station_item").each(function(index, element){
-        var stationId = $(element).attr('id');
-        var station = new Station(false, numPerStation, null, false, stationId, index+1);
-        classroom[stationId] = station;
-        console.log(station);
-    });  
+function Classroom (width, height, className, ghostSeats, leftSeats, totalSeats) {
+    this.width = width
+    this.height = height
+    this.className = className
+    this.ghostSeats = ghostSeats
+    this.leftSeats = leftSeats
+    this.totalSeats = totalSeats
 }
 
 /* Reads the input of the form in view index.jade and determines if the inputs
@@ -30,9 +14,11 @@ function createStationObject(num) {
         3. A width and height are inputed 
     If there is an invalid input, a proper error will display
 */
-function validateForm(classType) {
+function validateClassroom(classType) {
 	var width = parseInt($('#widthInsert').val(),10);
 	var height = parseInt($('#heightInsert').val(),10);
+    var className = $('#className').val()
+
     var perStation = 1
     if (classType == "lab")
         perStation =  parseInt($("#perStationInsert").val(), 10)
@@ -41,7 +27,7 @@ function validateForm(classType) {
     console.log(total_students);
     var fileVal = $('#fileInsert').val();
     $('.alert').remove();
-    if ($('#className').val() == '') {
+    if (className == '') {
         $('.errorMessage').prepend("<div class=\'alert alert-danger\' id=\'errorName\'> <strong>Error!</strong> Please provide a classroom name </div>")
         $('.form div:nth-child(1) div:nth-child(1) div:nth-child(1)').addClass('has-error')
         return false;        
@@ -52,10 +38,10 @@ function validateForm(classType) {
         $('.errorMessage').prepend("<div class=\'alert alert-danger\' id=\'errorHeight\'> <strong>Error!</strong> Invalid height. Must be within 1-26 </div>")
         $('.form div:nth-child(1) div:nth-child(1) div:nth-child(2)').addClass('has-error')
         return false;        
-    } else {;
+    } else {
         $('.form div:nth-child(1) div:nth-child(1) div:nth-child(2)').removeClass('has-error')
     }
-    if ($('#widthInsert').val() == '' || width <= 0) {
+    if ($('#widthInsert').val() == '' || width <= 0 || width > 27) {
         $('.errorMessage').prepend("<div class=\'alert alert-danger\' id=\'errorWidth\'> <strong>Error!</strong> Invalid width </div>")
         $('.form div:nth-child(1) div:nth-child(1) div:nth-child(3)').addClass('has-error')
         return false;
@@ -78,4 +64,8 @@ function validateForm(classType) {
         $('.errorMessage').prepend("<div class=\'alert alert-danger\' id=\'errorFile\'> <strong>Error!</strong> No file input </div>")
         return false;
     }
+
+    /* Create classroom if it passes all of the checks */
+    var classroom = new Classroom(width, height, className, [], [], (width*height))
+    $('.classModel').val(JSON.stringify(classroom))
 }

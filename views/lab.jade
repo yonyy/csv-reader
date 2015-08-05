@@ -6,7 +6,7 @@ block append script
 	script(src="classroom.js")
 	script(src="station.js")
 block prepend bodyLink
-	body(onload="createStationObject(#{numPerStation})")
+	body(onload="createStations(#{numPerStation})")
 block labActive
 	li(class="active")
 		a(href="/createLab")
@@ -139,6 +139,10 @@ block content
 						div(class="panel-body")
 							div.gridContainer
 								//- Create height x width table cell classroom
+								//- 1 2 3 4 5
+								//- 10 9 8 7 6
+								//- 11 12 13 14
+								//- ...
 								- for (var row = 1; row <= total_height; row++)
 									div(class='row row_#{row}')
 										- var offset = 0

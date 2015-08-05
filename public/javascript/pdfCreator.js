@@ -18,6 +18,8 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
   var formatStr = ""
   var gridLayout = false;
   var stationLayout = false;
+  var maxRowsPerPage = 12
+  console.log(students)
   if (filename == "") filename = "SeatingChart"
   if (title == "") title = "Seating Chart"
 
@@ -68,7 +70,8 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
   doc.setFontSize(8)
 
   /* Writing the heading of the pdf */
-  doc.text(title_marginLeft,title_marginTop, titleString);
+  doc.text(100,10, titleString);
+  //doc.text(title_marginLeft,title_marginTop, titleString);
   doc.setFontSize(rosterFontSize);
 
   if (!gridLayout && !stationLayout) {
@@ -106,10 +109,15 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
     //cellWidth = 40;
     //cellHeight = 20
     startX = 15;
-    end_Y = 280;  // changing value of end_y
-    end_X = 180
-    var cellWidth = Math.floor(end_Y/gridCol)
-    var cellHeight = Math.floor(end_X/gridRow) - 5
+    //end_Y = 270;  // changing value of end_y
+    end_X = 270
+    if (gridRow > 8)
+      end_Y = 250
+    else
+      end_Y = 180
+
+    var cellWidth = Math.floor(end_X/gridCol)
+    var cellHeight = Math.floor(end_Y/gridRow) - 5
     console.log(Math.floor(end_X/gridRow))
     currentX = startY
     currentY = startX
@@ -161,7 +169,7 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
 
   /* Writing class info to pdf */
   currentY += 3*row_gap
-  checkBoundaries(end_X,end_Y)
+  if (!gridLayout) checkBoundaries(end_X,end_Y)
   var seatPerStation = (seatArr[0].numPerStation != null) ? seatArr[0].numPerStation : 1
   var totalStudentStr = "Total Students: " + totalStudents;
   var totalSeatsStr = "Total Seats: " + totalSeats;
@@ -173,9 +181,10 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
   
   // Adding classroom and updating x coord and y coord
   for (var i = 0; i < bottomInfo.length; i++) {
+    console.log(currentX,currentY)
     doc.text(currentX, currentY, bottomInfo[i]);
     currentY += row_gap;
-    checkBoundaries(end_X, end_Y);
+    if (!gridLayout) checkBoundaries(end_X, end_Y);
   }
 
   // Save and dowload
@@ -238,6 +247,7 @@ function sortByName(stud1, stud2) {
 
 /* Comparison function to sort by row */
 function sortByRow(stud1, stud2) {
+  console.log(stud1)
   var seatPos1 = stud1.seat.seatPosition;
   var seatPos2 = stud2.seat.seatPosition;
   var row1 = seatPos1[0]

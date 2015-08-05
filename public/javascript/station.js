@@ -5,13 +5,13 @@ var autoFill = true;
 var clear = false;
 var remove = false;
 var removeAll = false;
-
 var ghostColor = "FFFFFF";
 var rightColor = "#FF5722";
 var finalGridContainer = "";
 var numGhosts = 0;
 var updatedStationNum = 1;
 var maxStations = 0;
+var classroom = {}
 
 function Station(isGhost,numPerStation,students,isEmpty,seatPosition, gridPos) {
 	this.isGhost = isGhost;
@@ -21,6 +21,17 @@ function Station(isGhost,numPerStation,students,isEmpty,seatPosition, gridPos) {
 	this.seatPosition = seatPosition;
 	this.gridPos = parseInt(gridPos,10)
 }
+
+function createStations(num) {
+    var numPerStation = parseInt(num,10)
+    $(".station_item").each(function(index, element){
+        var stationId = $(element).attr('id');
+        var station = new Station(false, numPerStation, null, false, stationId, index+1);
+        classroom[stationId] = station;
+        console.log(station);
+    });  
+}
+
 
 /* Updates the seat as left handed, empty, or ghost based off the checkbox
  * selected As well as update the number of non ghost seats */

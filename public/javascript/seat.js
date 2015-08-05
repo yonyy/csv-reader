@@ -1,10 +1,11 @@
 var isGhost = false;
 var isLeftHanded = false;
 var ghostColor = "FFFFFF";
-var leftColor = "#76FF03";
+var leftColor = "#2196F3";
 var rightColor = "#FF5722";
 var finalGridContainer = "";
 var numGhosts = 0;
+var classroom = {}
 
 function Seat(isGhost,isLeftHanded,student,isEmpty,seatPosition) {
 	this.isGhost = isGhost;
@@ -13,6 +14,20 @@ function Seat(isGhost,isLeftHanded,student,isEmpty,seatPosition) {
 	this.isEmpty = isEmpty;
 	this.seatPosition = seatPosition;
 }
+
+// k: seat[letter][number] v: Seat Obj
+/*  Function that loops through each div containing the class .seat_item
+    and generates a seat based of the divs' id and default parameters
+*/
+function createSeats() {
+	$(".seat_item").each(function(index, element){
+        var seatId = $(element).attr('id');
+		var seat = new Seat(false, false, null, false, seatId);
+		classroom[seatId] = seat;
+		console.log(seat);
+	});
+}
+
 
 /* Updates the seat as left handed, empty, or ghost based off the checkbox
  * selected As well as update the number of non ghost seats */

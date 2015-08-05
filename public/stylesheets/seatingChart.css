@@ -2,75 +2,14 @@
   text-align: center;
 }
 
-.grid--item {
-  display: inline-block;
-  margin-left: 5px;
-  margin-top: 5px;
-  width: 50px;
-  height: 50px;
-  color:#fff;
-  border-radius:5px;
-  text-align:center;
-  text-decoration:none;
-  font-family:fontawesome;
-  position: relative;
-  -o-transition:all 200ms ease-out;
-  -webkit-transition: all 200ms ease-out;
-  -moz-transition: all .200ms ease-out;
-  transition: all 200ms ease-out;
-   -webkit-font-smoothing: antialiased;
-}
-
-/* CSS properties if classroom is a lab */
-.station_item {
-  font-size: 15;
-  font-family: 'Raleway', sans-serif;
-  background: #FF5722;
-}
-
-.stationNumber {
-  width: 100%;
-  position: absolute;
-  top: 15px;
-  display: block;
-  text-align: center;
-    
-}
-
-/* CSS Properties if classroom is standard */
-.seat_item {
-  background: #FF5722;
-}
-
-.seat_alphabet, .cornerGrid {
-  position: absolute;
-}
-
-p.col, p.chr {
-  font-family: 'Raleway', sans-serif;
-  font-size: 12px;
-  margin-top: 15px;
-  color: black;
-}
-
-
-
-/* CSS Properites a lab and standard classroom share */
-.seat_item:hover, .station_item:hover {
-  -webkit-transform: scale(1.1);
-  transform: scale(1.1);
-  background-color: #FF8A65;
-  color: white; 
-}
-
 /* pop-up text */
 .grid--item .objectInfo {
   margin-bottom: 5px;
   color:#666;
   position:absolute;
   bottom:0;
-  left:-20px;
-  right:-20px;
+  left:-65px;
+  right:-65px;
   padding:5px 7px;
   z-index:-1;
   font-size:12px;
@@ -95,7 +34,7 @@ p.col, p.chr {
   border-top: 5px solid #fff;
   position:absolute;
   bottom:-5px;
-  left:40px;
+  left:85px;
 }
 
 /* text pops up when icon is in hover state */

@@ -43,19 +43,23 @@ function attachInfo() {
 	$('.seat_item').each(function(index, element) {
 		var seatObj = seatMap[$(element).attr('id')];
 		if (seatObj.isGhost) {
-			var info = "<p>Ghost Seat </p>";
+			var info = "<p class=\"objectInfo\">Ghost Seat </p>";
 			var studentProfile = "<span>" + info + "</span>"
 			$(element).append(studentProfile)
 		}
 		else {
+			var studentProfile = "";
 			var studentObj = seatObj.student;
-/*			console.log(seatObj);*/
-			var name = "<p>Name: "+ studentObj.lastname + ", " + studentObj.firstname+"</p>";
-			var email = "<p>Email: " + studentObj.email + "</p>";
-			var studentID = "<p>ID: " + studentObj.studentID + "</p>";
-			var seatID = "<p>Seat: " + studentObj.seat.seatPosition + "</p>";
-			var hand = studentObj.isLeftHanded ? "<p>Left-Handed</p>" : "<p>Right Handed</p>"
-			var studentProfile = "<span class=\"objectInfo\">" + name + email + studentID + seatID + hand + "</span>"
+			if (studentObj.studentID != "") {
+				var name = "<p>Name: "+ studentObj.lastname + ", " + studentObj.firstname+"</p>";
+				var email = "<p>Email: " + studentObj.email + "</p>";
+				var studentID = "<p>ID: " + studentObj.studentID + "</p>";
+				var seatID = "<p>Seat: " + studentObj.seat.seatPosition + "</p>";
+				var hand = studentObj.isLeftHanded ? "<p>Left-Handed</p>" : "<p>Right Handed</p>"
+				studentProfile = "<span class=\"objectInfo\">" + name + email + studentID + seatID + hand + "</span>"
+			}
+			else
+				studentProfile = "<span class=\"objectInfo\">Empty</span>"
 			$(element).append(studentProfile);
 /*			if (studentObj.isLeftHanded) 
 				console.log("Left-Handed");*/
@@ -81,8 +85,10 @@ function attachStationInfo() {
 			var studentIDs = "<p>IDs: "
 			for (var i = 0; i < studentObjs.length; i++) {
 				names += "<p>"+studentObjs[i].lastname + ", " + studentObjs[i].firstname+"</p>";
-				emails += studentObjs[i].email + ", ";
-				studentIDs += studentObjs[i].studentID + ", ";
+				if (studentObjs[i].studentID != "") {
+					emails += studentObjs[i].email + ", ";
+					studentIDs += studentObjs[i].studentID + ", ";
+				}
 			}
 			names += "</p>"
 			emails += "</p>"
@@ -109,6 +115,7 @@ function assignSeats(seed) {
 	var leftIndex = 0;	// index containing how many students have been assigned in the right handed array
 	shuffle(tempList,seed);	// Shuffles the list of students
 	
+	var counter = 0
 	// Copies over the map of seats and pushes it into an array in order to loop through it
 	for (var key in seatMap) {
 		if (seatMap.hasOwnProperty(key)) {
@@ -125,8 +132,10 @@ function assignSeats(seed) {
 	}
 
 	//assign all the odd columns
+	console.log("ODD columns")
 	for(var i = 1; i < gridCol; i+=2) {
 		for(var j = gridRow - 1; j >= 0; j--) {
+			var right = true;
 			var tempStudent;
 			var seat = seatArr[j*gridCol+i];
 			console.log("i: " + i + " j: " + j + " index: " + (j*gridCol+i))
@@ -139,50 +148,71 @@ function assignSeats(seed) {
 				// If the students is left handed choose from the left handed array
 				// only if there are any left handed students left otherwise choose from
 				// the right handed array
-				if(leftIndex < leftStudents.length)
-					tempStudent = leftStudents[leftIndex++]
+				if(leftIndex < leftStudents.length) {
+					tempStudent = leftStudents[leftIndex]
+					right = false;
+				}
 				else
-					tempStudent = rightStudents[rightIndex++]
+					tempStudent = rightStudents[rightIndex]
 			}
 			else {
 				// If the student is right handed choose from the right handed array
 				// only if there are any right handed students left otherwise choose from
 				// the left handed array
 				if(rightIndex < rightStudents.length)	
-					tempStudent = rightStudents[rightIndex++]
-				else
-					tempStudent = leftStudents[leftIndex++]
+					tempStudent = rightStudents[rightIndex]
+				else {
+					tempStudent = leftStudents[leftIndex]
+					right = false;
+				}
 			}
 			// Add studens to seats only if there are students to add
 			if (rightIndex + leftIndex < tempList.length) {
-				console.log(tempStudent)
+				if (right) rightIndex++;
+				else leftIndex++
 				seat.student = tempStudent;
 				tempStudent.seat = seat;
+				console.log(tempStudent)
+				counter++
 			}
 		}
 	}
 
 	//assign all the even columns
 	// Follows the same logic as assignign odd columns
+	console.log("EVEN columns")
 	for(var i = 0; i < gridCol; i+=2) {
 		for(var j = gridRow - 1; j >= 0; j--) {
-			var seat = seatArr[j*gridCol+i]; 
+			var right = true
 			var tempStudent;
+			var seat = seatArr[j*gridCol+i]; 
+			console.log("i: " + i + " j: " + j + " index: " + (j*gridCol+i))
+			console.log("rightIndex: " + rightIndex + " " + "leftIndex: " + leftIndex);
+			console.log("leftStudents.length: " + leftStudents.length + " " + "rightStudents.length: " + rightStudents.length)
+			console.log(seat)
 			if(seat.isGhost) {continue;}
 			if((rightIndex + leftIndex) >= tempList.length) { continue; }
 			if(seat.isLeftHanded)
-				if(leftIndex < leftStudents.length)
-					tempStudent = leftStudents[leftIndex++]
+				if(leftIndex < leftStudents.length) {
+					tempStudent = leftStudents[leftIndex]
+					right = false
+				}
 				else
-					tempStudent = rightStudents[rightIndex++]
+					tempStudent = rightStudents[rightIndex]
 			else
 				if(rightIndex < rightStudents.length)	
-					tempStudent = rightStudents[rightIndex++]
-				else
-					tempStudent = leftStudents[leftIndex++]
+					tempStudent = rightStudents[rightIndex]
+				else {
+					tempStudent = leftStudents[leftIndex]
+					right = false;
+				}
 			if (rightIndex + leftIndex < tempList.length) {
+				if (right) rightIndex++
+				else leftIndex++
 				seat.student = tempStudent;
 				tempStudent.seat = seat;
+				console.log(tempStudent)
+				counter++
 			}
 		}
 	}
@@ -199,6 +229,7 @@ function assignSeats(seed) {
 			students.push(emptyStudent);
 		}
 	}
+	console.log(counter + " students assigned")
 }
 
 /* Assigns the students to a station */
@@ -217,7 +248,6 @@ function assignStations(seed) {
 
 	console.log("gridRow: " + gridRow + " gridCol: " + gridCol)
 	console.log("seatArr.length: " + seatArr.length)
-	var emptyCounter = 0;
 	//assign all the odd columns
 	for(var i = 1; i < gridCol; i+=2) {
 		for(var j = gridRow - 1; j >= 0; j--) {
@@ -234,7 +264,6 @@ function assignStations(seed) {
 					partners.push(emptyStudent)
 					students.push(emptyStudent)
 					console.log(k)
-					emptyCounter++
 				}
 				else {
 					var tempStudent = tempList[index++]
@@ -262,7 +291,6 @@ function assignStations(seed) {
 					partners.push(emptyStudent)
 					students.push(emptyStudent)
 					console.log(k)
-					emptyCounter++
 				}
 				else {
 					var tempStudent = tempList[index++]
@@ -288,18 +316,15 @@ function assignStations(seed) {
 				partners.push(emptyStudent)
 				students.push(emptyStudent);
 				console.log(k)
-				emptyCounter++
 			}
 			s.students = partners
 		}
 	}
-
-	console.log("EMPTY COUNTER: " + emptyCounter)
 }
 
 // Function that shuffles the array
 function shuffle(array, seed) {
-	if (seed != "")
+	if (!isNaN(seed))	// If seed is a number
 		Math.seedrandom(seed)
 	var currentIndex = array.length
 	var temporaryValue

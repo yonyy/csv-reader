@@ -6,7 +6,7 @@ block append script
 	script(src="classroom.js")
 	script(src="seat.js")
 block prepend bodyLink
-	body(onload="createClassObject()")
+	body(onload="createSeats()")
 block createActive
 	li(class="active")
 		a(href="/create")
@@ -117,7 +117,7 @@ block content
 					form(class="form", name="edit_submit", action="/seating_chart", method="post")
 						input(name="className", type="hidden", value="#{className}")
 						input(name="totalStudents", type="hidden", value="#{totalStudents}")
-						input(name="totalSeats", class="totalSeats", type="hidden", value="")
+						input(name="totalSeats", class="totalSeats", type="hidden", value="#{totalSeats}")
 						input(name="width", type="hidden", value="#{width}")
 						input(name="height", type="hidden", value="#{height}")
 						input(name="students", class="students", type="hidden", value="JSON.stringify(#{students})")

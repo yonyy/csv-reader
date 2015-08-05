@@ -3,12 +3,13 @@ var classroomSchema = new mongoose.Schema({
 	name: String,
 	height: Number,
 	width: Number,
-	totalGhosts: Number,
+	ghostSeats: Array,
+	leftSeats: Array,
+	totalSeats: Number, 
 	created_at: {
 		type: Date,
 		default: Date.now
-	},
-	gridHTML: String
+	}
 });
 
 mongoose.model('Classroom', classroomSchema);
