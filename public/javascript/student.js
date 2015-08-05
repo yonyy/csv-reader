@@ -9,27 +9,28 @@ function Student(lastname, firstname, email, id, isLH, isOSD, seat)	{
 }
 
 /* A function that assigns the selected student as left handed or not based of the
- * value selected. Uses the rosterMap defined in filterSearchStudent.js */
+ * value selected. Uses the studentMap defined in filterSearchStudent.js */
 function assignHand(id, isLH) {
 	console.log(isLH);
-	roster[rosterMap[id]].isLeftHanded = (isLH == "true") ? true : false;
-	if (roster[rosterMap[id]].isLeftHanded) {
-		console.log(roster[rosterMap[id]].firstname + " isLeftHanded");
+	console.log(students[studentMap[id]])
+	students[studentMap[id]].isLeftHanded = (isLH == "true") ? true : false;
+	if (students[studentMap[id]].isLeftHanded) {
+		console.log(students[studentMap[id]].firstname + " isLeftHanded");
 	}
 	else
-		console.log(roster[rosterMap[id]].firstname + " NOT isLeftHanded");	
+		console.log(students[studentMap[id]].firstname + " NOT isLeftHanded");	
 }
 
 /* A function that assigns the selected student as OSD or not based of the
- * value selected Uses the rosterMap defined in filterSearchStudent.js */
+ * value selected Uses the studentMap defined in filterSearchStudent.js */
 function assignOSD(id, isOSD) {
 	console.log(isOSD);
-	roster[rosterMap[id]].isOSD = (isOSD == "true") ? true : false;
-	if (roster[rosterMap[id]].isOSD) {
-		console.log(roster[rosterMap[id]].firstname + " isOSD");
+	students[studentMap[id]].isOSD = (isOSD == "true") ? true : false;
+	if (students[studentMap[id]].isOSD) {
+		console.log(students[studentMap[id]].firstname + " isOSD");
 	}
 	else
-		console.log(roster[rosterMap[id]].firstname + " NOT isOSD");	
+		console.log(students[studentMap[id]].firstname + " NOT isOSD");	
 }
 
 /* Uses the properties of a Student object to generate a string. This function

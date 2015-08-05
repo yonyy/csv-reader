@@ -15,7 +15,7 @@ router.use(methodOverride(function(req, res){
 }));
 
 router.post('/', function(req, res, next) {
-	var className = req.body.className;
+/*	var className = req.body.className;
 	if (className == '')
 		className = "Classroom"
 	var width = req.body.width;
@@ -25,18 +25,18 @@ router.post('/', function(req, res, next) {
 	var totalGhosts = req.body.totalGhosts
 	var seed = req.body.seed
 	var numPerStation = req.body.numPerStation
-	var classType= req.body.classType
+	var classType= req.body.classType*/
 
-	console.log(width + " " + height);
+	var classroom = req.body.classroom
+	var seed = req.body.seed
+	var roster = req.body.roster
+	var classType = req.body.classType
+
+/*	console.log(width + " " + height);*/
 	res.render('lab', {
-		className : className,
-		height : height,
-		width : width,
-		students : students,
-		totalStudents : totalStudents,
-		totalGhosts : totalGhosts,
+		classroom: classroom,
+		roster : roster,
 		seed : seed,
-		numPerStation : numPerStation,
 		classType : classType
 	});
 

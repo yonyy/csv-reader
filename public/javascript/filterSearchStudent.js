@@ -1,13 +1,17 @@
 /*var roster = JSON.parse(sessionStorage.getItem('all_students')); // Array of students*/
-var rosterMap = {}	// A map that will be used in students.js in order to quickly lookup students and assign them as left handed or OSD
-var roster = []
+var studentMap = {}	// A map that will be used in students.js in order to quickly lookup students and assign them as left handed or OSD
+var students = []
+var globalRoster = []
 
-function setRoster(students) {
-	roster = students
+function setRoster(roster) {
+	globalRoster = roster
+	console.log(roster)
+	students = roster.students
+	console.log(students)
 	/* Creates a temporary map of the roster, K: student email, V: student object 
  	* This will be used when assigning the students as left handed or OSD. */
-	for(var i = 0; i < roster.length; i++) {
-	  rosterMap[roster[i].email] = i;
+	for(var i = 0; i < students.length; i++) {
+	  studentMap[students[i].email] = i;
 	}
 	searchList()
 }

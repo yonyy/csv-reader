@@ -5,13 +5,19 @@ var autoFill = true;
 var clear = false;
 var remove = false;
 var removeAll = false;
+
 var ghostColor = "FFFFFF";
 var rightColor = "#FF5722";
+
 var finalGridContainer = "";
 var numGhosts = 0;
+var actualTotal = 0;
 var updatedStationNum = 1;
 var maxStations = 0;
-var classroom = {}
+var seatMap = {}
+var globalClassroom = {}
+var ghostSeats = []
+var globalOrder = []
 
 function Station(isGhost,numPerStation,students,isEmpty,seatPosition, gridPos) {
 	this.isGhost = isGhost;
@@ -22,14 +28,32 @@ function Station(isGhost,numPerStation,students,isEmpty,seatPosition, gridPos) {
 	this.gridPos = parseInt(gridPos,10)
 }
 
-function createStations(num) {
+function createStations(num, classroom) {
+	globalClassroom = classroom
+	var seatOrder = classroom.seatOrder;
+
     var numPerStation = parseInt(num,10)
     $(".station_item").each(function(index, element){
+    	if (seatOrder.length != 0) {
+    		$(element).attr('id', seatOrder[index])
+    		$(element).children().text(seatOrder[index])
+    	}
         var stationId = $(element).attr('id');
         var station = new Station(false, numPerStation, null, false, stationId, index+1);
-        classroom[stationId] = station;
+        seatMap[stationId] = station;
         console.log(station);
-    });  
+    });
+
+
+    ghostSeats = classroom.ghostSeats
+	for (var i = 0; i < ghostSeats.length; i++) {
+		var seatId = "#"+ghostSeats[i]
+		$(seatId).css("background-color", ghostColor);
+		var seatObj = seatMap[seatId]
+		seatObj["isGhost"] = true;
+		seatObj["isLeftHanded"] = false;
+	}
+
 }
 
 
@@ -37,7 +61,7 @@ function createStations(num) {
  * selected As well as update the number of non ghost seats */
 function updateStation(id, expectedSeats, totalStud, numPerStation) { 
 	$('.alert').remove();
-	var seatObj = classroom[id];
+	var seatObj = seatMap[id];
 	maxStations = parseInt(expectedSeats,10);
 
 	console.log("id: " + id);
@@ -48,6 +72,11 @@ function updateStation(id, expectedSeats, totalStud, numPerStation) {
 			numGhosts++;
 		seatObj["isGhost"] = true;
 		console.log(seatObj)
+
+		ghostSeats.push(id)
+		var index = leftSeats.indexOf(id);
+		if (index > -1)
+    		leftSeats.splice(index, 1);
 
 	}
 	if (remove)
@@ -63,7 +92,7 @@ function updateStation(id, expectedSeats, totalStud, numPerStation) {
 
 	console.log(numGhosts)
 	
-	var actualTotal = expectedSeats - numGhosts
+	actualTotal = expectedSeats - numGhosts
 	$('p.actualTotal').text('Actual Total Seats: ' + actualTotal)
 	if (actualTotal*parseInt(numPerStation,10) < parseInt(totalStud,10))
 		$('.errorMessage').prepend("<div class=\'alert alert-warning\' id=\'errorSeatTotal\'> <strong>Warning!</strong> There are not enough seats for all the students. Please remove some ghost seats or begin a new and bigger classroom </div>")
@@ -94,7 +123,7 @@ function clearClass() {
 	/* Loop through current stations, and change the station's id to blank */
 	$(".station_item").each(function(index, element){
         var stationId = $(element).attr('id');
-        var tempStation = classroom[stationId]
+        var tempStation = seatMap[stationId]
         var newID = ""
         tempStation["seatPosition"] = newID
         newMap[index+1] = tempStation
@@ -104,8 +133,8 @@ function clearClass() {
         console.log(tempStation);
 
 	});
-	classroom = newMap
-	console.log(classroom)
+	seatMap = newMap
+	console.log(seatMap)
 	clear = true;
 }
 
@@ -117,7 +146,7 @@ function manIncreaseStation(stationID) {
 	console.log("updatedStationNum: " + updatedStationNum)
 
 	var newID = updatedStationNum
-	var tempStation = classroom[stationID]
+	var tempStation = seatMap[stationID]
 	tempStation["seatPosition"] = newID
 	updatedStationNum++
 
@@ -135,10 +164,10 @@ function manIncreaseStation(stationID) {
 		$("#"+newID).children().text(newID)
 	}
 
-	var switchStat = classroom[newID]
-	classroom[newID] = tempStation
-	classroom[stationID] = switchStat
-	console.log(classroom[newID])
+	var switchStat = seatMap[newID]
+	seatMap[newID] = tempStation
+	seatMap[stationID] = switchStat
+	console.log(seatMap[newID])
 }
 
 function autoFillStation(w, h) {
@@ -155,7 +184,7 @@ function autoFillStation(w, h) {
 
     $(".station_item").each(function(index, element){
         var stationId = $(element).attr('id');
-        var tempStation = classroom[stationId]
+        var tempStation = seatMap[stationId]
         var newID = 0
         console.log("index: " + index)
         if (index>0 && index%width == 0 ){
@@ -179,6 +208,6 @@ function autoFillStation(w, h) {
         $(element).children().text(newID)
         console.log(tempStation);
     });
-    classroom = newMap
-    console.log(classroom)
+    seatMap = newMap
+    console.log(seatMap)
 }

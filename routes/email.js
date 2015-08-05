@@ -17,7 +17,7 @@ router.use(methodOverride(function(req, res){
 
 router.post('/', function(req, res, next) {
 	var roster = req.body.roster;
-	var className = req.body.className;
+	var className = JSON.stringify(req.body.className);
 	console.log(className);
 	res.render('email',{
 		roster : roster,

@@ -15,7 +15,7 @@ router.use(methodOverride(function(req, res){
 }))
 
 router.get('/', function(req, res, next) {
-  res.render('create');
+  res.render('createClass');
 });
 
 module.exports = router;

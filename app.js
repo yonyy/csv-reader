@@ -15,7 +15,7 @@ var lab = require('./routes/lab')
 var seatingchart = require('./routes/seatingcharts')
 var student = require('./routes/student');
 var email = require('./routes/email');
-var create = require('./routes/create');
+var createClass = require('./routes/createClass');
 var createLab = require('./routes/createLab')
 var send = require('./routes/send')
 
@@ -42,7 +42,7 @@ app.use(methodOverride('_method'));
 
 /* Send home page file */
 app.use('/', routes);
-app.use('/create', create)
+app.use('/create', createClass)
 app.use('/createLab', createLab)
 app.use('/classroom', classroom);
 app.use('/lab', lab)

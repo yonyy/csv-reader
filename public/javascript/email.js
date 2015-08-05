@@ -41,7 +41,7 @@ function emailRoster(className) {
 /* A function to automatically load email form with the information passed 
  * Generates the list of recievers, sample subject text, sample body text
  */
-function fillEmailForm(studentstoEmail) {
+function fillEmailForm(studentstoEmail, className) {
 	var toList = "";
 	$('#inputSubject').val("Quiz Seating Assignment");
 	for(var i = 0; i < studentstoEmail.length; i++) {
@@ -50,7 +50,7 @@ function fillEmailForm(studentstoEmail) {
 	$('#inputReciever').val(toList);
 	 var sampleAddressText = "Dear [fullname], \n\n"
 	 var sampleBodyText = "Here is your assigned seat for the ________.\nWe will have seating charts available in the front of the classroom.\n\n" 
-	 var sampleInfoText = "Quiz - ________ at ________ in ________"  + "\n";
+	 var sampleInfoText = "Quiz - ________ at ________ in " + className.toString() + "\n";
 	 var sampleSeatText = "Seat: [seat] \n"
 	 var sampleIdText = "Exam Serial Number: [id] \n\n";
 	 var sampleEndText = "Please be sure to put your Exam Serial Number on your exam. \nNote: Exam Serial Number may change in future exams\n";

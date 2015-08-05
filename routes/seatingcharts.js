@@ -15,28 +15,26 @@ router.use(methodOverride(function(req, res){
 }));
 
 router.post('/', function(req, res, next) {
-	var className = req.body.className;
+/*	var className = req.body.className;
 	var totalStudents = req.body.totalStudents;
 	var totalSeats = req.body.totalSeats;
 	var width = req.body.width;
 	var height = req.body.height;
-	var students = req.body.students;
+	var students = req.body.students;*/
 	var gridHTML = req.body.gridHTML;
 	var classroom = req.body.classroom;
 	var seed = req.body.seed
 	var classType = req.body.classType
-	console.log(totalSeats)
+	var seatMap = req.body.seatMap
+	var roster = req.body.roster
+/*	console.log(totalSeats)*/
 	res.render('seating_chart', {
-		className: className,
-		totalStudents : totalStudents,
-		totalSeats : totalSeats,
-		width : width,
-		height : height,
-		students : students,
 		gridHTML : gridHTML,
 		classroom : classroom,
+		roster : roster,
+		seatMap : seatMap,
 		seed : seed,
-		classType : classType
+		classType : classType,
 	});
 });
 

@@ -1,28 +1,28 @@
 /*var grid = sessionStorage.getItem('finalGridContainer');	// HTML body that contains the classroom
 var gridCol = sessionStorage.getItem('width');		// Value containing the classroom width
 var gridRow = sessionStorage.getItem('height');		// Value containing the classroom height
-var seatMap = JSON.parse(sessionStorage.getItem('all_seats'));	// Hashmap of Seats K: id V: seat
+var finalSeatMap = JSON.parse(sessionStorage.getItem('all_seats'));	// Hashmap of Seats K: id V: seat
 var students = JSON.parse(sessionStorage.getItem('all_students'));	// Array of students
 var seatArr = []	// Array of the seats*/
 
 var grid = "";	// HTML body that contains the classroom
 var gridCol = 0;		// Value containing the classroom width
 var gridRow = 0;		// Value containing the classroom height
-var seatMap = {};		// Hashmap of Seats K: id V: seat
+var finalSeatMap = {};		// Hashmap of Seats K: id V: seat
 var students = [];		// Array of students
 var seatArr = [];		// Array of the seats
 
 /* Function that executes once the HTML body loads. Appends the grid HTML,
  * updates the onclick function, and begins assigning the students to a seat,
  * and attaching info */
-function loadGrid(gridHTML, width, height, classroom, studentsArr, seed, classType) {
+function loadGrid(gridHTML, classroom, seats, roster, seed, classType) {
 	grid = gridHTML
-	gridCol = width
-	gridRow = height
-	seatMap = classroom
-	students = JSON.parse(studentsArr)
+	gridCol = parseInt(classroom.width,10)
+	gridRow = parseInt(classroom.height,10)
+	finalSeatMap = seats
+	students = roster.students
 	
-	console.log(seatMap)
+	console.log(finalSeatMap)
 	console.log(students)
 	$('.finalGridContainer').append(gridHTML);
 	$('.seat_item').attr("onclick","displaySeatInfo($(this).attr('id'))");
@@ -41,7 +41,7 @@ function loadGrid(gridHTML, width, height, classroom, studentsArr, seed, classTy
  * This can be seen when the user hovers over the seat */
 function attachInfo() {
 	$('.seat_item').each(function(index, element) {
-		var seatObj = seatMap[$(element).attr('id')];
+		var seatObj = finalSeatMap[$(element).attr('id')];
 		if (seatObj.isGhost) {
 			var info = "<p class=\"objectInfo\">Ghost Seat </p>";
 			var studentProfile = "<span>" + info + "</span>"
@@ -71,7 +71,7 @@ function attachInfo() {
  * This can be seen when the user hovers over the station */
 function attachStationInfo() {
 	$('.station_item').each(function(index, element) {
-		var stationObj = seatMap[$(element).attr('id')];
+		var stationObj = finalSeatMap[$(element).attr('id')];
 		if (stationObj.isGhost) {
 			var info = "<p class=\"objectInfo\">Ghost Seat </p>";
 			var studentProfile = "<span>" + info + "</span>"
@@ -103,7 +103,7 @@ function attachStationInfo() {
 }
 
 function displaySeatInfo(id) {
-	console.log(seatMap[id]);
+	console.log(finalSeatMap[id]);
 }
 
 /* Assigns the students to a seat */
@@ -117,12 +117,13 @@ function assignSeats(seed) {
 	
 	var counter = 0
 	// Copies over the map of seats and pushes it into an array in order to loop through it
-	for (var key in seatMap) {
-		if (seatMap.hasOwnProperty(key)) {
-			seatArr.push(seatMap[key])
+	for (var key in finalSeatMap) {
+		if (finalSeatMap.hasOwnProperty(key)) {
+			seatArr.push(finalSeatMap[key])
 		}
 	}
 
+	console.log(seatArr)
 	// Goes through the shuffles student array and begins dividing it into left and right handed students
 	for(var i = 0; i < tempList.length; i++) {
 		if (tempList[i].isLeftHanded)
@@ -240,9 +241,9 @@ function assignStations(seed) {
 	shuffle(tempList,seed);	// Shuffles the list of students
 	console.log("lab")
 	// Copies over the map of seats and pushes it into an array in order to loop through it
-	for (var key in seatMap) {
-		if (seatMap.hasOwnProperty(key)) {
-			seatArr.push(seatMap[key])
+	for (var key in finalSeatMap) {
+		if (finalSeatMap.hasOwnProperty(key)) {
+			seatArr.push(finalSeatMap[key])
 		}
 	}
 

@@ -6,16 +6,23 @@ block append script
 	script(src="classroom.js")
 	script(src="seat.js")
 block prepend bodyLink
-	body(onload="createSeats()")
+	body(onload="createSeats(#{classroom})")
 block createActive
 	li(class="active")
 		a(href="/create")
 			i(class="fa fa-fw fa-edit")
 			|  Create
 block content
+	- var parsedClass = JSON.parse(classroom)
+	- var parsedRoster = JSON.parse(roster)
+	- numGhosts = parsedClass.ghostSeats.length
+	- var height = parsedClass.height
+	- var width = parsedClass.width
+	- var className = parsedClass.className
+	- var totalSeats = parsedClass.totalSeats
+	- var totalStudents = parsedRoster.totalStudents
 	- var total_width = parseInt(width,10) + 1
 	- var total_height = parseInt(height,10) + 1
-	- numGhosts = totalGhosts
 	div(id="page-wrapper")
 		div(class="container-fluid")
 			div(class="row")
@@ -39,7 +46,6 @@ block content
 							span(class="glyphicon glyphicon-wrench")
 							|  Classroom Information
 					p(class="lead currentDim") Height: #{height} Width: #{width}
-					- var totalSeats = height*width
 					p(class="lead expectedTotal") Expected Total Seats: #{totalSeats}
 					p(class="lead actualTotal") Actual Total Seats: #{totalSeats}
 					p(class="lead totalStudents") Total Students: #{totalStudents}
@@ -115,23 +121,33 @@ block content
 			div(class="row")
 				div(class="col-md-offset-6 col-lg-4")
 					form(class="form", name="edit_submit", action="/seating_chart", method="post")
-						input(name="className", type="hidden", value="#{className}")
-						input(name="totalStudents", type="hidden", value="#{totalStudents}")
-						input(name="totalSeats", class="totalSeats", type="hidden", value="#{totalSeats}")
-						input(name="width", type="hidden", value="#{width}")
-						input(name="height", type="hidden", value="#{height}")
-						input(name="students", class="students", type="hidden", value="JSON.stringify(#{students})")
-						input(name="gridHTML", class="gridHTML", type="hidden", value="")
-						input(name="classroom", class="classroom", type="hidden", value="")
-						input(name="seed", type="hidden", value="#{seed}")
+						//- input(name="className", type="hidden", value="#{className}")
+						//- input(name="totalStudents", type="hidden", value="#{totalStudents}")
+						//- input(name="totalSeats", class="totalSeats", type="hidden", value="#{totalSeats}")
+						//- input(name="width", type="hidden", value="#{width}")
+						//- input(name="height", type="hidden", value="#{height}")
+						//- input(name="students", class="students", type="hidden", value="JSON.stringify(#{students})")
+						//- 
+						//- 
+						//- input(name="seed", type="hidden", value="#{seed}")
+						input(type="hidden", name="classType", value="#{classType}")
+						input(type="hidden", name="seed", value="#{seed}")
+						input(type="hidden", class="gridHTML", name="gridHTML", value="")
+						input(type="hidden", class="classroom", name="classroom", value="")
+						input(type="hidden", class="seatMap", name="seatMap", value="")
+						input(type="hidden", class="roster", name="roster", value="#{roster}")
 						button(type="submit", class="btn btn-default submitClass") Submit
 					script.
 						$('.submitClass').click(function() {
 							var finalGridContainer = $('.gridContainer').html();
-							//- sessionStorage.setItem('all_seats', JSON.stringify(classroom));
+							//- sessionStorage.setItem('all_seats', JSON.stringify(seatMap));
 							//- sessionStorage.setItem('width', #{total_width}-1);
 							//- sessionStorage.setItem('height', #{total_height}-1);
 							//- sessionStorage.setItem('finalGridContainer', finalGridContainer);
 							$('.gridHTML').val(JSON.stringify(finalGridContainer))
-							$('.classroom').val(JSON.stringify(classroom))
+							$('.seatMap').val(JSON.stringify(seatMap))
+							globalClassroom.leftSeats = leftSeats
+							globalClassroom.ghostSeats = ghostSeats
+							globalClassroom.totalSeats = actualTotal
+							$('.classroom').val(JSON.stringify(globalClassroom))
 						});

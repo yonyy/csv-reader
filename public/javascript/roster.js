@@ -2,8 +2,15 @@
  * Returns an array of student objects */
 var all_students = [];
 var total_students = 0;
+var fileName = ""
 
-function createClass(dataArr) {
+function Roster (rosterName, students, totalStudents) {
+	this.rosterName = rosterName
+	this.students = students
+	this.totalStudents = totalStudents
+}
+
+function createStudents(dataArr) {
 	var studentsArr = [];
 	for (var i = 0; i < dataArr.length; i++) {
 		var studentInfo = dataArr[i].split(',');
@@ -16,14 +23,15 @@ function createClass(dataArr) {
 }
 
 /* Read the contents of the file and beging parsing it */
-function readUpload() {
+function readRoster() {
 	var selectedFile = document.getElementById('fileInsert').files[0];
 	if (selectedFile) {
+		fileName = selectedFile.name
 		var reader = new FileReader();
 		reader.onload = function(e) {
 			var content = reader.result;
 			var data = content.split('\n');
-			all_students = createClass(data);
+			all_students = createStudents(data);
 /*			printContent(all_students);*/
 		}
 		reader.readAsText(selectedFile);
@@ -43,5 +51,5 @@ function readUpload() {
 }*/
 
 window.onload = function () {
-	document.getElementById('fileInsert').addEventListener('change',readUpload,false);
+	document.getElementById('fileInsert').addEventListener('change',readRoster,false);
 }

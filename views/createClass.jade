@@ -1,0 +1,51 @@
+extends ./create.jade
+
+block createActive
+	li(class="active")
+		a(href="/create")
+			i(class="fa fa-fw fa-edit")
+			|  Create Class
+block formInputs
+	form(class="form", name="dimensions")
+			div(class="row")
+				div(class="col-lg-6")
+					div(class="form-group classroomName")
+						label(for="className") Classroom Name
+						input(type="text", class="form-control", name="className", id="className")
+					div(class="col-lg-6 form-group")
+						label(for="heightInsert") Height
+						input(type="number", class="form-control", name="height", id="heightInsert", placeholder="10")
+					div(class="col-lg-6 form-group")
+						label(for="widthInsert") Width
+						input(type="number", class="form-control", name="width", id="widthInsert", placeholder="12")
+						input(type="hidden", id="perStation", value="")
+					div(class="form-group")
+						label(for="classSeed") Seed (Used to generate a random yet repeatable seating chart) [Optional]
+						input(type="number", class="form-control", name="seed", id="seedInsert", placeholder="3")
+				div(class="col-lg-6")
+					div(class="form-group")
+						label Existing classrooms
+						select(multiple class="form-control existingClass", name="className")
+							option(selected="selected" id="op0" value='0') --Select--
+							option(id="op1" value='1') WLH 2004
+							option(id="op2" value='2') PCYH 124
+							option(id="op3" value='3') SOLIS 110
+			div(class="row")
+				div(class="col-lg-6")
+					div(class="form-group")
+						label(for="fileInsert") File Input
+						input(type="file", accept=".csv", id="fileInsert", name="fileInput", onchange="readRoster()")
+				div(class="col-lg-6")
+					div(class="form-group")
+						label Existing rosters
+						select(multiple class="form-control existingRoster", name="fileInput")
+							option(selected="selected" id="r0", value='0') --Select--
+							option(id="r1" value='1') CSE 15L W14 Section 002
+							option(id="r2" value='2') CSE 12 W14 Section 001
+			input(type="hidden", class="classType", name="classType", value="classroom")
+			//- input(type="hidden", name="students", id="students", value="")
+			//- input(type="hidden", name="totalStudents", id="totalStudents", value="")
+			//- input(type="hidden", name="totalGhosts", value = "0")
+			//- input(type="hidden", class="classModel", name="classModel", value="")
+			div(class="col-md-offset-5")
+				a(class="btn btn-default submitForm", role="button") Submit

@@ -17,7 +17,7 @@ router.use(methodOverride(function(req, res){
 }));
 
 router.post('/', function(req, res, next) {
-	var width = req.body.width;
+/*	var width = req.body.width;
 	var height = req.body.height;
 	var className = req.body.className;
 	var students = req.body.students;	// array of students
@@ -30,21 +30,19 @@ router.post('/', function(req, res, next) {
 	if (classType == "lab")
 		var numPerStation = req.body.numPerStation
 	else
-		numPerStation = 1
+		numPerStation = 1*/
+	var classType = req.body.classType
+	var classroom = req.body.classroom
+	var roster = req.body.roster
+	var seed = (req.body.seed != "") ? req.body.seed : JSON.stringify("noSeed")
 
 /*	console.log(students);*/
-	console.log(totalStudents);
+/*	console.log(totalStudents);*/
 	res.render('student', {
-		title: 'Customize your Roster',
-		width: width,
-		height: height,
-		className : className,
-		students : students,
-		totalStudents : totalStudents,
-		totalGhosts : totalGhosts,
+		classroom : classroom,
+		roster : roster,
 		seed : seed,
-		classType : classType,
-		numPerStation : numPerStation
+		classType : classType
 	});
 });
 

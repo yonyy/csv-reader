@@ -20,9 +20,9 @@ block append script
 	script(src="email.js")
 block prepend bodyLink
 	- if (classType == "lab")
-		body(onload="loadGrid(#{gridHTML}, #{width}, #{height}, #{classroom}, #{students}, #{seed}, \"lab\")")
+		body(onload="loadGrid(#{gridHTML}, #{classroom}, #{seatMap}, #{roster}, #{seed}, \"lab\")")
 	- else
-		body(onload="loadGrid(#{gridHTML},#{width},#{height},#{classroom},#{students},#{seed},\"class\")")
+		body(onload="loadGrid(#{gridHTML}, #{classroom}, #{seatMap}, #{roster}, #{seed}, \"class\")")
 
 block labActive
 	- if(classType == "lab")
@@ -47,6 +47,10 @@ block createActive
 				i(class="fa fa-fw fa-edit")
 				|  Create Class
 block content
+	- var totalSeats = JSON.parse(classroom).totalSeats
+	- console.log(classroom)
+	- var totalStudents = JSON.parse(roster).students.length
+	- var className = JSON.parse(classroom).className
 	div(id='page-wrapper', class="pageContainer")
 		div(class="container-fluid")
 			div(class="row")
@@ -75,8 +79,8 @@ block content
 					h1 Choose how to format pdf
 					form(class="form-horizontal rosterFileName")
 						div(class="form-group")
-							label(for="rosterName" class="col-sm-2 control-label") PDF Name
-							input(type="text", class="form-control", id="rosterName", placeholder="CSE100Quiz5SeatingChart", style="width: 200px;")
+							label(for="pdfName" class="col-sm-2 control-label") PDF Name
+							input(type="text", class="form-control", id="pdfName", placeholder="CSE100Quiz5SeatingChart", style="width: 200px;")
 						div(class="form-group")
 							label(for="pdfTitle" class="col-sm-2 control-label") PDF Title
 							input(type="text", class="form-control", id="pdfTitle", placeholder="Pepper Canyon 106 - Quiz 5 Thursday, June 4th -5pm", style="width: 400px;")
@@ -104,6 +108,7 @@ block content
 							|Sorted order
 					input(type="hidden", id="totalStudents", value="#{totalStudents}")
 					input(type="hidden", id="totalSeats", value="#{totalSeats}")
+					input(type="hidden", id="classroomName", value="#{className}")
 					a(class="btn btn-default", id="downloadRoster", role="button") Download
 					a(class="btn btn-default", id="emailRoster", role="button") Email Students
 				script.
@@ -111,10 +116,13 @@ block content
 						$("input[type='radio']").not(this).prop('checked', false);
 					})
 					$('#downloadRoster').click(function() {
-						generatePDF($("input[type='radio']:checked").val(), $('#rosterName').val(), $('#pdfTitle').val(), $('#totalSeats').val(), $('#totalStudents').val())
+						var checked = $("input[type='radio']:checked").val()
+						var pdfName = $('#pdfName').val()
+						var pdfTitle = $('#pdfTitle').val()
+						generatePDF(checked, pdfName, pdfTitle, $('#totalSeats').val(), $('#totalStudents').val())
 					})
 					$('#emailRoster').click(function() {
-						emailRoster("sample")
+						emailRoster($('#classroomName').val())
 					})
 			div(class="row")
 				div(class="col-lg-12")

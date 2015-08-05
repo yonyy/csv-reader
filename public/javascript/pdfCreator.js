@@ -3,9 +3,9 @@ var col_gap = 50; // the gap between each row
 var title_marginLeft = 50;  // The x coord of the title
 var title_marginTop = 10; // The y coord of the title
 var end_X = 200;  // The maximum x coord
-var end_Y = 290;  // the maximum y coord
+var end_Y = 280;  // the maximum y coord
 var rosterFontSize = 6; // font size to use for the students
-var startX = 5; // The x coord to begin writing the table of students
+var startX = 10; // The x coord to begin writing the table of students
 var startY = 15;  // The y coord to begin writing the table of students
 var pdfFileName = "";
 var doc = null;
@@ -155,12 +155,14 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
             doc.text(currentX, currentY, createString(partners[k]))
             currentY += row_gap;  // Go down one row
           }
+          console.log(currentY)
           checkBoundaries(end_X, end_Y)
         }
       }
     }
     /* Writing the empty students to the pdf */
     for(var i = 0; i < emptySeats.length; i++) {
+      console.log(currentY)
       doc.text(currentX, currentY, emptySeats[i].toString());
       currentY+= row_gap; // Same logic as above
       checkBoundaries(end_X, end_Y)
