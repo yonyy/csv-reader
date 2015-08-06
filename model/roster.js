@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var seatSchema = new mongoose.Schema({
+var rosterSchema = new mongoose.Schema({
 	rosterName : String,
 	totalStudents: Number,
 	students : Array,
@@ -9,4 +9,4 @@ var seatSchema = new mongoose.Schema({
 	}
 });
 
-mongoose.model('Roster', seatSchema);
+mongoose.model('Roster', rosterSchema);

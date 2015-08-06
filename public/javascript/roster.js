@@ -1,15 +1,16 @@
-/* Given an array of student info create student objects of it 
- * Returns an array of student objects */
-var all_students = [];
-var total_students = 0;
-var fileName = ""
+var all_students = [];	// array to contain student objects
+var total_students = 0;	// number of students
+var fileName = ""	// file name
 
+// Constructor for Roster object. Resembles the Roster model in DB
 function Roster (rosterName, students, totalStudents) {
 	this.rosterName = rosterName
 	this.students = students
 	this.totalStudents = totalStudents
 }
 
+/* Given an array of student info create student objects of it 
+ * Returns an array of student objects */
 function createStudents(dataArr) {
 	var studentsArr = [];
 	for (var i = 0; i < dataArr.length; i++) {
@@ -36,6 +37,19 @@ function readRoster() {
 		}
 		reader.readAsText(selectedFile);
 	}
+}
+
+// Runs if user did not select an old roster. Checks that the file value
+// isnt empty
+function validateRoster() {
+	 // validating file input
+	var fileVal = $('#fileInsert').val();
+    if (fileVal == '') {
+        $('.errorMessage').prepend("<div class=\'alert alert-danger\' id=\'errorFile\'> <strong>Error!</strong> No file input </div>")
+        return false;
+    }
+
+    return true;
 }
 
 

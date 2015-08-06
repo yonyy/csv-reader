@@ -30,9 +30,12 @@ block formInputs
 					label Existing lab rooms
 					select(multiple class="form-control existingClass", name="className")
 						option(selected="selected" id="op0" value='0') --Select--
-						option(id="op1" value='1') CSE B260
-						option(id="op2" value='2') CSE B250
-						option(id="op3" value='3') CSE B240
+						- for labroom in JSON.parse(labrooms)
+							- var labVal = JSON.stringify(labroom)
+							option(value="#{labVal}")=labroom.className + " (" + labroom.totalSeats + " seats, " + labroom.numPerStation +" per seat)"
+						//- option(id="op1" value='1') CSE B260
+						//- option(id="op2" value='2') CSE B250
+						//- option(id="op3" value='3') CSE B240
 		div(class="row")
 			div(class="col-lg-6")
 				div(class="form-group")
@@ -43,8 +46,11 @@ block formInputs
 					label Existing rosters
 					select(multiple class="form-control existingRoster", name="fileInput")
 						option(selected="selected" id="r0", value='0') --Select--
-						option(id="r1" value='1') CSE 15L W14 Section 002
-						option(id="r2" value='2') CSE 12 W14 Section 001
+							- for roster in JSON.parse(rosters)
+								- var labVal = JSON.stringify(roster)
+								option(value="#{labVal}")=roster.rosterName + " (" + roster.totalStudents + " students)"
+						//- option(id="r1" value='1') CSE 15L W14 Section 002
+						//- option(id="r2" value='2') CSE 12 W14 Section 001
 		input(type="hidden", class="classType", name="classType", value="lab")
 		//- input(type="hidden", name="students", id="students", value="")
 		//- input(type="hidden", name="totalStudents", id="totalStudents", value="")

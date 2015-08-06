@@ -3,12 +3,13 @@ var path = require('path');
 var app = express();
 var bodyParser = require("body-parser");
 var logger = require('morgan');
+var favicon = require('serve-favicon')
 
 var db = require('./model/db');
 var classrooms = require('./model/classroom');
-var students = require('./model/student');
 var rosters = require('./model/roster');
 
+var api = require('./routes/api')
 var routes = require('./routes/index');
 var classroom = require('./routes/classroom');
 var lab = require('./routes/lab')
@@ -50,6 +51,7 @@ app.use('/student', student);
 app.use('/email', email);
 app.use('/seating_chart', seatingchart)
 app.use('/send', send)
+app.use('/api', api)
 
 http.listen(app.get("port"), app.get("ipaddr"), function() {
   console.log("Server up and running. Go to http://" + app.get("ipaddr") + ":" + app.get("port"));

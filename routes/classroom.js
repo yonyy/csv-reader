@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var mongoose = require('mongoose') //mongo connection
 var bodyParser = require('body-parser'); // parses information from POST
 var methodOverride = require('method-override'); // used to manipulate POST
 var textParser = require('./modules/textParser.js');
@@ -29,6 +30,30 @@ router.post('/', function(req, res, next) {
 	var seed = req.body.seed
 	var roster = req.body.roster
 	var classType = req.body.classType
+
+	var parsedRoster = JSON.parse(roster)
+	var rosterName = parsedRoster.rosterName
+	mongoose.model('Roster').findOne({rosterName : rosterName}, function (err, newRoster){
+		if (err) {
+			console.error(err)
+		}
+		if (!newRoster) {
+			console.log("Roster not found")
+			mongoose.model('Roster').create({
+				rosterName : rosterName,
+				totalStudents : parsedRoster.totalStudents,
+				students : parsedRoster.students,
+			}, function (err, newRoster){
+				if (err)
+					console.error(err)
+				else
+					console.log("Uploaded : " + newRoster.rosterName)
+			});
+		}
+		else {
+			console.log("Roster already exists. Not uploading")
+		}
+	});
 
 	res.render('classroom', {
 		classroom: classroom,

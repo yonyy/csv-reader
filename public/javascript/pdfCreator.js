@@ -20,6 +20,8 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
   var stationLayout = false;
   var maxRowsPerPage = 12
   console.log(students)
+
+  // Formating title and sorting array based on sorting option selected
   if (filename == "") filename = "SeatingChart"
   if (title == "") title = "Seating Chart"
 
@@ -50,7 +52,7 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
   if (gridLayout) 
     doc = new jsPDF("l"); // Landscape orientatiokn for grid layout
 
-  var emptySeats = [];
+  var emptySeats = [];  // array to hold empty seat strings. To be prined at the end of file
   console.log(filename)
   console.log(title)
 
@@ -132,7 +134,7 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
           cellContent = tempStation.seatPosition.toString() + "\n"
           var partners = tempStation.students;
           for (var k = 0; k < partners.length; k++) {
-            cellContent += partners[k].firstname + ", " + partners[k].lastname + "\n"
+            cellContent += partners[k].firstname + ", " + partners[k].lastname + " ______" + "\n"
           }
         }
         doc.cell(currentX,currentY,cellWidth,cellHeight, cellContent,i)

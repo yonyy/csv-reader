@@ -1,15 +1,15 @@
-var isGhost = false;
-var isLeftHanded = false;
-var ghostColor = "FFFFFF";
-var leftColor = "#2196F3";
-var rightColor = "#FF5722";
-var finalGridContainer = "";
-var numGhosts = 0;
-var actualTotal = 0
-var seatMap = {}
-var globalClassroom = {}
-var ghostSeats = []
-var leftSeats = []
+var isGhost = false;	// variable to keep track if ghost checkbox is clicked
+var isLeftHanded = false;	// variable to keep track if left handed option is clicked
+var ghostColor = "FFFFFF";	// background color of a ghost seat
+var leftColor = "#2196F3";	// background color of a right handed seat
+var rightColor = "#FF5722";	// background color of a left handed seat
+var finalGridContainer = "";	// suppose to contain the HTML content of the grid once it is finalized
+var numGhosts = 0;	// keeps track of the total number of ghosts
+var actualTotal = 0	// keeps track of the total non ghost seats
+var seatMap = {}	// seatMap to allow quick access to the seat object based of its id position
+var globalClassroom = {}	// global classroom object. Once classroom is finalized, the passed in classroom is updated to this one
+var ghostSeats = []	// array to hold positions of ghosts seats. Assigend to global classroom once all seats are assigned
+var leftSeats = []	// array to hold position of left seats. Assigned to global classroom once all seats are assigned
 
 function Seat(isGhost,isLeftHanded,student,isEmpty,seatPosition) {
 	this.isGhost = isGhost;
@@ -29,23 +29,31 @@ function createSeats(classroom) {
         var seatId = $(element).attr('id');
 		var seat = new Seat(false, false, null, false, seatId);
 		seatMap[seatId] = seat;
+		actualTotal++
 		console.log(seat);
 	});
 
+	// This section run if user has selected an uploaded classroom
+	// It over writes the current status of the seat to a ghost seat
 	ghostSeats = classroom.ghostSeats
+	console.log(ghostSeats)
 	for (var i = 0; i < ghostSeats.length; i++) {
 		var seatId = "#"+ghostSeats[i]
 		$(seatId).css("background-color", ghostColor);
-		var seatObj = seatMap[seatId]
+		var seatObj = seatMap[ghostSeats[i]]
 		seatObj["isGhost"] = true;
 		seatObj["isLeftHanded"] = false;
+		actualTotal--
 	}
 
+	// This section run if user has selected an uploaded classroom
+	// It over writes the current status of the seat to a left seat
 	leftSeats = classroom.leftSeats
+	console.log(leftSeats)
 	for (var i = 0; i < leftSeats.length; i++) {
 		var seatId = "#"+leftSeats[i]
 		$(seatId).css("background-color", leftColor);
-		var seatObj = seatMap[seatId]
+		var seatObj = seatMap[leftSeats[i]]
 		seatObj["isGhost"] = false;
 		seatObj["isLeftHanded"] = true;		
 	}
@@ -65,6 +73,7 @@ function updateSeat(id, expectedSeats, totalStud) {
 		seatObj["isGhost"] = true;
 		seatObj["isLeftHanded"] = false;
 		
+		// Push the id to the ghostSeat and remove it from leftSeats
 		ghostSeats.push(id)
 		var index = leftSeats.indexOf(id);
 		if (index > -1)
@@ -77,6 +86,7 @@ function updateSeat(id, expectedSeats, totalStud) {
 		seatObj["isLeftHanded"] = true;
 		seatObj["isGhost"] = false;
 		
+		// Push id to the leftSeats and remove it from ghostSeats
 		leftSeats.push(id)
 		var index = ghostSeats.indexOf(id);
 		if (index > -1)
@@ -89,6 +99,7 @@ function updateSeat(id, expectedSeats, totalStud) {
 		seatObj["isLeftHanded"] = false;
 		seatObj["isGhost"] = false;
 
+		// Remove id from both left and ghost seats array
 		var index = leftSeats.indexOf(id);
 		if (index > -1)
     		leftSeats.splice(index, 1);

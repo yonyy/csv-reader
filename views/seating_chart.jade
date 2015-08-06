@@ -47,10 +47,11 @@ block createActive
 				i(class="fa fa-fw fa-edit")
 				|  Create Class
 block content
-	- var totalSeats = JSON.parse(classroom).totalSeats
-	- console.log(classroom)
+	- var parsedClass = JSON.parse(classroom)
+	- var totalSeats = parsedClass.totalSeats
 	- var totalStudents = JSON.parse(roster).students.length
-	- var className = JSON.parse(classroom).className
+	- var className = parsedClass.className
+	- var numPerStation = parsedClass.numPerStation
 	div(id='page-wrapper', class="pageContainer")
 		div(class="container-fluid")
 			div(class="row")
@@ -72,7 +73,8 @@ block content
 							span(class="glyphicon glyphicon-th-list")
 							|  Classroom seating chart for #{className}
 					p(class="lead") #{totalStudents} Total Students
-					p(class="lead") #{totalSeats} Total Seats 
+					p(class="lead") #{totalSeats} Total Seats
+					p(class="lead") #{numPerStation} student(s) per Seat
 			div.pop-up
 				span(class="ex") x
 				div.pop-up-text

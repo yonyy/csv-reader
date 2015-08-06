@@ -17,13 +17,11 @@ block content
 	- var parsedClass = JSON.parse(classroom)
 	- var parsedRoster = JSON.parse(roster)
 	- numGhosts = parsedClass.ghostSeats.length
-	- var height = parsedClass.height
-	- var width = parsedClass.width
+	- var height = parseInt(parsedClass.height,10)
+	- var width = parseInt(parsedClass.width,10)
 	- var className = parsedClass.className
 	- var totalSeats = parsedClass.totalSeats
 	- var totalStudents = parsedRoster.totalStudents
-	- var total_width = parseInt(width,10) + 1
-	- var total_height = parseInt(height,10) + 1
 	div(id="page-wrapper")
 		div(class="container-fluid")
 			div(class="row")
@@ -152,13 +150,13 @@ block content
 								//- 10 9 8 7 6
 								//- 11 12 13 14
 								//- ...
-								- for (var row = 1; row <= total_height; row++)
+								- for (var row = 1; row <= height; row++)
 									div(class='row row_#{row}')
 										- var offset = 0
-										- for (var col = 1; col <= total_width; col++)
-											- var id = ((row-1)*total_width) + col
+										- for (var col = 1; col <= width; col++)
+											- var id = ((row-1)*width) + col
 											- if (row % 2 == 0)
-												- id = ((row-1)*total_width) + total_width - offset
+												- id = ((row-1)*width) + width - offset
 												- offset++
 											- console.log(id)
 											div(class="grid--item station_item", id="#{id}", onclick="updateStation($(this).attr('id'),#{totalSeats},#{totalStudents}, #{numPerStation})")

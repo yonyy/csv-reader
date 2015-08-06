@@ -1,23 +1,24 @@
-var manIncrease = false;
-var manualClass = false;
-var isGhost = false;
-var autoFill = true;
-var clear = false;
-var remove = false;
-var removeAll = false;
+var manIncrease = false;	// variable to check if user selected to manually number stations
+var manualClass = false;	// variable to define a state of mode. 
+							// If user manually numbers seats, the user should still be allowed to select other boxes without having the grid cleared out 
+var isGhost = false;		// variable to keep track if ghost option is clicked
+var autoFill = true;		// variable to keep track if user wants the stations to be autofilled
+var clear = false;			// varialbe to keep track if grid is needed to cleared out. Grid should clear is user is switching from autoFill to manual and vice versa
+var remove = false;			// variable to keep track if user wants to remove a station number
+var removeAll = false;		// variable to keep track if user wants to remove all station numbers
 
-var ghostColor = "FFFFFF";
-var rightColor = "#FF5722";
+var ghostColor = "FFFFFF";	// background color of ghost seat
+var rightColor = "#FF5722";	// background color of right handed seat
 
-var finalGridContainer = "";
-var numGhosts = 0;
-var actualTotal = 0;
-var updatedStationNum = 1;
-var maxStations = 0;
-var seatMap = {}
-var globalClassroom = {}
-var ghostSeats = []
-var globalOrder = []
+var finalGridContainer = "";	// suppose to contain the HTML content of the grid once it is finalized
+var numGhosts = 0;	// keeps track of the total number of ghosts
+var actualTotal = 0;	// keeps track of the total non ghost seats
+var updatedStationNum = 1;	// counter of current station number when user is manual numbering
+var maxStations = 0;	// prevent updatedStationNum from going too high
+var seatMap = {}	// seatMap to allow quick access to the seat object based of its id position
+var globalClassroom = {}	// global classroom object. Once classroom is finalized, the passed in classroom is updated to this one
+var ghostSeats = []	// array to hold positions of ghosts seats. Assigend to global classroom once all seats are assigned
+var globalOrder = []	// array to hold position final numbering of stations. Assigned to global classroom once finalized
 
 function Station(isGhost,numPerStation,students,isEmpty,seatPosition, gridPos) {
 	this.isGhost = isGhost;
@@ -28,36 +29,46 @@ function Station(isGhost,numPerStation,students,isEmpty,seatPosition, gridPos) {
 	this.gridPos = parseInt(gridPos,10)
 }
 
+// k: seat[letter][number] v: Station Obj
+/*  Function that loops through each div containing the class .station_item
+    and generates a seat based of the divs' id and default parameters
+*/
 function createStations(num, classroom) {
 	globalClassroom = classroom
 	var seatOrder = classroom.seatOrder;
 
     var numPerStation = parseInt(num,10)
     $(".station_item").each(function(index, element){
+    	// This section runs only if user has selectted a previously generated lab room
+    	// Over writes station num to match the ordering of the used lab
     	if (seatOrder.length != 0) {
     		$(element).attr('id', seatOrder[index])
     		$(element).children().text(seatOrder[index])
+    		actualTotal++
     	}
+        
         var stationId = $(element).attr('id');
         var station = new Station(false, numPerStation, null, false, stationId, index+1);
         seatMap[stationId] = station;
         console.log(station);
     });
 
-
+	// This section run if user has selected an uploaded classroom
+	// It over writes the current status of the seat to a ghost seat
     ghostSeats = classroom.ghostSeats
 	for (var i = 0; i < ghostSeats.length; i++) {
 		var seatId = "#"+ghostSeats[i]
 		$(seatId).css("background-color", ghostColor);
-		var seatObj = seatMap[seatId]
+		var seatObj = seatMap[ghostSeats[i]]
 		seatObj["isGhost"] = true;
 		seatObj["isLeftHanded"] = false;
+		actualTotal--
 	}
 
 }
 
 
-/* Updates the seat as left handed, empty, or ghost based off the checkbox
+/* Updates the station as ghost or new number based off the checkbox
  * selected As well as update the number of non ghost seats */
 function updateStation(id, expectedSeats, totalStud, numPerStation) { 
 	$('.alert').remove();
@@ -66,6 +77,7 @@ function updateStation(id, expectedSeats, totalStud, numPerStation) {
 
 	console.log("id: " + id);
 	
+	/* If it is ghost, update html and seatObject and increment numGhosts */
 	if (isGhost) {
 		$('#'+id).css("background-color", ghostColor);
 		if (!seatObj["isGhost"])
@@ -74,20 +86,23 @@ function updateStation(id, expectedSeats, totalStud, numPerStation) {
 		console.log(seatObj)
 
 		ghostSeats.push(id)
-		var index = leftSeats.indexOf(id);
-		if (index > -1)
-    		leftSeats.splice(index, 1);
 
 	}
 	if (remove)
 		removeStation(id)
 	if (manIncrease)
 		manIncreaseStation(id)
+
+	/* Making station normal */
 	if (!manIncrease && !isGhost && !autoFill && !remove && !removeAll) {
 		$('#'+id).css("background-color", rightColor);
 		if (numGhosts > 0 && seatObj["isGhost"])
 			numGhosts--;
 		seatObj["isGhost"] = false;
+
+		var index = ghostSeats.indexOf(id);
+		if (index > -1)
+    		ghostSeats.splice(index, 1);
 	}
 
 	console.log(numGhosts)
@@ -101,6 +116,7 @@ function updateStation(id, expectedSeats, totalStud, numPerStation) {
 	console.log("totalSeats: " + actualTotal)
 }
 
+// Validates lab that no station is left unnumbered
 function checkEmptyStations() {
 	$('.alert').remove()
 	$(".station_item").each(function(index, element){
@@ -116,6 +132,7 @@ function removeStation(id) {
 	$("#"+id).children().text("")
 }
 
+// Resets the grid. This function is called if user has switched from autoFill to manualIncrease
 function clearClass() {
 	console.log("clearing")
 	updatedStationNum = 1;
@@ -138,6 +155,7 @@ function clearClass() {
 	clear = true;
 }
 
+// Assigns current station to a new number based on current station number
 function manIncreaseStation(stationID) {
 	if (updatedStationNum % (parseInt(maxStations,10)+1) == 0 )
 		updatedStationNum = 1
@@ -170,6 +188,7 @@ function manIncreaseStation(stationID) {
 	console.log(seatMap[newID])
 }
 
+// Loops through each station and resets it to default values
 function autoFillStation(w, h) {
 	clear = false;
 	var newMap = {}
