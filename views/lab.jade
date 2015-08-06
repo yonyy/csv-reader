@@ -158,7 +158,6 @@ block content
 											- if (row % 2 == 0)
 												- id = ((row-1)*width) + width - offset
 												- offset++
-											- console.log(id)
 											div(class="grid--item station_item", id="#{id}", onclick="updateStation($(this).attr('id'),#{totalSeats},#{totalStudents}, #{numPerStation})")
 												span(class='stationNumber')=id
 

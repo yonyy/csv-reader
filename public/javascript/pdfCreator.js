@@ -19,6 +19,10 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
   var gridLayout = false;
   var stationLayout = false;
   var maxRowsPerPage = 12
+  end_X = 200;  // The maximum x coord
+  end_Y = 280;  // the maximum y coord
+  startX = 10; // The x coord to begin writing the table of students
+  startY = 15;  // The y coord to begin writing the table of students
   console.log(students)
 
   // Formating title and sorting array based on sorting option selected
@@ -134,7 +138,11 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
           cellContent = tempStation.seatPosition.toString() + "\n"
           var partners = tempStation.students;
           for (var k = 0; k < partners.length; k++) {
-            cellContent += partners[k].firstname + ", " + partners[k].lastname + " ______" + "\n"
+            cellContent += partners[k].firstname + ", " + partners[k].lastname
+            if (partners[k].studentID != "")
+               cellContent += " ______\n"
+            else
+              cellContent += "\n"
           }
         }
         doc.cell(currentX,currentY,cellWidth,cellHeight, cellContent,i)

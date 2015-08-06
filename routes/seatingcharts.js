@@ -58,7 +58,7 @@ router.post('/', function(req, res, next) {
 			console.log("Class already exists. Not uploading")
 		}
 	});
-	console.log(roster)
+	
 /*	console.log(totalSeats)*/
 	res.render('seating_chart', {
 		gridHTML : gridHTML,

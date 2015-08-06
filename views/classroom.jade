@@ -115,7 +115,6 @@ block content
 													- if (ascii <= 73)
 														- rowID = String.fromCharCode(ascii-1)
 													- var id = rowID + (col).toString()
-													- console.log(id)
 													div(class="grid--item seat_item", id="#{id}", onclick="updateSeat($(this).attr('id'),#{totalSeats},#{totalStudents})")
 			//- Contains submit button
 			div(class="row")

@@ -1,5 +1,6 @@
 var express = require('express');
 var nodemailer = require('nodemailer');
+var async = require('async')
 var smtpPool = require('nodemailer-smtp-pool');
 var router = express.Router();
 var bodyParser = require('body-parser'); //parses information from POST
@@ -36,48 +37,60 @@ router.post('/', function(req, res, next) {
 		auth: {
 			user: userEmail,
 			pass: userPass
+    	},
+    	tls: {
+    		rejectUnauthorized: false
     	}
 	}));
 
 	var sentTotal = 0;
 	var totalRecievers = 0;
 	var parsedBodyText = "";
-	for(var i = 0; i < toList.length; i++) {
-		if (toList[i] != "") {
-			totalRecievers++;
-			parsedBodyText = textParser.parseText(text, rosterMap[toList[i]]);
-			console.log(toList[i]);
-			var mailOptions = {
-				from: userEmail, // sender address
-				to: toList[i], // list of receivers
-				subject: subject, // Subject line
-				text: parsedBodyText // plaintext body
-			};
-			
-			// send mail with defined transport object
-			transporter.sendMail(mailOptions, function(error, info){
-				if(error) {
-					status = false;
-					console.log(error);
-					console.log(status);
-			    } else {
-			    	sentTotal++;
-			        console.log('Message sent: ' + info.response);
-			    }
-			});
-		}
-	}
+	
+	async.series([
+		function sendEmails(callback) {
+			for(var i = 0; i < toList.length; i++) {
+				if (toList[i] != "") {
+					totalRecievers++;
+					parsedBodyText = textParser.parseText(text, rosterMap[toList[i]]);
+					console.log(toList[i]);
+					var mailOptions = {
+						from: userEmail, // sender address
+						to: toList[i], // list of receivers
+						subject: subject, // Subject line
+						text: parsedBodyText // plaintext body
+					};
+					
+					// send mail with defined transport object
+					transporter.sendMail(mailOptions, function(error, info){
+						if(error) {
+							status = false;
+							console.log(error);
+					    } else {
+					    	sentTotal++;
+					        console.log('Message sent: ' + info.response);
+					        callback(null,sentTotal)
+					    }
+					});
+				}
+			}
+		},
+		function sendStatus(callback) {
+			console.log("sentTotal: " + sentTotal + " out of " + totalRecievers)
+			if(status) {
+				res.render('send', {
+					status : "success"
+				});
+			} else {
+				res.render('send', {
+					status : "error"
+				});
+			}
 
-	console.log("sentTotal: " + sentTotal + " out of " + totalRecievers)
-	if(status == true) {
-		res.render('send', {
-			status : "success"
-		});
-	} else {
-		res.render('send', {
-			status : "error"
-		});
-	}
+		}
+	], function (err, result){
+		console.log("done")
+	});
 });
 
 module.exports = router;
