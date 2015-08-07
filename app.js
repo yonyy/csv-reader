@@ -34,11 +34,8 @@ app.use(express.static(path.join(__dirname + '/public')));
 app.use(express.static(path.join(__dirname + '/public/javascript')));
 app.use(express.static(path.join(__dirname + '/public/stylesheets')));
 app.use(express.static(path.join(__dirname + '/public/images')));
-app.use(bodyParser.json());       // to support JSON-encoded bodies
-app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
-  extended: true
-}));
-
+app.use(bodyParser.json({limit: '50mb'}));       // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));     // to support URL-encoded bodies
 app.use(methodOverride('_method'));
 
 /* Send home page file */

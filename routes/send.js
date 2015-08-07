@@ -7,7 +7,7 @@ var bodyParser = require('body-parser'); //parses information from POST
 var methodOverride = require('method-override'); //used to manipulate POST
 var textParser = require('./modules/textParser.js');
 
-router.use(bodyParser.urlencoded({ extended: true }))
+router.use(bodyParser.urlencoded({limit: '50mb', extended: true }))
 router.use(methodOverride(function(req, res){
       if (req.body && typeof req.body === 'object' && '_method' in req.body) {
         // look in urlencoded POST bodies and delete it
@@ -32,13 +32,21 @@ router.post('/', function(req, res, next) {
 	var userPass = req.body.userPass;
 	var toList = reciever.split(',');
 	var status = true;
+
+	/* UCSD requires you to authorize SMTP with SSL (Secure Sockets Layer) to use 
+		the outgoing mail server from off campus.
+		For most non-UCSD ISPs, such as cable modem services, specify smtp.ucsd.edu 
+		as your outgoing server. */
 	var transporter = nodemailer.createTransport(smtpPool({
-		service: "gmail",
+		host: 'smtp.ucsd.edu',
+		secure: true, // use SSL
+		port : 465, // port for secure SMTP
+		greetingTimeout : 3000,
 		auth: {
 			user: userEmail,
 			pass: userPass
     	},
-    	tls: {
+    	tls: {	//
     		rejectUnauthorized: false
     	}
 	}));
@@ -50,9 +58,13 @@ router.post('/', function(req, res, next) {
 	async.series([
 		function sendEmails(callback) {
 			for(var i = 0; i < toList.length; i++) {
+				// Send non empty emails
 				if (toList[i] != "") {
+					if (!rosterMap[toList[i]])	// send regular text if reciever isnt in roster
+						parsedBodyText = text
+					else
+						parsedBodyText = textParser.parseText(text, rosterMap[toList[i]]);
 					totalRecievers++;
-					parsedBodyText = textParser.parseText(text, rosterMap[toList[i]]);
 					console.log(toList[i]);
 					var mailOptions = {
 						from: userEmail, // sender address
@@ -66,6 +78,7 @@ router.post('/', function(req, res, next) {
 						if(error) {
 							status = false;
 							console.log(error);
+							callback(error,info)
 					    } else {
 					    	sentTotal++;
 					        console.log('Message sent: ' + info.response);
@@ -89,7 +102,7 @@ router.post('/', function(req, res, next) {
 
 		}
 	], function (err, result){
-		console.log("done")
+		console.log(result)
 	});
 });
 
