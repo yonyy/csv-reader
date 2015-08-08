@@ -41,7 +41,7 @@ router.post('/', function(req, res, next) {
 		host: 'smtp.ucsd.edu',
 		secure: true, // use SSL
 		port : 465, // port for secure SMTP
-		greetingTimeout : 3000,
+		greetingTimeout : 300,
 		auth: {
 			user: userEmail,
 			pass: userPass
@@ -52,7 +52,7 @@ router.post('/', function(req, res, next) {
 	}));
 
 	var sentTotal = 0;
-	var totalRecievers = 0;
+	var expectedRecievers = 0;
 	var parsedBodyText = "";
 	
 	async.series([
@@ -64,7 +64,7 @@ router.post('/', function(req, res, next) {
 						parsedBodyText = text
 					else
 						parsedBodyText = textParser.parseText(text, rosterMap[toList[i]]);
-					totalRecievers++;
+					expectedRecievers++;
 					console.log(toList[i]);
 					var mailOptions = {
 						from: userEmail, // sender address
@@ -78,21 +78,22 @@ router.post('/', function(req, res, next) {
 						if(error) {
 							status = false;
 							console.log(error);
-							callback(error,info)
 					    } else {
 					    	sentTotal++;
 					        console.log('Message sent: ' + info.response);
-					        callback(null,sentTotal)
 					    }
 					});
 				}
 			}
+			callback(null,sentTotal)
 		},
 		function sendStatus(callback) {
-			console.log("sentTotal: " + sentTotal + " out of " + totalRecievers)
+			console.log("sentTotal: " + sentTotal + " out of " + expectedRecievers)
 			if(status) {
 				res.render('send', {
-					status : "success"
+					status : "success",
+					sentTotal : sentTotal,
+					expectedRecievers : expectedRecievers
 				});
 			} else {
 				res.render('send', {

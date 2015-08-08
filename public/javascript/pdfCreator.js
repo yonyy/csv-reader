@@ -1,6 +1,6 @@
 var row_gap = 5;  // The gap between each column
 var col_gap = 50; // the gap between each row
-var title_marginLeft = 50;  // The x coord of the title
+var title_marginLeft = 70;  // The x coord of the title
 var title_marginTop = 10; // The y coord of the title
 var end_X = 200;  // The maximum x coord
 var end_Y = 280;  // the maximum y coord
@@ -76,7 +76,7 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
   doc.setFontSize(8)
 
   /* Writing the heading of the pdf */
-  doc.text(100,10, titleString);
+  doc.text(title_marginLeft,title_marginTop,titleString);
   //doc.text(title_marginLeft,title_marginTop, titleString);
   doc.setFontSize(rosterFontSize);
 
