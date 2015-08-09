@@ -4,9 +4,10 @@ var mongoose = require('mongoose');
 // Here we find an appropriate database to connect to, defaulting to
 // localhost if we don't find one.
 var uristring =
-process.env.MONGOLAB_URI ||
-process.env.MONGOHQ_URL ||
-'mongodb://localhost/csvDB';
+//process.env.MONGOLAB_URI ||
+//process.env.MONGOHQ_URL ||
+'mongodb://yonyperez:natanoy13@ds031893.mongolab.com:31893/seatingchartsdb'
+//'mongodb://localhost/csvDB';
 
 // The http server will listen to an appropriate port, or default to
 // port 5000.
