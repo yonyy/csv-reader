@@ -20,12 +20,12 @@ var createClass = require('./routes/createClass');
 var createLab = require('./routes/createLab')
 var send = require('./routes/send')
 
-var http = require('http').createServer(app);
+//var http = require('http').createServer(app);
 var methodOverride = require('method-override');
 
 /* Server config */
-app.set("ipaddr", "127.0.0.1");
-app.set("port",8080);
+//app.set("ipaddr", "127.0.0.1");
+app.set('port', (process.env.PORT || 5000));
 app.set('view engine', 'jade');
 app.set('views', path.join(__dirname + '/views'));
 
@@ -50,8 +50,8 @@ app.use('/seating_chart', seatingchart)
 app.use('/send', send)
 app.use('/api', api)
 
-http.listen(app.get("port"), app.get("ipaddr"), function() {
-  console.log("Server up and running. Go to http://" + app.get("ipaddr") + ":" + app.get("port"));
+app.listen(app.get("port"), function() {
+  console.log("Server up and running. Go to http://localhost:" + app.get("port"));
 });
 
 module.exports = app;
