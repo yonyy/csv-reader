@@ -64,17 +64,17 @@ block content
 						li(class="active")
 							i(class="fa fa-edit")
 							|  Create
-					p(class="lead") Hover over a cell to see its information
-					p(class="lead") Click "Download" to download a pdf of the seating chart
+					p(class="classHeader") Hover over a cell to see its information
+					p(class="classHeader") Click "Download" to download a pdf of the seating chart
 			div(class="row")
 				div(class="col-lg-12")
 					ol(class="breadcrumb")
 						li(class="active")
 							span(class="glyphicon glyphicon-th-list")
 							|  Classroom seating chart for #{className}
-					p(class="lead") #{totalStudents} Total Students
-					p(class="lead") #{totalSeats} Total Seats
-					p(class="lead") #{numPerStation} student(s) per Seat
+					p(class="classInfo") Total Students: #{totalStudents} 
+					p(class="classInfo") Total Seats: #{totalSeats} 
+					p(class="classInfo") Student(s) per Seat: #{numPerStation}
 			div.pop-up
 				span(class="ex") x
 				div.pop-up-text

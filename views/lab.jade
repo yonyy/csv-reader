@@ -34,8 +34,11 @@ block content
 						li(class="active")
 							i(class="fa fa-edit")
 							|  Create
-					p(class="lead") Select "Ghost Seat" to mark a ghost seat
-					p(class="lead") Select "Left-Handed" to mark a left-handed seat
+					p(class="classHeader") Select "Ghost Seat" to mark a ghost seat
+					p(class="classHeader") Select "Manually Number" to manually number stations
+					p(class="classHeader") Select "Default Fill" to reset number stations to default
+					p(class="classHeader") Select "Remove Number" to remove a number from a station
+					p(class="classHeader") Select "Remove All Numbers" to clear all the station numbers
 			div(class="row")
 				div(class="col-md-offset-3 col-lg-6 errorMessage")
 			div(class="row")
@@ -44,12 +47,11 @@ block content
 						li(class="active") 
 							span(class="glyphicon glyphicon-wrench")
 							|  Classroom Information
-					p(class="lead currentDim") Height: #{height} Width: #{width}
-					p(class="lead expectedTotal") Expected Total Seats: #{totalSeats}
-					p(class="lead actualTotal") Actual Total Seats: #{totalSeats}
-					p(class="lead numPerStation") Students per Station: #{numPerStation}
-					p(class="lead totalStudents") Total Students: #{totalStudents}
-					p(class="lead instructions") Select Checkboxes to manually number stations or to number stations automatically
+					p(class="classInfo currentDim") Height: #{height} Width: #{width}
+					p(class="classInfo expectedTotal") Expected Total Seats: #{totalSeats}
+					p(class="classInfo actualTotal") Actual Total Seats: #{totalSeats}
+					p(class="classInfo numPerStation") Students per Station: #{numPerStation}
+					p(class="classInfo totalStudents") Total Students: #{totalStudents}
 					input(type="hidden", class="width", value="#{width}")
 					input(type="hidden", class="height", value="#{height}")
 			div(class="row")
@@ -64,7 +66,7 @@ block content
 				div(class="col-lg-2")
 					label
 						input(type="checkbox", id="fill_option", class="option", checked)
-						|  Automatically Fill
+						|  Default Fill
 				div(class="col-lg-2")
 					label
 						input(type="checkbox", id="remove_option", class="option")
@@ -72,7 +74,7 @@ block content
 				div(class="col-lg-2")
 					label
 						input(type="checkbox", id="removeAll_option", class="option")
-						|  Remove All Number
+						|  Remove All Numbers
 				script.
 					$('input.option').on('change', function() {
 						$('input.option').not(this).prop('checked', false);
@@ -87,7 +89,7 @@ block content
 								manualClass = true;
 							}
 							isGhost = false;
-							autoFill = false;
+							defaultFill = false;
 							remove = false;
 							removeAll = false;
 						} else if ($(this).attr('id') == "ghost_option"){
@@ -96,16 +98,16 @@ block content
 							else 
 								isGhost = true;
 							manIncrease = false;
-							autoFill = false;
+							defaultFill = false;
 							remove = false;
 							removeAll = false;
 						} else if ($(this).attr('id') == "fill_option"){
-							if (autoFill)
-								autoFill = false
+							if (defaultFill)
+								defaultFill = false
 							else {
-								autoFill = true;
+								defaultFill = true;
 								manualClass = false;
-								autoFillStation($('.width').val(), $('.height').val())
+								defaultFillStation($('.width').val(), $('.height').val())
 							}
 							manIncrease = false;
 							isGhost = false;
@@ -119,7 +121,7 @@ block content
 							}
 							manIncrease = false;
 							isGhost = false;
-							autoFill = false;
+							defaultFill = false;
 							removeAll = false;
 						} else if ($(this).attr('id') == "removeAll_option"){
 							if (removeAll)
@@ -131,7 +133,7 @@ block content
 							remove = false;
 							manIncrease = false;
 							isGhost = false;
-							autoFill = false;
+							defaultFill = false;
 						}
 					});
 

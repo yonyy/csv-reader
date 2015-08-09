@@ -2,8 +2,8 @@ var manIncrease = false;	// variable to check if user selected to manually numbe
 var manualClass = false;	// variable to define a state of mode. 
 							// If user manually numbers seats, the user should still be allowed to select other boxes without having the grid cleared out 
 var isGhost = false;		// variable to keep track if ghost option is clicked
-var autoFill = true;		// variable to keep track if user wants the stations to be autofilled
-var clear = false;			// varialbe to keep track if grid is needed to cleared out. Grid should clear is user is switching from autoFill to manual and vice versa
+var defaultFill = true;		// variable to keep track if user wants the stations to be defaultFilled
+var clear = false;			// varialbe to keep track if grid is needed to cleared out. Grid should clear is user is switching from defaultFill to manual and vice versa
 var remove = false;			// variable to keep track if user wants to remove a station number
 var removeAll = false;		// variable to keep track if user wants to remove all station numbers
 
@@ -94,7 +94,7 @@ function updateStation(id, expectedSeats, totalStud, numPerStation) {
 		manIncreaseStation(id)
 
 	/* Making station normal */
-	if (!manIncrease && !isGhost && !autoFill && !remove && !removeAll) {
+	if (!manIncrease && !isGhost && !defaultFill && !remove && !removeAll) {
 		$('#'+id).css("background-color", rightColor);
 		if (numGhosts > 0 && seatObj["isGhost"])
 			numGhosts--;
@@ -129,10 +129,12 @@ function checkEmptyStations() {
 }
 
 function removeStation(id) {
+	if ($("#"+id).children().text() != "" && updatedStationNum > 1)
+		updatedStationNum--;
 	$("#"+id).children().text("")
 }
 
-// Resets the grid. This function is called if user has switched from autoFill to manualIncrease
+// Resets the grid. This function is called if user has switched from defaultFill to manualIncrease
 function clearClass() {
 	console.log("clearing")
 	updatedStationNum = 1;
@@ -157,6 +159,7 @@ function clearClass() {
 
 // Assigns current station to a new number based on current station number
 function manIncreaseStation(stationID) {
+	// keeps updatedStationNum between 1 <= n <= (width * height)
 	if (updatedStationNum % (parseInt(maxStations,10)+1) == 0 )
 		updatedStationNum = 1
 	
@@ -189,7 +192,7 @@ function manIncreaseStation(stationID) {
 }
 
 // Loops through each station and resets it to default values
-function autoFillStation(w, h) {
+function defaultFillStation(w, h) {
 	clear = false;
 	var newMap = {}
 	var row = 1
