@@ -1,23 +1,22 @@
 extends ./layout.jade
 block append link
 	- if (classType == "lab")
-		link(href="lab.css", rel="stylesheet")
+		link(href="css/lab.css", rel="stylesheet")
 	- else
-		link(href="classroom.css", rel="stylesheet")
-	link(href="seatingChart.css", rel="stylesheet")
-	link(href='sb-admin.css', rel='stylesheet')
+		link(href="css/classroom.css", rel="stylesheet")
+	link(href="css/seatingChart.css", rel="stylesheet")
 block append script
 	script(src="//mrrio.github.io/jsPDF/dist/jspdf.debug.js")
 	script(src="//cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.0/seedrandom.min.js")
-	script(src="jquery.redirect.js")
-	script(src="student.js")
+	script(src="js/jquery.redirect.js")
+	script(src="js/student.js")
 	- if (classType == "lab")
-		script(src="station.js")
+		script(src="js/station.js")
 	- else
-		script(src="seat.js")
-	script(src="finalSeatingChart.js")
-	script(src="pdfCreator.js")
-	script(src="email.js")
+		script(src="js/seat.js")
+	script(src="js/finalSeatingChart.js")
+	script(src="js/pdfCreator.js")
+	script(src="js/email.js")
 block prepend bodyLink
 	- if (classType == "lab")
 		body(onload="loadGrid(#{gridHTML}, #{classroom}, #{seatMap}, #{roster}, #{seed}, \"lab\")")

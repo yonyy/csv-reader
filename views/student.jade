@@ -1,10 +1,9 @@
 extends ./layout.jade
 block append link
-	link(href='sb-admin.css', rel='stylesheet')
 	link(rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css")
 block append script
-	script(src="filterSearchStudent.js")
-	script(src="student.js")
+	script(src="js/filterSearchStudent.js")
+	script(src="js/student.js")
 	script(src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js")
 block prepend bodyLink
 	body(onload="setRoster(#{roster})")

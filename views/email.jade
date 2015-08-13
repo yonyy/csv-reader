@@ -1,8 +1,8 @@
 extends ./layout.jade
 block append link
-	link(href="email.css", rel="stylesheet")
+	link(href="css/email.css", rel="stylesheet")
 block append script
-	script(src="email.js")
+	script(src="js/email.js")
 block prepend bodyLink
 	body(onload="fillEmailForm(#{roster},#{className})")
 block createActive
