@@ -23,15 +23,11 @@
 ## How to Use
 1. Localhost
 	* Open up your terminal and go to the directory
-	...
-	npm start
-	...
+		npm start
 
-	or
+or
 
-	...
-	node app.js
-	...
+		node app.js
 
 2. Heroku
 	* I have also made this web application available to use through [Heroku](https://ucsdseatingcharts.herokuapp.com)
@@ -41,6 +37,6 @@
 This web application is still being improved and changed.
 
 ## About Me
-	### Yonatan Perez, 20
-	### UCSD '17, Mathematics-Computer Science
+### Yonatan Perez, 20
+### UCSD '17, Mathematics-Computer Science
 
