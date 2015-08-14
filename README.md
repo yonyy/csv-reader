@@ -24,11 +24,9 @@
 1. Localhost
 	* Open up your terminal and go to the directory
 
-	npm start
-
-or
-
-	node app.js
+```		
+node app.js
+```
 
 2. Heroku
 	* I have also made this web application available to use through [Heroku](https://ucsdseatingcharts.herokuapp.com)
