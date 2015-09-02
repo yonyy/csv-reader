@@ -39,14 +39,14 @@ function createStations(num, classroom) {
 
     var numPerStation = parseInt(num,10)
     $(".station_item").each(function(index, element){
-    	// This section runs only if user has selectted a previously generated lab room
+    	// This section runs only if user has selected a previously generated lab room
     	// Over writes station num to match the ordering of the used lab
     	if (seatOrder.length != 0) {
     		$(element).attr('id', seatOrder[index])
     		$(element).children().text(seatOrder[index])
-    		actualTotal++
     	}
-        
+
+    	actualTotal++
         var stationId = $(element).attr('id');
         var station = new Station(false, numPerStation, null, false, stationId, index+1);
         seatMap[stationId] = station;

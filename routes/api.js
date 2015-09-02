@@ -67,7 +67,7 @@ router.route('/rosters/:id')
 	})
 
 
-router.route('/classrooms')
+router.route('/rooms')
 	.get(function(req, res, next){
 		mongoose.model('Classroom').find({}, function (err, classrooms){
 			if (err) {
@@ -80,7 +80,109 @@ router.route('/classrooms')
 		})
 	});
 
+router.route('/rooms/:id')
+	.get(function(req, res, next){
+		console.log("id: " + req.params.id)
+		mongoose.model('Classroom').findById(req.params.id, function (err, classroom){
+			if (err) {
+				console.error(err)
+				res.json(err)
+			}
+			else {
+				res.json(classroom)
+			}
+		});
+	})
+
+	.delete(function(req, res, next){
+		mongoose.model('Classroom').findById(req.params.id, function (err, classroom){
+			if (err) {
+				console.error(err)
+				res.json(err)
+			}
+			else {
+				classroom.remove(function (err, classroom){
+					if (err) {
+						console.error(err)
+						res.json(err)
+					}
+					else {
+						console.log('DELETE removing ID: ' + classroom._id);
+						res.json({
+							message : 'deleted',
+							item : classroom
+						});
+					}
+				})
+			}
+		})
+	})
+
+router.route('/classrooms')
+	.get(function(req, res, next){
+		mongoose.model('Classroom').find({classType: 'classroom'}, function (err, classrooms){
+			if (err) {
+				console.error(err)
+				res.json(err)
+			}
+			else {
+				res.json(classrooms)
+			}
+		})
+	});
+
 router.route('/classrooms/:id')
+	.get(function(req, res, next){
+		console.log("id: " + req.params.id)
+		mongoose.model('Classroom').findById(req.params.id, function (err, classroom){
+			if (err) {
+				console.error(err)
+				res.json(err)
+			}
+			else {
+				res.json(classroom)
+			}
+		});
+	})
+
+	.delete(function(req, res, next){
+		mongoose.model('Classroom').findById(req.params.id, function (err, classroom){
+			if (err) {
+				console.error(err)
+				res.json(err)
+			}
+			else {
+				classroom.remove(function (err, classroom){
+					if (err) {
+						console.error(err)
+						res.json(err)
+					}
+					else {
+						console.log('DELETE removing ID: ' + classroom._id);
+						res.json({
+							message : 'deleted',
+							item : classroom
+						});
+					}
+				})
+			}
+		})
+	});
+
+router.route('/labs')
+	.get(function(req, res, next){
+		mongoose.model('Classroom').find({classType: 'lab'}, function (err, classrooms){
+			if (err) {
+				console.error(err)
+				res.json(err)
+			}
+			else {
+				res.json(classrooms)
+			}
+		})
+	});
+
+router.route('/labs/:id')
 	.get(function(req, res, next){
 		console.log("id: " + req.params.id)
 		mongoose.model('Classroom').findById(req.params.id, function (err, classroom){

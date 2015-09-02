@@ -1,8 +1,10 @@
 var isGhost = false;	// variable to keep track if ghost checkbox is clicked
 var isLeftHanded = false;	// variable to keep track if left handed option is clicked
+
 var ghostColor = "FFFFFF";	// background color of a ghost seat
 var leftColor = "#2196F3";	// background color of a right handed seat
 var rightColor = "#FF5722";	// background color of a left handed seat
+
 var finalGridContainer = "";	// suppose to contain the HTML content of the grid once it is finalized
 var numGhosts = 0;	// keeps track of the total number of ghosts
 var actualTotal = 0	// keeps track of the total non ghost seats

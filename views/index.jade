@@ -38,8 +38,8 @@ block bodyLink
 							a(class="page-scroll" href="#example") Examples
 						li
 							a(class="page-scroll" href="#info") Info
-						li
-							a(class="page-scroll" href="#about") About
+						//- li
+						//- 	a(class="page-scroll" href="#terms") Termonology
 		//- !-- Header --
 		header
 			div(class="container")
@@ -80,7 +80,7 @@ block bodyLink
 							i(class="fa fa-download fa-stack-1x fa-inverse")
 						h4(class="service-heading") Download and Email
 						p(class="text-muted") Once the seating algorithm has been completed, you can download the seating chart to pdf in three formats, Name, Column, and Row sorted. If you are using a Lab, you can download it in Grid, Name, and Station sorted. Once you have a copy of the seating charts, you have the option of emailing the students their seating charts. A sample body message is provided, but you can modify to your liking.
-		//- !-- Services Section --
+		//- !-- Example Section --
 		section(id="example", class="bg-light-gray")
 			div(class="container")
 				div(class="row")
@@ -189,6 +189,104 @@ block bodyLink
 										h4 Enjoy
 									div(class="timeline-body")
 										p(class="text-muted") Once you complete a seating chart and emailed all the students, you can easily create another seating chart for the same classroom but different roster, or vice versa. Enjoy UCSD Seating Charts and make seating students easier.
+	//- <!-- Portfolio Modal 1 -->
+	div(class="example-modal modal fade" id="screenshot1" tabindex="-1" role="dialog" aria-hidden="true")
+		div(class="modal-content")
+			div(class="close-modal" data-dismiss="modal")
+				div(class="lr")
+					div(class="rl")
+			div(class="container")
+				div(class="row")
+					div(class="col-lg-8 col-lg-offset-2")
+						div(class="modal-body")
+							//-<!-- Project Details Go Here -->
+							h2 Classroom Creation
+							p(class="item-intro text-muted") The inputs and options available
+							img(class="img-responsive img-centered" src="img/exampleCreate.jpg" alt="")
+							p See the inputs you will need to insert in order to create the classroom or lab. If a classroom's dimensions cannot support the roster size, a warning message will display. Towards the bottom right, it contains a list of all the previously used rosters, and in the top right, it contains a list of all the previously generated classrooms.
+							button(type="button" class="btn btn-primary" data-dismiss="modal") #[i(class="fa fa-times")] Close Example
+
+	//- <!-- Portfolio Modal 2 -->
+	div(class="example-modal modal fade" id="screenshot2" tabindex="-1" role="dialog" aria-hidden="true")
+		div(class="modal-content")
+			div(class="close-modal" data-dismiss="modal")
+				div(class="lr")
+					div(class="rl")
+			div(class="container")
+				div(class="row")
+					div(class="col-lg-8 col-lg-offset-2")
+						div(class="modal-body")
+							//-<!-- Project Details Go Here -->
+							h2 Roster View
+							p(class="item-intro text-muted") Decide who is left handed or not
+							img(class="img-responsive img-centered" src="img/exampleUploadRoster.jpg" alt="")
+							p After you have uploaded the roster and moved on to this second page, you will have the option to decide whether a student is left handed or not. By assigning this, the algorithm will place the student in a left handed seat, if defined in the classroom.
+							button(type="button" class="btn btn-primary" data-dismiss="modal") #[i(class="fa fa-times")] Close Example
+	//- <!-- Portfolio Modal 3 -->
+	div(class="example-modal modal fade" id="screenshot3" tabindex="-1" role="dialog" aria-hidden="true")
+		div(class="modal-content")
+			div(class="close-modal" data-dismiss="modal")
+				div(class="lr")
+					div(class="rl")
+			div(class="container")
+				div(class="row")
+					div(class="col-lg-8 col-lg-offset-2")
+						div(class="modal-body")
+							//-<!-- Project Details Go Here -->
+							h2 Classroom Design
+							p(class="item-intro text-muted") How designing the classroom works
+							img(class="img-responsive img-centered" src="img/exampleClass.jpg" alt="")
+							p In this step of the application, you have the chance to decide whether a seat is a #[a(href="#terms") ghost seat], #[a(href="#terms") left handed seat], or #[a(href="#terms") normal seat]. If the user selects too many ghost seats such that the classroom can not hold all of the students, a warning will be shown. If a seat is defined as a left handed seat, the application will seat left handed students to it. Normal seats are defined by the color orange, left-handed seats are blue, and ghost seats are invisible. This interface allows you to quickly design and visually see the classroom.
+							button(type="button" class="btn btn-primary" data-dismiss="modal") #[i(class="fa fa-times")] Close Example
+	//- <!-- Portfolio Modal 4 -->
+	div(class="example-modal modal fade" id="screenshot4" tabindex="-1" role="dialog" aria-hidden="true")
+		div(class="modal-content")
+			div(class="close-modal" data-dismiss="modal")
+				div(class="lr")
+					div(class="rl")
+			div(class="container")
+				div(class="row")
+					div(class="col-lg-8 col-lg-offset-2")
+						div(class="modal-body")
+							//-<!-- Project Details Go Here -->
+							h2 The Algorithm's Result
+							p(class="item-intro text-muted") The final seating chart
+							img(class="img-responsive img-centered" src="img/exampleFinal.jpg" alt="")
+							p Once the web application has finished assigning seats to all the students, you will be able to see where each students sits by hovering over each seat and seeing that seat's information. Each seat's information will contain the student's name, email address, seat position, ID, and the hand in which they write with. In addition, this page will allow you to begin downloading the seating charts in a pdf file, as well as, provide the option to email the students. This page contains the information you need to save and share the seating chart.
+							button(type="button" class="btn btn-primary" data-dismiss="modal") #[i(class="fa fa-times")] Close Example
+	//- <!-- Portfolio Modal 5 -->
+	div(class="example-modal modal fade" id="screenshot5" tabindex="-1" role="dialog" aria-hidden="true")
+		div(class="modal-content")
+			div(class="close-modal" data-dismiss="modal")
+				div(class="lr")
+					div(class="rl")
+			div(class="container")
+				div(class="row")
+					div(class="col-lg-8 col-lg-offset-2")
+						div(class="modal-body")
+							//-<!-- Project Details Go Here -->
+							h2 Email
+							p(class="item-intro text-muted") Begin constructing the email
+							img(class="img-responsive img-centered" src="img/exampleEmail.jpg" alt="")
+							p A simple way to construct an email for everyone. When providing your email address, please make sure to insert your UCSD email address. This application currently only supports sending emails from a UCSD account. The web application provides to you the list of the students' email address, and a sample body message to send. The blank space is for any details you want to share, such as the date and time of the event. In addition, the application provides a list of syntax you may use in the body message to insert a student's information. Now you can easily send emails to students containing their information.
+							button(type="button" class="btn btn-primary" data-dismiss="modal") #[i(class="fa fa-times")] Close Example
+	//- <!-- Portfolio Modal 6 -->
+	div(class="example-modal modal fade" id="screenshot6" tabindex="-1" role="dialog" aria-hidden="true")
+		div(class="modal-content")
+			div(class="close-modal" data-dismiss="modal")
+				div(class="lr")
+					div(class="rl")
+			div(class="container")
+				div(class="row")
+					div(class="col-lg-8 col-lg-offset-2")
+						div(class="modal-body")
+							//-<!-- Project Details Go Here -->
+							h2 PDFs
+							p(class="item-intro text-muted") Download the pdfs in multiple sorted orders.
+							img(class="img-responsive img-centered" src="img/exampleFullPdf.jpg" alt="")
+							p Shown above is one of formats the seating chart can sorted and downloaded, by last name. The available formats for a classroom are #[a(href="sample/SeatingChartNameSorted.pdf", target="_blank") name sorted], #[a(href="sample/SeatingChartColumnSorted.pdf", target="_blank") column sorted], and #[a(href="sample/SeatingChartRowSorted.pdf", target="_blank") row sorted]. A labroom is similar, except it has the extra option of #[a(href="sample/SeatingChartGridSorted.pdf", target="_blank") grid sorted]
+							button(type="button" class="btn btn-primary" data-dismiss="modal") #[i(class="fa fa-times")] Close Example
+
 block append script
 	//- Custom Theme JavaScript
 	script(src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js")
