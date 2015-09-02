@@ -1,0 +1,19 @@
+//- Contains all the necessary links and scripts that all html pages will need
+
+html
+	block head
+		meta(charset="utf-8")
+		meta(http-equiv="X-UA-Compatible", content="IE=edge")
+		meta(name="viewport", content="width=device-width, initial-scale=1")
+		block title 
+			title
+		block link
+			link(href="css/bootstrap.min.css", rel="stylesheet")
+			link(href="css/font-awesome/css/font-awesome.min.css", rel="stylesheet", type="text/css")
+			link(href='https://fonts.googleapis.com/css?family=Raleway:600', rel='stylesheet')
+		block script
+			script(src="js/jquery-1.11.3.js")
+			script(src="js/bootstrap.min.js")
+			//-script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js")
+	block bodyLink
+		body

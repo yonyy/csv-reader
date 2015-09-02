@@ -1,25 +1,196 @@
-extends ./layout.jade
+extends ./headlayout.jade
+block title 
+	title UCSD Seating Charts
 block prepend bodyLink
 	body
-block indexActive
-	li(class="active")
-		a(href="/index")
-			i(class="fa fa-dashboard")
-			|  Home
-block content
-	div(id='page-wrapper', class="pageContainer", style="height:100%;")
-		div(class="container-fluid")
-			//- Page heading
-			div(class="row")
-				div(class="col-lg-12")
-					h1(class="page-header") Home #[small How this works]
-					ol(class="breadcrumb")
-						li(class="active")
-							i(class="fa fa-dashboard")
-							|  Dashboard
-			div(class="jumbotron")
-				h1 Create your own seating chart!
-				p Upload your roster, mark a student as left handed, design the classroom, and email the students their seats.
-				p Download the seating chart to a pdf in multiple formats!
-				p
-					a(href="/create", class="btn btn-primary btn-lg", role="button") Create &raquo;
+
+block append link
+	//- Custom CSS
+	link(href="css/agency.css", rel="stylesheet")
+	link(href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css")
+	link(href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css')
+	link(href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css')
+	link(href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css')
+	//-link(href='css/sb-admin.css', rel='stylesheet')
+
+block bodyLink
+	body(id='page-top', class="index")
+		
+		//- Navigation
+		nav(class="navbar navbar-default navbar-fixed-top")
+			div(class="container")
+				//- Brand and toggle get grouped for better mobile display
+				div(class="navbar-header page-scroll")
+					button(type="button", class="navbar-toggle", data-toggle="collapse", data-target="#bs-example-navbar-collapse-1")
+						span(class="sr-only") Toggle Navigation
+						span(class="icon-bar")
+						span(class="icon-bar")
+						span(class="icon-bar")
+					a(class="navbar-brand page-scroll", href="#page-top") UCSD Seating Charts
+				//- !-- Collect the nav links, forms, and other content for toggling --
+				div(class="collapse navbar-collapse" id="bs-example-navbar-collapse-1")
+					ul(class="nav navbar-nav navbar-right")
+						li(class="hidden")
+							a(href="#page-top")
+						li
+							a(class="page-scroll" href="#services") Services
+						li
+							a(class="page-scroll" href="#example") Examples
+						li
+							a(class="page-scroll" href="#info") Info
+						li
+							a(class="page-scroll" href="#about") About
+		//- !-- Header --
+		header
+			div(class="container")
+				div(class="intro-text")
+					div(class="jumbotron intro-box")
+						div(class="intro-lead-in") Welcome to UCSD Seating Charts
+						div(class="intro-heading") A Fast and Easy Way to Seat Students
+						div(class="row")
+							div(class="col-xs-offset-3 col-lg-1")
+								a(href="#services" class="page-scroll btn btn-xl") Tell Me More
+							div(class="col-xs-offset-2 col-lg-1")
+								a(href="/create" class="page-scroll btn btn-xl") Create
+		//- !-- Services Section --
+		section(id="services")
+			div(class="container")
+				div(class="row")
+					div(class="col-lg-12 text-center")
+						h2(class="section-heading") Services
+						h3(class="section-subheading text-muted") What you can do
+				div(class="row text-center")
+					div(class="col-md-4")
+						span(class="fa-stack fa-4x")
+							i(class="fa fa-circle fa-stack-2x text-primary")
+							i(class="fa fa-pencil-square-o fa-stack-1x fa-inverse")
+						h4(class="service-heading") Design
+						p(class="text-muted") Choose how to design your own classroom in two formats, Lab and Classroom. In a Lab, you can have multiple people in one seat/station, and in addition, you can personally number the stations. In a Classroom, each seat only holds one student and the seats are arrange like all other lecture halls in UCSD. In both you can decide whether a seat is left handed or a "ghost seat". 
+
+					div(class="col-md-4")
+						span(class="fa-stack fa-4x")
+							i(class="fa fa-circle fa-stack-2x text-primary")
+							i(class="fa fa-cloud-upload fa-stack-1x fa-inverse")
+						h4(class="service-heading") Save
+						p(class="text-muted") Save your designs! Everytime you create a new classroom or upload a new roster, the website will automatically save it to our database and reuse the classroom or roster without creating it all over again.
+
+					div(class="col-md-4")
+						span(class="fa-stack fa-4x")
+							i(class="fa fa-circle fa-stack-2x text-primary")
+							i(class="fa fa-download fa-stack-1x fa-inverse")
+						h4(class="service-heading") Download and Email
+						p(class="text-muted") Once the seating algorithm has been completed, you can download the seating chart to pdf in three formats, Name, Column, and Row sorted. If you are using a Lab, you can download it in Grid, Name, and Station sorted. Once you have a copy of the seating charts, you have the option of emailing the students their seating charts. A sample body message is provided, but you can modify to your liking.
+		//- !-- Services Section --
+		section(id="example", class="bg-light-gray")
+			div(class="container")
+				div(class="row")
+					div(class="col-lg-12 text-center")
+						h2(class="section-heading") Examples
+						h3(class="section-subheading text-muted") See screenshots of how the web application works
+				div(class="row")
+					div(class="col-md-4 col-sm-6 example-item")
+						a(href="#screenshot1", class="example-link", data-toggle="modal")
+							div(class="example-hover")
+								div(class="example-hover-content")
+									i(class="fa fa-plus fa-3x")
+							img(src="img/exampleCreate.jpg", class="img-responsive", alt="")
+						div(class="example-caption")
+							h4 Creating the classroom
+							p(class="text-muted") See how creating the classroom looks like
+					div(class="col-md-4 col-sm-6 example-item")
+						a(href="#screenshot2", class="example-link", data-toggle="modal")
+							div(class="example-hover")
+								div(class="example-hover-content")
+									i(class="fa fa-plus fa-3x")
+							img(src="img/exampleUploadRoster.jpg", class="img-responsive", alt="")
+						div(class="example-caption")
+							h4 The Roster
+							p(class="text-muted") Witness how you can easily assign a student to be left-handed
+					div(class="col-md-4 col-sm-6 example-item")
+						a(href="#screenshot3", class="example-link", data-toggle="modal")
+							div(class="example-hover")
+								div(class="example-hover-content")
+									i(class="fa fa-plus fa-3x")
+							img(src="img/exampleClass.jpg", class="img-responsive", alt="")
+						div(class="example-caption")
+							h4 Designing the classroom
+							p(class="text-muted") Begin seeing the classroom take shape
+				div(class="row")
+					div(class="col-md-4 col-sm-6 example-item")
+						a(href="#screenshot4", class="example-link", data-toggle="modal")
+							div(class="example-hover")
+								div(class="example-hover-content")
+									i(class="fa fa-plus fa-3x")
+							img(src="img/exampleFinal.jpg", class="img-responsive", alt="")
+						div(class="example-caption")
+							h4 The Algorithm
+							p(class="text-muted") See the final seating arrangement
+					div(class="col-md-4 col-sm-6 example-item")
+						a(href="#screenshot5", class="example-link", data-toggle="modal")
+							div(class="example-hover")
+								div(class="example-hover-content")
+									i(class="fa fa-plus fa-3x")
+							img(src="img/exampleEmail.jpg", class="img-responsive", alt="")
+						div(class="example-caption")
+							h4 Email the classroom
+							p(class="text-muted") Look at how easy it is to construct an email and send it to all the students
+					div(class="col-md-4 col-sm-6 example-item")
+						a(href="#screenshot6", class="example-link", data-toggle="modal")
+							div(class="example-hover")
+								div(class="example-hover-content")
+									i(class="fa fa-plus fa-3x")
+							img(src="img/examplePdf.jpg", class="img-responsive", alt="")
+						div(class="example-caption")
+							h4 the PDFs
+							p(class="text-muted") See for yourself how the multiple pdf formats
+		//- About Section
+		section(id="info")
+			div(class="container")
+				div(class="row")
+					div(class="col-lg-12 text-center")
+						h2(class="section-heading") Info
+						h3(class="section-subheading text-muted") What you should have before beginning to create a seating chart
+				div(class="row")
+					div(class="col-lg-12")
+						ul(class="timeline")
+							li
+								div(class="timeline-image")
+									span(class="fa-stack fa-5x")
+										i(class="fa fa-file-excel-o fa-stack-1x fa-inverse")
+								div(class="timeline-panel")
+									div(class="timeline-heading")
+										h4 Roster
+									div(class="timeline-body")
+										p(class="text-muted") Make sure you have a CSV file of the roster you are going to use, and is of the following format: #[code [lastname], [firstname], [email], [student id]]. Failure to have your roster file in this format will result in complications with the application. You can download an example #[a(href="csv/RandomNames.csv") here]
+							li(class="timeline-inverted")
+								div(class="timeline-image")
+									span(class="fa-stack fa-5x")
+										i(class="glyphicon glyphicon-th fa-stack-1x fa-inverse")
+								div(class="timeline-panel")
+									div(class="timeline-heading")
+										h4 Classroom Layout
+									div(class="timeline-body")
+										p(class="text-muted") Once you have roster file in the correct format, you may begin designing your classroom. Please make sure the classroom type and layout is accurate to the actual classroom before procceeding to assigning seats. The web appplication allows classrooms to be saved, reused, and edited, but not updated.
+							li
+								div(class="timeline-image")
+									span(class="fa-stack fa-5x")
+										i(class="glyphicon glyphicon-send fa-stack-1x fa-inverse")
+								div(class="timeline-panel")
+									div(class="timeline-heading")
+										h4 Email
+									div(class="timeline-body")
+										p(class="text-muted") If you plan on emailing the student's their assigned seats with any other information, make sure you follow the syntax provided to properly insert the correct information, otherwise, the email's body message may contain errors. When providing your email, the web application only currently supports UCSD email accounts, #[code @ucsd.edu], otherwise, the emails will not send.
+							li(class="timeline-inverted")
+								div(class="timeline-image")
+									span(class="fa-stack fa-5x")
+										i(class="fa fa-smile-o fa-stack-1x fa-inverse")
+								div(class="timeline-panel")
+									div(class="timeline-heading")
+										h4 Enjoy
+									div(class="timeline-body")
+										p(class="text-muted") Once you complete a seating chart and emailed all the students, you can easily create another seating chart for the same classroom but different roster, or vice versa. Enjoy UCSD Seating Charts and make seating students easier.
+block append script
+	//- Custom Theme JavaScript
+	script(src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js")
+	script(src="js/shrinkHeader.js")
+	script(src="js/agency.js")

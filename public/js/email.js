@@ -62,17 +62,32 @@ function fillEmailForm(studentstoEmail, className) {
 
 /* Reads the input from email form a makes sure the appropriate text fields are filled */
 function validateEmailForm(form) {
+	var userEmail = $('#inputEmail').val()
+	var ucsdOffset = 8
 	$('.alert').remove();
-	if ($('#inputEmail').val() == ""){
+
+	if (userEmail == ""){
 		$('form div:nth-child(1) div:nth-child(1)').addClass('has-error');
 		$('.errorMessage').append("<div class=\'alert alert-danger\' id=\'errorNamePass\'> <strong>Error!</strong> Please provide an email/password </div>")
+		$(window).scrollTop(0)
 		return false;
 	} else {
 		$('form div:nth-child(1) div:nth-child(1)').removeClass('has-error');
 	}
+
+	if (userEmail.substr(userEmail.length - ucsdOffset) != "ucsd.edu") {
+		$('form div:nth-child(1) div:nth-child(1)').addClass('has-error');
+		$('.errorMessage').append("<div class=\'alert alert-danger\' id=\'errorNamePass\'> <strong>Error!</strong> Please provide a UCSD account email address <code>@ucsd.edu</code></div>")
+		$(window).scrollTop(0)
+		return false;
+	} else {
+		$('form div:nth-child(1) div:nth-child(1)').removeClass('has-error');
+	}
+
 	if ($('#inputPassword').val() == "") {
 		$('form div:nth-child(2) div:nth-child(2)').addClass('has-error');
 		$('.errorMessage').append("<div class=\'alert alert-danger\' id=\'errorNamePass\'> <strong>Error!</strong> Please provide an email/password </div>")
+		$(window).scrollTop(0)
 		return false;
 	} else {
 		$('form div:nth-child(2) div:nth-child(2)').removeClass('has-error');

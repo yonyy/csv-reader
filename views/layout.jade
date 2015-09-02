@@ -1,45 +1,38 @@
-html
-	head
-		meta(charset="utf-8")
-		meta(http-equiv="X-UA-Compatible", content="IE=edge")
-		meta(name="viewport", content="width=device-width, initial-scale=1")
-		block title 
-			title Create Seating Chart
-		block link
-			link(href="css/bootstrap.min.css", rel="stylesheet")
-			link(href='https://fonts.googleapis.com/css?family=Raleway:600', rel='stylesheet')
-			link(href="css/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css")
-			link(href='css/sb-admin.css', rel='stylesheet')
-		block script
-			script(src="js/jquery-1.11.3.js")
-			//-script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js")
-	block bodyLink
-			block bodyHTML
-				div(id="wrapper")
-					nav(class="navbar navbar-inverse navbar-fixed-top" role="navigation")
-						div(class="navbar-header")
-							a(class="navbar-brand" href="/") Generate Your Own Seating Chart</a>
-						div(class="collapse navbar-collapse navbar-ex1-collapse")
-							ul(class="nav navbar-nav side-nav")
-								block indexActive
-									li
-										a(href="/index")
-											i(class="fa fa-fw fa-dashboard")
-											|  Home
-								block createActive
-									li
-										a(href="/create")
-											i(class="fa fa-fw fa-edit")
-											|  Create Class
-								block labActive
-									li
-										a(href="/createLab")
-											i(class="glyphicon glyphicon-console") 
-											|  Create Lab
-								block formActive
-									li
-										a(href="#")
-											i(class="fa fa-fw fa-edit")
-											|  Form
-					block content
-						div(id="page-wrapper")
+//- Standard layout for every html page excluding the index page
+
+extends ./headlayout.jade
+block append link
+	link(href='css/sb-admin.css', rel='stylesheet')
+block title 
+	title Create Seating Chart
+block bodyLink
+	body
+		block bodyHTML
+			div(id="wrapper")
+				nav(class="navbar navbar-inverse navbar-fixed-top" role="navigation")
+					div(class="navbar-header")
+						a(class="navbar-brand" href="/") Generate Your Own Seating Chart</a>
+					div(class="collapse navbar-collapse navbar-ex1-collapse")
+						ul(class="nav navbar-nav side-nav")
+							block indexActive
+								li
+									a(href="/index")
+										i(class="fa fa-fw fa-dashboard")
+										|  Home
+							block createActive
+								li
+									a(href="/create")
+										i(class="fa fa-fw fa-edit")
+										|  Create Class
+							block labActive
+								li
+									a(href="/createLab")
+										i(class="glyphicon glyphicon-console") 
+										|  Create Lab
+							block formActive
+								li
+									a(href="#")
+										i(class="fa fa-fw fa-edit")
+										|  Form
+				block content
+					div(id="page-wrapper")

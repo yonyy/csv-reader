@@ -33,11 +33,14 @@ function validateClassroom(classType) {
     console.log($('#className').val() + " " + $('#heightInsert').val() +  " " + $('#widthInsert').val());
     console.log(total_students);
 
+    // remove previous error/warning messages
     $('.alert').remove();
+    
     // Validation classname
     if (className == '') {
         $('.errorMessage').prepend("<div class=\'alert alert-danger\' id=\'errorName\'> <strong>Error!</strong> Please provide a classroom name </div>")
         $('.form div:nth-child(1) div:nth-child(1) div:nth-child(1)').addClass('has-error')
+        $(window).scrollTop(0)
         return false;        
     } else {;
         $('.form div:nth-child(1) div:nth-child(1) div:nth-child(1)').removeClass('has-error')
@@ -46,6 +49,7 @@ function validateClassroom(classType) {
     if ($('#heightInsert').val() == '' || height <= 0 || height > 25) {
         $('.errorMessage').prepend("<div class=\'alert alert-danger\' id=\'errorHeight\'> <strong>Error!</strong> Invalid height. Must be within 1-26 </div>")
         $('.form div:nth-child(1) div:nth-child(1) div:nth-child(2)').addClass('has-error')
+        $(window).scrollTop(0)
         return false;        
     } else {
         $('.form div:nth-child(1) div:nth-child(1) div:nth-child(2)').removeClass('has-error')
@@ -55,6 +59,7 @@ function validateClassroom(classType) {
     if ($('#widthInsert').val() == '' || width <= 0 || width > 27) {
         $('.errorMessage').prepend("<div class=\'alert alert-danger\' id=\'errorWidth\'> <strong>Error!</strong> Invalid width </div>")
         $('.form div:nth-child(1) div:nth-child(1) div:nth-child(3)').addClass('has-error')
+        $(window).scrollTop(0)
         return false;
 
     } else {
@@ -66,6 +71,7 @@ function validateClassroom(classType) {
         $('.errorMessage').prepend("<div class=\'alert alert-danger\' id=\'errorArea\'> <strong>Error!</strong> Not a big enough classroom </div>")
         $('.form div:nth-child(1) div:nth-child(1) div:nth-child(2)').addClass('has-error')
         $('.form div:nth-child(1) div:nth-child(1) div:nth-child(3)').addClass('has-error')
+        $(window).scrollTop(0)
         return false;        
     } else {
         $('.form div:nth-child(1) div:nth-child(1) div:nth-child(2)').removeClass('has-error')
@@ -77,6 +83,7 @@ function validateClassroom(classType) {
         if (perStation <= 0) {
             $('.errorMessage').prepend("<div class=\'alert alert-danger\' id=\'errorPerStation\'> <strong>Error!</strong> Please a valid number of students per station </div>")
             $('.form div:nth-child(1) div:nth-child(1) div:nth-child(4)').addClass('has-error')
+            $(window).scrollTop(0)
             return false; 
         } else {
             $('.form div:nth-child(1) div:nth-child(1) div:nth-child(4)').removeClass('has-error')

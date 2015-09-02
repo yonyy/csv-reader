@@ -32,6 +32,7 @@ function readRoster() {
 		reader.onload = function(e) {
 			var content = reader.result;
 			var data = content.split('\n');
+			if (!verifyFormat(data)) return;
 			all_students = createStudents(data);
 /*			printContent(all_students);*/
 		}
@@ -39,13 +40,62 @@ function readRoster() {
 	}
 }
 
+/* Verifies that the roster has the proper format */
+function verifyFormat(data) {
+	$('.alert').remove()
+	var isNum = true
+	var isString = true
+	var studentData = []
+	var size = 4
+
+	for (var i = 0; i < data.length; i++) {
+		studentData = data[i].split(',')
+		if (studentData.length == 1) continue
+		if (studentData.length != size) {
+			isNum = false
+			break;
+		}
+
+		if (!isNaN(studentData[0]) || typeof studentData[0] !== 'string') {
+			isString = false
+			break
+		}
+		
+		if (!isNaN(studentData[1]) || typeof studentData[1] !== 'string') {
+			isString = false
+			break
+		}
+		
+		if (!isNaN(studentData[2]) || typeof studentData[2] !== 'string') {
+			isString = false
+			break
+		}
+		
+		if (isNaN(studentData[3])) {
+			isNum = false
+			break
+		}
+	}
+
+	if (!isNum || !isString) {
+		$('.errorMessage').prepend("<div class=\'alert alert-danger\' id=\'errorFile\'> <strong>Error!</strong> The uploaded .csv file does follow the required format. Please click the link above and review the required format for the csv file. </div>")
+		$('#fileInsert').val("")
+		$('.existingRoster').attr('disabled', false)
+		$(window).scrollTop(0)
+	}
+
+	return (isNum && isString)
+}
+
 // Runs if user did not select an old roster. Checks that the file value
 // isnt empty
 function validateRoster() {
 	 // validating file input
 	var fileVal = $('#fileInsert').val();
+	$('.alert').remove()
     if (fileVal == '') {
         $('.errorMessage').prepend("<div class=\'alert alert-danger\' id=\'errorFile\'> <strong>Error!</strong> No file input </div>")
+        $(window).scrollTop(0)
         return false;
     }
 
