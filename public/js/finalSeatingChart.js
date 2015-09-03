@@ -22,17 +22,18 @@ function loadGrid(gridHTML, classroom, seats, roster, seed, classType) {
 	finalSeatMap = seats
 	students = roster.students
 	
-	console.log(finalSeatMap)
-	console.log(students)
+	//console.log(finalSeatMap)
+	//console.log(students)
 	$('.finalGridContainer').append(gridHTML);
 	$('.seat_item').attr("onclick","displaySeatInfo($(this).attr('id'))");
 	$('.station_item').attr("onclick","displaySeatInfo($(this).attr('id'))");
 	if (classType == "lab") {
-		assignStations(seed);
+		assignStationsByCol(seed);
 		attachStationInfo()
 	}
 	else {
-		assignSeats(seed);
+		if (students.length*4 <= classroom.totalSeats) assignSeatsByRow(seed)
+		else assignSeatsByCol(seed);
 		attachInfo();
 	}
 }
@@ -103,11 +104,12 @@ function attachStationInfo() {
 }
 
 function displaySeatInfo(id) {
-	console.log(finalSeatMap[id]);
+	//console.log(finalSeatMap[id]);
 }
 
-/* Assigns the students to a seat */
-function assignSeats(seed) {
+/* Assigns the students to a seat by row. In addition, this is currently used to evenly space out students 1 row and 1 seat apart from each other. */
+function assignSeatsByRow(seed) {
+	console.log("even spaced out by row")
 	var leftStudents = []	// an array to hold the students who are left handed
 	var rightStudents = []	// an array to hold the students who are right handed
 	var tempList = students;
@@ -123,7 +125,6 @@ function assignSeats(seed) {
 		}
 	}
 
-	console.log(seatArr)
 	// Goes through the shuffles student array and begins dividing it into left and right handed students
 	for(var i = 0; i < tempList.length; i++) {
 		if (tempList[i].isLeftHanded)
@@ -132,16 +133,17 @@ function assignSeats(seed) {
 			rightStudents.push(tempList[i]);
 	}
 
-	//assign all the odd columns
-	console.log("ODD columns")
-	for(var i = 1; i < gridCol; i+=2) {
-		for(var j = gridRow - 1; j >= 0; j--) {
+	//assign all by row. Seperate each student by one seat and row
+	console.log(gridRow + ", " + gridRow)
+	for(var i = gridRow-1; i >= 0; i-=2) {
+		for(var j = 0; j < gridCol; j+=2) {
 			var right = true;
 			var tempStudent;
-			var seat = seatArr[j*gridCol+i];
-			console.log("i: " + i + " j: " + j + " index: " + (j*gridCol+i))
-			console.log("rightIndex: " + rightIndex + " " + "leftIndex: " + leftIndex);
-			console.log("leftStudents.length: " + leftStudents.length + " " + "rightStudents.length: " + rightStudents.length)
+			var seat = seatArr[i*gridCol+j];
+			//console.log("i: " + i + " j: " + j + " index: " + (j*gridCol+i))
+			//console.log("rightIndex: " + rightIndex + " " + "leftIndex: " + leftIndex);
+			//console.log("leftStudents.length: " + leftStudents.length + " " + "rightStudents.length: " + rightStudents.length)
+			////console.log(seat)
 			console.log(seat)
 			if(seat.isGhost) {continue;}
 			if((rightIndex + leftIndex) >= tempList.length) { continue; }
@@ -173,7 +175,94 @@ function assignSeats(seed) {
 				else leftIndex++
 				seat.student = tempStudent;
 				tempStudent.seat = seat;
-				console.log(tempStudent)
+				//console.log(tempStudent)
+				counter++
+			}
+		}
+	}
+
+	// Fill the remaining seats with empty students
+	for(var i = 0; i < seatArr.length; i++) {
+		var s = seatArr[i];
+		if(s.isGhost) { continue; }
+		if(s.student == null) { 
+			var emptyStudent = new Student("EMPTY", "EMPTY", "", "", false, false, null);
+			s.isEmpty = true;
+			emptyStudent.seat = s;
+			s.student = emptyStudent; 
+			students.push(emptyStudent);
+		}
+	}
+	console.log(counter + " students assigned")
+}
+
+/* Assigns the students to a seat */
+function assignSeatsByCol(seed) {
+	var leftStudents = []	// an array to hold the students who are left handed
+	var rightStudents = []	// an array to hold the students who are right handed
+	var tempList = students;
+	var rightIndex = 0;	// index containing how many students have been assigned in the left handed array
+	var leftIndex = 0;	// index containing how many students have been assigned in the right handed array
+	shuffle(tempList,seed);	// Shuffles the list of students
+	
+	var counter = 0
+	// Copies over the map of seats and pushes it into an array in order to loop through it
+	for (var key in finalSeatMap) {
+		if (finalSeatMap.hasOwnProperty(key)) {
+			seatArr.push(finalSeatMap[key])
+		}
+	}
+
+	// Goes through the shuffles student array and begins dividing it into left and right handed students
+	for(var i = 0; i < tempList.length; i++) {
+		if (tempList[i].isLeftHanded)
+			leftStudents.push(tempList[i])
+		else
+			rightStudents.push(tempList[i]);
+	}
+
+	//assign all the odd columns
+	//console.log("ODD columns")
+	for(var i = 1; i < gridCol; i+=2) {
+		for(var j = gridRow - 1; j >= 0; j--) {
+			var right = true;
+			var tempStudent;
+			var seat = seatArr[j*gridCol+i];
+			//console.log("i: " + i + " j: " + j + " index: " + (j*gridCol+i))
+			//console.log("rightIndex: " + rightIndex + " " + "leftIndex: " + leftIndex);
+			//console.log("leftStudents.length: " + leftStudents.length + " " + "rightStudents.length: " + rightStudents.length)
+			////console.log(seat)
+			if(seat.isGhost) {continue;}
+			if((rightIndex + leftIndex) >= tempList.length) { continue; }
+			if(seat.isLeftHanded) {
+				// If the students is left handed choose from the left handed array
+				// only if there are any left handed students left otherwise choose from
+				// the right handed array
+				if(leftIndex < leftStudents.length) {
+					tempStudent = leftStudents[leftIndex]
+					right = false;
+				}
+				else
+					tempStudent = rightStudents[rightIndex]
+			}
+			else {
+				// If the student is right handed choose from the right handed array
+				// only if there are any right handed students left otherwise choose from
+				// the left handed array
+				if(rightIndex < rightStudents.length)	
+					tempStudent = rightStudents[rightIndex]
+				else {
+					tempStudent = leftStudents[leftIndex]
+					right = false;
+				}
+			}
+			// Add studens to seats only if there are students to add
+			if (rightIndex + leftIndex < tempList.length) {
+				if (right) rightIndex++;
+				else leftIndex++
+				seat.student = tempStudent;
+				tempStudent.seat = seat;
+				//console.log(tempStudent)
 				counter++
 			}
 		}
@@ -181,16 +270,16 @@ function assignSeats(seed) {
 
 	//assign all the even columns
 	// Follows the same logic as assignign odd columns
-	console.log("EVEN columns")
+	//console.log("EVEN columns")
 	for(var i = 0; i < gridCol; i+=2) {
 		for(var j = gridRow - 1; j >= 0; j--) {
 			var right = true
 			var tempStudent;
 			var seat = seatArr[j*gridCol+i]; 
-			console.log("i: " + i + " j: " + j + " index: " + (j*gridCol+i))
-			console.log("rightIndex: " + rightIndex + " " + "leftIndex: " + leftIndex);
-			console.log("leftStudents.length: " + leftStudents.length + " " + "rightStudents.length: " + rightStudents.length)
-			console.log(seat)
+			//console.log("i: " + i + " j: " + j + " index: " + (j*gridCol+i))
+			//console.log("rightIndex: " + rightIndex + " " + "leftIndex: " + leftIndex);
+			//console.log("leftStudents.length: " + leftStudents.length + " " + "rightStudents.length: " + rightStudents.length)
+			//console.log(seat)
 			if(seat.isGhost) {continue;}
 			if((rightIndex + leftIndex) >= tempList.length) { continue; }
 			if(seat.isLeftHanded)
@@ -212,7 +301,7 @@ function assignSeats(seed) {
 				else leftIndex++
 				seat.student = tempStudent;
 				tempStudent.seat = seat;
-				console.log(tempStudent)
+				//console.log(tempStudent)
 				counter++
 			}
 		}
@@ -230,16 +319,16 @@ function assignSeats(seed) {
 			students.push(emptyStudent);
 		}
 	}
-	console.log(counter + " students assigned")
+	//console.log(counter + " students assigned")
 }
 
 /* Assigns the students to a station */
-function assignStations(seed) {
+function assignStationsByCol(seed) {
 	var tempList = students;
 	var index = 0
 	var maxStudents = tempList.length;
 	shuffle(tempList,seed);	// Shuffles the list of students
-	console.log("lab")
+	//console.log("lab")
 	// Copies over the map of seats and pushes it into an array in order to loop through it
 	for (var key in finalSeatMap) {
 		if (finalSeatMap.hasOwnProperty(key)) {
@@ -247,24 +336,24 @@ function assignStations(seed) {
 		}
 	}
 
-	console.log("gridRow: " + gridRow + " gridCol: " + gridCol)
-	console.log("seatArr.length: " + seatArr.length)
+	//console.log("gridRow: " + gridRow + " gridCol: " + gridCol)
+	//console.log("seatArr.length: " + seatArr.length)
 	//assign all the odd columns
 	for(var i = 1; i < gridCol; i+=2) {
 		for(var j = gridRow - 1; j >= 0; j--) {
 			var seat = seatArr[j*gridCol+i]; 
 			var partners = []
-			console.log("i: " + i + " j: " + j + " index: " + (j*gridCol+i))
+			//console.log("i: " + i + " j: " + j + " index: " + (j*gridCol+i))
 			if(seat.isGhost) {continue;}
 			for (var k = 0; k < parseInt(seat.numPerStation,10); k++) {
-				console.log("index: " + index + "tempList.length "+ tempList.length)
+				//console.log("index: " + index + "tempList.length "+ tempList.length)
 				if(index >= maxStudents) {
-					console.log("students.length: " + students.length)
+					//console.log("students.length: " + students.length)
 					var emptyStudent = new Student("EMPTY", "EMPTY", "", "", false, false, null);
 					emptyStudent.seat = seat;
 					partners.push(emptyStudent)
 					students.push(emptyStudent)
-					console.log(k)
+					//console.log(k)
 				}
 				else {
 					var tempStudent = tempList[index++]
@@ -282,16 +371,16 @@ function assignStations(seed) {
 		for(var j = gridRow - 1; j >= 0; j--) {
 			var seat = seatArr[j*gridCol+i]; 
 			var partners = []
-			console.log("i: " + i + " j: " + j + " index: " + (j*gridCol+i))
+			//console.log("i: " + i + " j: " + j + " index: " + (j*gridCol+i))
 			if(seat.isGhost) {continue;}
 			for (var k = 0; k < parseInt(seat.numPerStation,10); k++) {
-				console.log("index: " + index + "tempList.length "+ tempList.length)
+				//console.log("index: " + index + "tempList.length "+ tempList.length)
 				if(index >= maxStudents) {
 					var emptyStudent = new Student("EMPTY", "EMPTY", "", "", false, false, null);
 					emptyStudent.seat = seat
 					partners.push(emptyStudent)
 					students.push(emptyStudent)
-					console.log(k)
+					//console.log(k)
 				}
 				else {
 					var tempStudent = tempList[index++]
@@ -310,13 +399,13 @@ function assignStations(seed) {
 		if(s.students == null) {
 			var partners = []
 			for (var k = 0; k < parseInt(s.numPerStation,10); k++) {
-				console.log("students.length: " + students.length)
+				//console.log("students.length: " + students.length)
 				var emptyStudent = new Student("EMPTY", "EMPTY", "", "", false, false, null);
 				s.isEmpty = true;
 				emptyStudent.seat = s;
 				partners.push(emptyStudent)
 				students.push(emptyStudent);
-				console.log(k)
+				//console.log(k)
 			}
 			s.students = partners
 		}

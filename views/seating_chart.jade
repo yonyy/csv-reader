@@ -74,57 +74,69 @@ block content
 					p(class="classInfo") Total Students: #{totalStudents} 
 					p(class="classInfo") Total Seats: #{totalSeats} 
 					p(class="classInfo") Student(s) per Seat: #{numPerStation}
-			div.pop-up
-				span(class="ex") x
-				div.pop-up-text
-					h1 Choose how to format pdf
-					form(class="form-horizontal rosterFileName")
-						div(class="form-group")
-							label(for="pdfName" class="col-sm-2 control-label") PDF Name
-							input(type="text", class="form-control", id="pdfName", placeholder="CSE100Quiz5SeatingChart", style="width: 200px;")
-						div(class="form-group")
-							label(for="pdfTitle" class="col-sm-2 control-label") PDF Title
-							input(type="text", class="form-control", id="pdfTitle", placeholder="Pepper Canyon 106 - Quiz 5 Thursday, June 4th -5pm", style="width: 400px;")
-					- if (classType != "lab")
-						div.radio
-							label
-								input(type="radio", name="format", id="row", class="format", value="RowSorted", checked) 
-								|By row
-						div.radio
-							label
-								input(type="radio", name="format", id="column", class="format", value="ColumnSorted")
-								|By column
-					- else
-						div.radio
-							label
-								input(type="radio", name="format", id="grid", class="format", value="GridSorted" checked)
-								|By the room layout
-						div.radio
-							label
-								input(type="radio", name="format", id="station", class="format", value="StationSorted")
-								|By Station Number
-					div.radio
-						label
-							input(type="radio", name="format", id="sorted", class="format", value="NameSorted") 
-							|Sorted order
-					input(type="hidden", id="totalStudents", value="#{totalStudents}")
-					input(type="hidden", id="totalSeats", value="#{totalSeats}")
-					input(type="hidden", id="classroomName", value="#{className}")
-					a(class="btn btn-default", id="downloadRoster", role="button") Download
-					a(class="btn btn-default", id="emailRoster", role="button") Email Students
-				script.
-					$("input[type='radio']").on('change', function() {
-						$("input[type='radio']").not(this).prop('checked', false);
-					})
-					$('#downloadRoster').click(function() {
-						var checked = $("input[type='radio']:checked").val()
-						var pdfName = $('#pdfName').val()
-						var pdfTitle = $('#pdfTitle').val()
-						generatePDF(checked, pdfName, pdfTitle, $('#totalSeats').val(), $('#totalStudents').val())
-					})
-					$('#emailRoster').click(function() {
-						emailRoster($('#classroomName').val())
-					})
+			//- Modal
+			div(class="modal fade" id="myModal" role="dialog")
+				div(class="modal-dialog")
+					//- Modal Content
+					div(class="modal-content")
+						div(class="modal-header")
+							button(type="button" class="close" data-dismiss="modal") &times;
+							h4(class="modal-title") Choose how to format PDF or Email students
+						div(class="modal-body")
+							form(class="form-horizontal")
+								div(class="row")
+									div(class="form-group")
+										div(class="col-lg-3")
+											label(for="pdfName" class="control-label") PDF Name
+										div(class="col-lg-5")
+											input(type="text", class="form-control", id="pdfName", placeholder="CSE100Quiz5SeatingChart")
+								div(class="row")
+									div(class="form-group")
+										div(class="col-lg-3")
+											label(for="pdfTitle" class="control-label") PDF Title
+										div(class="col-lg-8")
+											input(type="text", class="form-control", id="pdfTitle", placeholder="Pepper Canyon 106 - Quiz 5 Thursday, June 4th - 5pm")
+								- if (classType != "lab")
+									div.radio
+										label
+											input(type="radio", name="format", id="row", class="format", value="RowSorted", checked) 
+											|Sort By row
+									div.radio
+										label
+											input(type="radio", name="format", id="column", class="format", value="ColumnSorted")
+											|Sort By column
+								- else
+									div.radio
+										label
+											input(type="radio", name="format", id="grid", class="format", value="GridSorted" checked)
+											|Sort By the room layout
+									div.radio
+										label
+											input(type="radio", name="format", id="station", class="format", value="StationSorted")
+											|Sort By Station Number
+								div.radio
+									label
+										input(type="radio", name="format", id="sorted", class="format", value="NameSorted") 
+										| Sort By Last Name
+							input(type="hidden", id="totalStudents", value="#{totalStudents}")
+							input(type="hidden", id="totalSeats", value="#{totalSeats}")
+							input(type="hidden", id="classroomName", value="#{className}")
+							button(type="button", class="btn btn-default", id="downloadRoster") Download
+							button(type="button", class="btn btn-default", id="emailRoster") Email Students
+							button(type="button", class="btn btn-default", id="close-button" data-dismiss="modal") Close
+							script.
+								$("input[type='radio']").on('change', function() {
+									$("input[type='radio']").not(this).prop('checked', false);
+								})
+								$('#downloadRoster').click(function() {
+									var checked = $("input[type='radio']:checked").val()
+									var pdfName = $('#pdfName').val()
+									var pdfTitle = $('#pdfTitle').val()
+									generatePDF(checked, pdfName, pdfTitle, $('#totalSeats').val(), $('#totalStudents').val())
+								})
+								$('#emailRoster').click(function() {
+									emailRoster($('#classroomName').val())
+								})
 			div(class="row")
 				div(class="col-lg-12")
 					div(class="panel panel-default")
@@ -136,14 +148,15 @@ block content
 							div(class="finalGridContainer")
 			div(class="row")
 				div(class="col-md-offset-6 col-lg-4")
-					button(class="btn btn-default pop-up-button") Download
+					button(class="btn btn-lg btn btn-default pop-up-button", data-toggle="modal" data-target="#myModal") Download
 					script.
-						$('.pop-up').hide(0);
-						$('.pop-up-button').click(function(){
-							$('.pop-up').fadeIn(300);
-							$('.pop-up-button').hide(0);
-						});
-						$('.pop-up .ex').click(function() {
-							$('.pop-up').hide(0);
-							$('.pop-up-button').show(0);
-						});
+						//- $('.pop-up').hide(0);
+						//- $('.pop-up-button').click(function(){
+						//- 	$('.pop-up').fadeIn(300);
+						//- 	$('.pop-up-button').hide(0);
+						//- 	$(window).scrollTop(0);
+						//- });
+						//- $('.pop-up .ex').click(function() {
+						//- 	$('.pop-up').hide(0);
+						//- 	$('.pop-up-button').show(0);
+						//- });

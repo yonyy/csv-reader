@@ -46,7 +46,7 @@
 
 
 /* Pop up */
-.pop-up-button:hover{
+/*.pop-up-button:hover{
   background:#dfdfdf;
 }
 
@@ -81,24 +81,25 @@
   padding:20px;
   background: white;
   text-align: center;
+}*/
+
+.modal-dialog {
+  margin-top: 10%;
+}
+
+.modal-body {
+  text-align: center;
 }
 
 .radio {
   text-align: left;
-  margin-left: 45%;
+  margin-left: 40%;
 }
 
 .rosterFileName {
   margin-left: 30%;
 }
 
-#rosterName{
-  width: 200px;
-}
-#pdfTitle {
-  width: 300px;
-}
-
-#downloadRoster, #emailRoster {
+#downloadRoster, #emailRoster, #close-button {
   margin-left: 5px;
 }
