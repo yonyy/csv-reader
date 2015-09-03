@@ -127,6 +127,8 @@ fieldset[disabled] .btn-primary.active {
     font-weight: 700;
     color: #fff;
     background-color: #fed136;
+    margin-left: 5px;
+    margin-top: 5px;
 }
 
 .btn-xl:hover,
@@ -506,6 +508,20 @@ section h3.section-subheading {
     margin-top: 12px;
     font-size: 10px;
     line-height: 14px;
+}
+
+.timeline > li > .timeline-badge {
+    z-index: 100;
+    position: absolute;
+    left: 0;
+    width: 80px;
+    height: 80px;
+    margin-left: 0;
+    border: 7px solid #f1f1f1;
+    border-radius: 100%;
+    text-align: center;
+    color: #fff;
+    background-color: #fed136;
 }
 
 .timeline>li.timeline-inverted>.timeline-panel {
