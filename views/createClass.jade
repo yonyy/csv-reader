@@ -24,7 +24,7 @@ block formInputs
 				div(class="col-lg-6")
 					div(class="form-group")
 						label Existing classrooms
-						select(multiple class="form-control existingClass", name="className")
+						select(class="form-control existingClass", name="className")
 							option(selected="selected" id="op0" value='0') --Select--
 							- for classroom in JSON.parse(classrooms)
 								- var classVal = JSON.stringify(classroom)
@@ -37,7 +37,7 @@ block formInputs
 				div(class="col-lg-6")
 					div(class="form-group")
 						label Existing rosters
-						select(multiple class="form-control existingRoster", name="fileInput")
+						select(class="form-control existingRoster", name="fileInput")
 							option(selected="selected" id="r0", value='0') --Select--
 							- console.log("ssss")
 							- for roster in JSON.parse(rosters)
