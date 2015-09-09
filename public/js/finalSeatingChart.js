@@ -11,6 +11,11 @@ var gridRow = 0;		// Value containing the classroom height
 var finalSeatMap = {};		// Hashmap of Seats K: id V: seat
 var students = [];		// Array of students
 var seatArr = [];		// Array of the seats
+var rosterSize = 0;
+var numPerStation = 1;
+var lab = false;
+var finalSeed = 0;
+var col = true;
 
 /* Function that executes once the HTML body loads. Appends the grid HTML,
  * updates the onclick function, and begins assigning the students to a seat,
@@ -19,8 +24,12 @@ function loadGrid(gridHTML, classroom, seats, roster, seed, classType) {
 	grid = gridHTML
 	gridCol = parseInt(classroom.width,10)
 	gridRow = parseInt(classroom.height,10)
+	numPerStation = parseInt(classroom.numPerStation,10)
 	finalSeatMap = seats
+	finalSeed = seed
 	students = roster.students
+    students.sort(sortByName);
+	rosterSize = roster.students.length
 	
 	//console.log(finalSeatMap)
 	//console.log(students)
@@ -28,12 +37,12 @@ function loadGrid(gridHTML, classroom, seats, roster, seed, classType) {
 	$('.seat_item').attr("onclick","displaySeatInfo($(this).attr('id'))");
 	$('.station_item').attr("onclick","displaySeatInfo($(this).attr('id'))");
 	if (classType == "lab") {
-		assignStationsByCol(seed);
+		lab = true
+		assignStationsByCol(seed,0,0);
 		attachStationInfo()
 	}
 	else {
-		if (students.length*4 <= classroom.totalSeats) assignSeatsByRow(seed)
-		else assignSeatsByCol(seed);
+		assignSeatsByCol(seed,0,0);
 		attachInfo();
 	}
 }
@@ -41,6 +50,7 @@ function loadGrid(gridHTML, classroom, seats, roster, seed, classType) {
 /* Creates a span element, and inside it contains the student's information.
  * This can be seen when the user hovers over the seat */
 function attachInfo() {
+	$('.objectInfo').remove()
 	$('.seat_item').each(function(index, element) {
 		var seatObj = finalSeatMap[$(element).attr('id')];
 		if (seatObj.isGhost) {
@@ -97,8 +107,6 @@ function attachStationInfo() {
 			var seatID = "<p>Seat: " + studentObjs[0].seat.seatPosition + "</p>";
 			var studentProfile = "<span class=\"objectInfo\">" + names + emails + studentIDs + seatID +"</span>"
 			$(element).append(studentProfile);
-/*			if (studentObj.isLeftHanded) 
-				console.log("Left-Handed");*/
 		}
 	})
 }
@@ -107,9 +115,57 @@ function displaySeatInfo(id) {
 	//console.log(finalSeatMap[id]);
 }
 
+function spreadOut(colOffset, rowOffset, sortByCol) {
+	var available = 0
+	$('.alert').remove()
+	for(var i = gridRow-1; i >= 0; i-=(rowOffset+1)) {
+		for(var j = 0; j < gridCol; j+=(colOffset+1)) {
+			var s = seatArr[i*gridCol+j]
+			if (!s.isGhost) available++
+		}
+	}
+
+	// not enough space to be spread out
+	//console.log("lab: " + lab + " sortByCol: " + sortByCol)
+	if (available*numPerStation >= rosterSize) {
+		clearSeats()
+		if (lab) {
+			if (sortByCol) assignStationsByCol(finalSeed, colOffset, rowOffset)
+			else assignStationsByRow(finalSeed, colOffset, rowOffset)
+			attachStationInfo()
+		}
+		else {
+			if (sortByCol) assignSeatsByCol(finalSeed, colOffset, rowOffset)
+			else assignSeatsByRow(finalSeed, colOffset, rowOffset)
+			attachInfo()
+		}
+	} else {
+		$('.errorMessage').prepend("<div class=\'alert alert-danger\' id=\'errorSeatTotal\'> <strong>Error!</strong> There is not enough space to sit students " + colOffset +" column(s) and " + rowOffset + " row(s) apart</div>")
+		$(window).scrollTop(0)
+	}
+
+	return
+}
+
+function clearSeats() {
+	var nonEmpty = []
+	for (var k = 0; k < students.length; k++) {
+		if (students[k].studentID != ""){
+			students[k].seat = null
+			nonEmpty.push(students[k])
+		}
+	}
+
+    nonEmpty.sort(sortByName);
+	students = nonEmpty
+	for(var i = 0; i < seatArr.length; i++) {
+		var s = seatArr[i];
+		s.isEmpty = true;
+		s.student = null; 
+	}
+}
 /* Assigns the students to a seat by row. In addition, this is currently used to evenly space out students 1 row and 1 seat apart from each other. */
-function assignSeatsByRow(seed) {
-	console.log("even spaced out by row")
+function assignSeatsByRow(seed, colOffset, rowOffset) {
 	var leftStudents = []	// an array to hold the students who are left handed
 	var rightStudents = []	// an array to hold the students who are right handed
 	var tempList = students;
@@ -134,9 +190,9 @@ function assignSeatsByRow(seed) {
 	}
 
 	//assign all by row. Seperate each student by one seat and row
-	console.log(gridRow + ", " + gridRow)
-	for(var i = gridRow-1; i >= 0; i-=2) {
-		for(var j = 0; j < gridCol; j+=2) {
+	//console.log("tempList.length: " + tempList.length)
+	for(var i = gridRow-1; i >= 0; i-=(rowOffset+1)) {
+		for(var j = 0; j < gridCol; j+=(colOffset+1)) {
 			var right = true;
 			var tempStudent;
 			var seat = seatArr[i*gridCol+j];
@@ -144,7 +200,6 @@ function assignSeatsByRow(seed) {
 			//console.log("rightIndex: " + rightIndex + " " + "leftIndex: " + leftIndex);
 			//console.log("leftStudents.length: " + leftStudents.length + " " + "rightStudents.length: " + rightStudents.length)
 			////console.log(seat)
-			console.log(seat)
 			if(seat.isGhost) {continue;}
 			if((rightIndex + leftIndex) >= tempList.length) { continue; }
 			if(seat.isLeftHanded) {
@@ -169,7 +224,7 @@ function assignSeatsByRow(seed) {
 					right = false;
 				}
 			}
-			// Add studens to seats only if there are students to add
+			// Add students to seats only if there are students to add
 			if (rightIndex + leftIndex < tempList.length) {
 				if (right) rightIndex++;
 				else leftIndex++
@@ -178,6 +233,8 @@ function assignSeatsByRow(seed) {
 				//console.log(tempStudent)
 				counter++
 			}
+
+			//console.log(seat)
 		}
 	}
 
@@ -193,11 +250,11 @@ function assignSeatsByRow(seed) {
 			students.push(emptyStudent);
 		}
 	}
-	console.log(counter + " students assigned")
+	//console.log(counter + " students assigned")
 }
 
 /* Assigns the students to a seat */
-function assignSeatsByCol(seed) {
+function assignSeatsByCol(seed, colOffset, rowOffset) {
 	var leftStudents = []	// an array to hold the students who are left handed
 	var rightStudents = []	// an array to hold the students who are right handed
 	var tempList = students;
@@ -223,15 +280,15 @@ function assignSeatsByCol(seed) {
 
 	//assign all the odd columns
 	//console.log("ODD columns")
-	for(var i = 1; i < gridCol; i+=2) {
-		for(var j = gridRow - 1; j >= 0; j--) {
+	for(var j = 0; j < gridCol; j+=(colOffset+1)) {
+		for(var i = gridRow - 1; i >= 0; i-=(rowOffset+1)) {
 			var right = true;
 			var tempStudent;
-			var seat = seatArr[j*gridCol+i];
+			var seat = seatArr[i*gridCol+j];
 			//console.log("i: " + i + " j: " + j + " index: " + (j*gridCol+i))
 			//console.log("rightIndex: " + rightIndex + " " + "leftIndex: " + leftIndex);
 			//console.log("leftStudents.length: " + leftStudents.length + " " + "rightStudents.length: " + rightStudents.length)
-			////console.log(seat)
+			//console.log(seat)
 			if(seat.isGhost) {continue;}
 			if((rightIndex + leftIndex) >= tempList.length) { continue; }
 			if(seat.isLeftHanded) {
@@ -256,7 +313,7 @@ function assignSeatsByCol(seed) {
 					right = false;
 				}
 			}
-			// Add studens to seats only if there are students to add
+			// Add students to seats only if there are students to add
 			if (rightIndex + leftIndex < tempList.length) {
 				if (right) rightIndex++;
 				else leftIndex++
@@ -271,7 +328,7 @@ function assignSeatsByCol(seed) {
 	//assign all the even columns
 	// Follows the same logic as assignign odd columns
 	//console.log("EVEN columns")
-	for(var i = 0; i < gridCol; i+=2) {
+/*	for(var i = 0; i < gridCol; i+=2) {
 		for(var j = gridRow - 1; j >= 0; j--) {
 			var right = true
 			var tempStudent;
@@ -305,7 +362,7 @@ function assignSeatsByCol(seed) {
 				counter++
 			}
 		}
-	}
+	}*/
 
 	// Fill the remaining seats with empty students
 	for(var i = 0; i < seatArr.length; i++) {
@@ -323,7 +380,7 @@ function assignSeatsByCol(seed) {
 }
 
 /* Assigns the students to a station */
-function assignStationsByCol(seed) {
+function assignStationsByRow(seed, colOffset, rowOffset) {
 	var tempList = students;
 	var index = 0
 	var maxStudents = tempList.length;
@@ -339,8 +396,98 @@ function assignStationsByCol(seed) {
 	//console.log("gridRow: " + gridRow + " gridCol: " + gridCol)
 	//console.log("seatArr.length: " + seatArr.length)
 	//assign all the odd columns
-	for(var i = 1; i < gridCol; i+=2) {
+	for(var i = gridRow-1; i >= 0; i-=(rowOffset+1)) {
+		for(var j = 0; j < gridCol; j+=(colOffset+1)) {
+			var seat = seatArr[i*gridCol+j]; 
+			var partners = []
+			//console.log("i: " + i + " j: " + j + " index: " + (j*gridCol+i))
+			if(seat.isGhost) {continue;}
+			for (var k = 0; k < parseInt(seat.numPerStation,10); k++) {
+				//console.log("index: " + index + "tempList.length "+ tempList.length)
+				if(index >= maxStudents) {
+					//console.log("students.length: " + students.length)
+					var emptyStudent = new Student("EMPTY", "EMPTY", "", "", false, false, null);
+					emptyStudent.seat = seat;
+					partners.push(emptyStudent)
+					students.push(emptyStudent)
+					//console.log(k)
+				}
+				else {
+					var tempStudent = tempList[index++]
+					tempStudent.seat = seat;
+					partners.push(tempStudent)
+				}
+			}
+			seat.students = partners;
+		}
+	}
+
+	//assign all the even columns
+	// Follows the same logic as assignign odd columns
+/*	for(var i = 0; i < gridCol; i+=2) {
 		for(var j = gridRow - 1; j >= 0; j--) {
+			var seat = seatArr[j*gridCol+i]; 
+			var partners = []
+			//console.log("i: " + i + " j: " + j + " index: " + (j*gridCol+i))
+			if(seat.isGhost) {continue;}
+			for (var k = 0; k < parseInt(seat.numPerStation,10); k++) {
+				//console.log("index: " + index + "tempList.length "+ tempList.length)
+				if(index >= maxStudents) {
+					var emptyStudent = new Student("EMPTY", "EMPTY", "", "", false, false, null);
+					emptyStudent.seat = seat
+					partners.push(emptyStudent)
+					students.push(emptyStudent)
+					//console.log(k)
+				}
+				else {
+					var tempStudent = tempList[index++]
+					tempStudent.seat = seat;
+					partners.push(tempStudent)
+				}
+			}
+			seat.students = partners;
+		}
+	}*/
+
+	// Fill the remaining seats with empty students
+	for(var i = 0; i < seatArr.length; i++) {
+		var s = seatArr[i];
+		if(s.isGhost) { continue; }
+		if(s.students == null) {
+			var partners = []
+			for (var k = 0; k < parseInt(s.numPerStation,10); k++) {
+				//console.log("students.length: " + students.length)
+				var emptyStudent = new Student("EMPTY", "EMPTY", "", "", false, false, null);
+				s.isEmpty = true;
+				emptyStudent.seat = s;
+				partners.push(emptyStudent)
+				students.push(emptyStudent);
+				//console.log(k)
+			}
+			s.students = partners
+		}
+	}
+}
+
+/* Assigns the students to a station by column first */
+function assignStationsByCol(seed, colOffset, rowOffset) {
+	var tempList = students;
+	var index = 0
+	var maxStudents = tempList.length;
+	shuffle(tempList,seed);	// Shuffles the list of students
+	//console.log("lab")
+	// Copies over the map of seats and pushes it into an array in order to loop through it
+	for (var key in finalSeatMap) {
+		if (finalSeatMap.hasOwnProperty(key)) {
+			seatArr.push(finalSeatMap[key])
+		}
+	}
+
+	//console.log("gridRow: " + gridRow + " gridCol: " + gridCol)
+	//console.log("seatArr.length: " + seatArr.length)
+	//assign all the odd columns
+	for(var i = 0; i < gridCol; i+=(colOffset+1)) {
+		for(var j = gridRow - 1; j >= 0; j-=(rowOffset+1)) {
 			var seat = seatArr[j*gridCol+i]; 
 			var partners = []
 			//console.log("i: " + i + " j: " + j + " index: " + (j*gridCol+i))
@@ -367,7 +514,7 @@ function assignStationsByCol(seed) {
 
 	//assign all the even columns
 	// Follows the same logic as assignign odd columns
-	for(var i = 0; i < gridCol; i+=2) {
+/*	for(var i = 0; i < gridCol; i+=2) {
 		for(var j = gridRow - 1; j >= 0; j--) {
 			var seat = seatArr[j*gridCol+i]; 
 			var partners = []
@@ -390,7 +537,7 @@ function assignStationsByCol(seed) {
 			}
 			seat.students = partners;
 		}
-	}
+	}*/
 
 	// Fill the remaining seats with empty students
 	for(var i = 0; i < seatArr.length; i++) {
@@ -411,6 +558,7 @@ function assignStationsByCol(seed) {
 		}
 	}
 }
+
 
 // Function that shuffles the array
 function shuffle(array, seed) {

@@ -23,7 +23,7 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
   end_Y = 280;  // the maximum y coord
   startX = 10; // The x coord to begin writing the table of students
   startY = 15;  // The y coord to begin writing the table of students
-  console.log(students)
+  //console.log(students)
 
   // Formating title and sorting array based on sorting option selected
   if (filename == "") filename = "SeatingChart"
@@ -57,14 +57,14 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
     doc = new jsPDF("l"); // Landscape orientatiokn for grid layout
 
   var emptySeats = [];  // array to hold empty seat strings. To be prined at the end of file
-  console.log(filename)
-  console.log(title)
+  //console.log(filename)
+  //console.log(title)
 
   currentX = startX;
   currentY = startY;
   var titleString = title + " " + formatStr;
   var downloadString = filename + format;
-  console.log(titleString);
+  //console.log(titleString);
 
   doc.setFont("helvetica");
   doc.setProperties({
@@ -81,7 +81,7 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
   doc.setFontSize(rosterFontSize);
 
   if (!gridLayout && !stationLayout) {
-    console.log(students) 
+    //console.log(students) 
     /* Writing roster */
     for (var i = 0; i < students.length; i++) {
       if (currentY <= end_Y) {  // Add students in the current column
@@ -124,7 +124,7 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
 
     var cellWidth = Math.floor(end_X/gridCol)
     var cellHeight = Math.floor(end_Y/gridRow) - 5
-    console.log(Math.floor(end_X/gridRow))
+    //console.log(Math.floor(end_X/gridRow))
     currentX = startY
     currentY = startX
     doc.cellInitialize();
@@ -132,8 +132,8 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
       for(var j = 0; j < gridCol; j++) {
         var tempStation = seatArr[i*gridCol + j]
         var cellContent = " "
-        console.log(tempStation)
-        console.log(partners)
+        //console.log(tempStation)
+        //console.log(partners)
         if (!tempStation.isGhost) {
           cellContent = tempStation.seatPosition.toString() + "\n"
           var partners = tempStation.students;
@@ -165,14 +165,14 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
             doc.text(currentX, currentY, createString(partners[k]))
             currentY += row_gap;  // Go down one row
           }
-          console.log(currentY)
+          //console.log(currentY)
           checkBoundaries(end_X, end_Y)
         }
       }
     }
     /* Writing the empty students to the pdf */
     for(var i = 0; i < emptySeats.length; i++) {
-      console.log(currentY)
+      //console.log(currentY)
       doc.text(currentX, currentY, emptySeats[i].toString());
       currentY+= row_gap; // Same logic as above
       checkBoundaries(end_X, end_Y)
@@ -193,7 +193,7 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
   
   // Adding classroom and updating x coord and y coord
   for (var i = 0; i < bottomInfo.length; i++) {
-    console.log(currentX,currentY)
+    //console.log(currentX,currentY)
     doc.text(currentX, currentY, bottomInfo[i]);
     currentY += row_gap;
     if (!gridLayout) checkBoundaries(end_X, end_Y);
@@ -226,98 +226,5 @@ function countSeats() {
     }
   }
   return expectedSeats;
-}
-
-/* Comparison functions to sort seats by their grid layout */
-function sortByStation(station1, station2) {
-  if (parseInt(station1.seatPosition,10) < parseInt(station2.seatPosition,10))
-    return -1;
-  if (parseInt(station1.seatPosition,10) > parseInt(station2.seatPosition,10))
-    return 1;
-  return 0;
-}
-
-
-
-/* Comparison functions to sort seats by their grid layout */
-function sortByGrid(station1, station2) {
-  if (parseInt(station1.gridPos,10) < parseInt(station2.gridPos,10))
-    return -1;
-  if (parseInt(station1.gridPos,10) > parseInt(station2.gridPos,10))
-    return 1;
-  return 0;
-}
-
-/* Comparison functions to sort by lastname */
-function sortByName(stud1, stud2) {
-  if (stud1.lastname < stud2.lastname)
-    return -1;
-  if (stud1.lastname > stud2.lastname)
-    return 1;
-  return 0;
-}
-
-/* Comparison function to sort by row */
-function sortByRow(stud1, stud2) {
-  console.log(stud1)
-  var seatPos1 = stud1.seat.seatPosition;
-  var seatPos2 = stud2.seat.seatPosition;
-  var row1 = seatPos1[0]
-  var row2 = seatPos2[0]
-  var pos1 = "";
-  var pos2 = "";
-  
-  for (var i = 1; i < seatPos1.length; i++) {
-    pos1 += seatPos1[i]
-  }
-
-  for (var i = 1; i < seatPos2.length; i++) {
-    pos2 += seatPos2[i];
-  }
-  
-  var int_pos1 = parseInt(pos1,10);
-  var int_pos2 = parseInt(pos2,10);
-
-  if(row1 == row2) {
-    if (int_pos1 < int_pos2)
-      return -1;
-    else
-      return 1;
-  }
-  else if(row1 < row2)
-    return -1;
-  else
-    return 1;
-}
-
-/* Comparison function to sort by column */
-function sortByColumns(stud1, stud2) {
-  var seatPos1 = stud1.seat.seatPosition;
-  var seatPos2 = stud2.seat.seatPosition;
-  var row1 = seatPos1[0]
-  var row2 = seatPos2[0]
-  var pos1 = "";
-  var pos2 = "";
-  for (var i = 1; i < seatPos1.length; i++) {
-    pos1 += seatPos1[i]
-  }
-
-  for (var i = 1; i < seatPos2.length; i++) {
-    pos2 += seatPos2[i];
-  }
-  
-  var int_pos1 = parseInt(pos1,10);
-  var int_pos2 = parseInt(pos2,10);
-
-  if(int_pos1 == int_pos2) {
-    if (row1 < row2)
-      return -1;
-    else
-      return 1;
-  }
-  else if(int_pos1 < int_pos2)
-    return -1;
-  else
-    return 1;
 }
 

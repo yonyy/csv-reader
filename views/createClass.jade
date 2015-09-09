@@ -39,7 +39,6 @@ block formInputs
 						label Existing rosters
 						select(class="form-control existingRoster", name="fileInput")
 							option(selected="selected" id="r0", value='0') --Select--
-							- console.log("ssss")
 							- for roster in JSON.parse(rosters)
 								- var labVal = JSON.stringify(roster)
 								option(value="#{labVal}")=roster.rosterName + " (" + roster.totalStudents + " students)"

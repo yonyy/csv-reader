@@ -60,7 +60,6 @@ block content
 				script.
 					$('input.option').on('change', function() {
 						$('input.option').not(this).prop('checked', false);
-						console.log($(this).attr('id'));
 						if ($(this).attr('id') == "ghost_option") {
 							if (isGhost)
 								isGhost = false
@@ -146,6 +145,5 @@ block content
 							globalClassroom.leftSeats = leftSeats
 							globalClassroom.ghostSeats = ghostSeats
 							globalClassroom.totalSeats = actualTotal
-							console.log(actualTotal)
 							$('.classroom').val(JSON.stringify(globalClassroom))
 						});

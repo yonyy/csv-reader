@@ -32,13 +32,13 @@ function createSeats(classroom) {
 		var seat = new Seat(false, false, null, false, seatId);
 		seatMap[seatId] = seat;
 		actualTotal++
-		console.log(actualTotal)
+		//console.log(actualTotal)
 	});
 
 	// This section run if user has selected an uploaded classroom
 	// It over writes the current status of the seat to a ghost seat
 	ghostSeats = classroom.ghostSeats
-	console.log(ghostSeats.length)
+	//console.log(ghostSeats.length)
 	for (var i = 0; i < ghostSeats.length; i++) {
 		var seatId = "#"+ghostSeats[i]
 		$(seatId).css("background-color", ghostColor);
@@ -46,13 +46,13 @@ function createSeats(classroom) {
 		seatObj["isGhost"] = true;
 		seatObj["isLeftHanded"] = false;
 		actualTotal--
-		console.log(actualTotal)
+		//console.log(actualTotal)
 	}
 
 	// This section run if user has selected an uploaded classroom
 	// It over writes the current status of the seat to a left seat
 	leftSeats = classroom.leftSeats
-	console.log(leftSeats)
+	//console.log(leftSeats)
 	for (var i = 0; i < leftSeats.length; i++) {
 		var seatId = "#"+leftSeats[i]
 		$(seatId).css("background-color", leftColor);
@@ -68,7 +68,7 @@ function createSeats(classroom) {
 function updateSeat(id, expectedSeats, totalStud) { 
 	$('.alert').remove();
 	var seatObj = seatMap[id];
-	console.log(id);
+	//console.log(id);
 	if (isGhost) {
 		$('#'+id).css("background-color", ghostColor);
 		if (!seatObj["isGhost"]) {
@@ -113,9 +113,9 @@ function updateSeat(id, expectedSeats, totalStud) {
 		if (index > -1)
     		ghostSeats.splice(index, 1);
 	}
-	console.log(seatObj)
-	console.log($('#'+id).html());
-	console.log(numGhosts)
+	//console.log(seatObj)
+	//console.log($('#'+id).html());
+	//console.log(numGhosts)
 	actualTotal = expectedSeats - numGhosts
 	$('p.actualTotal').text('Actual Total Seats: ' + actualTotal)
 	if (actualTotal < parseInt(totalStud,10)) {

@@ -77,7 +77,6 @@ block content
 				script.
 					$('input.option').on('change', function() {
 						$('input.option').not(this).prop('checked', false);
-						console.log($(this).attr('id'));
 						if ($(this).attr('id') == "increase_option") {
 							if (manIncrease)
 								manIncrease = false

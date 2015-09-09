@@ -29,9 +29,9 @@ function validateClassroom(classType) {
     classroomSize = perStation*(height*width)
 
 
-    console.log(perStation)
-    console.log($('#className').val() + " " + $('#heightInsert').val() +  " " + $('#widthInsert').val());
-    console.log(total_students);
+    //console.log(perStation)
+    //console.log($('#className').val() + " " + $('#heightInsert').val() +  " " + $('#widthInsert').val());
+    //console.log(total_students);
 
     // remove previous error/warning messages
     $('.alert').remove();

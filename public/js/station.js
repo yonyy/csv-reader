@@ -50,7 +50,7 @@ function createStations(num, classroom) {
         var stationId = $(element).attr('id');
         var station = new Station(false, numPerStation, null, false, stationId, index+1);
         seatMap[stationId] = station;
-        console.log(station);
+        //console.log(station);
     });
 
 	// This section run if user has selected an uploaded classroom
@@ -75,7 +75,7 @@ function updateStation(id, expectedSeats, totalStud, numPerStation) {
 	var seatObj = seatMap[id];
 	maxStations = parseInt(expectedSeats,10);
 
-	console.log("id: " + id);
+	//console.log("id: " + id);
 	
 	/* If it is ghost, update html and seatObject and increment numGhosts */
 	if (isGhost) {
@@ -83,7 +83,7 @@ function updateStation(id, expectedSeats, totalStud, numPerStation) {
 		if (!seatObj["isGhost"])
 			numGhosts++;
 		seatObj["isGhost"] = true;
-		console.log(seatObj)
+		//console.log(seatObj)
 
 		ghostSeats.push(id)
 
@@ -105,7 +105,7 @@ function updateStation(id, expectedSeats, totalStud, numPerStation) {
     		ghostSeats.splice(index, 1);
 	}
 
-	console.log(numGhosts)
+	//console.log(numGhosts)
 	
 	actualTotal = expectedSeats - numGhosts
 	$('p.actualTotal').text('Actual Total Seats: ' + actualTotal)
@@ -115,7 +115,7 @@ function updateStation(id, expectedSeats, totalStud, numPerStation) {
 	}
 	$('.totalSeats').val(parseInt(actualTotal,10))
 	$('.totalGhosts').val(parseInt(numGhosts,10))
-	console.log("totalSeats: " + actualTotal)
+	//console.log("totalSeats: " + actualTotal)
 }
 
 // Validates lab that no station is left unnumbered
@@ -138,7 +138,7 @@ function removeStation(id) {
 
 // Resets the grid. This function is called if user has switched from defaultFill to manualIncrease
 function clearClass() {
-	console.log("clearing")
+	//console.log("clearing")
 	updatedStationNum = 1;
 	var newMap = {}
 	/* Loop through current stations, and change the station's id to blank */
@@ -151,11 +151,11 @@ function clearClass() {
         
 		$(element).attr('id', index+1)
 		$(element).children().text(newID)
-        console.log(tempStation);
+        //console.log(tempStation);
 
 	});
 	seatMap = newMap
-	console.log(seatMap)
+	//console.log(seatMap)
 	clear = true;
 }
 
@@ -165,8 +165,8 @@ function manIncreaseStation(stationID) {
 	if (updatedStationNum % (parseInt(maxStations,10)+1) == 0 )
 		updatedStationNum = 1
 	
-	console.log("maxStations: " + maxStations)
-	console.log("updatedStationNum: " + updatedStationNum)
+	//console.log("maxStations: " + maxStations)
+	//console.log("updatedStationNum: " + updatedStationNum)
 
 	var newID = updatedStationNum
 	var tempStation = seatMap[stationID]
@@ -190,7 +190,7 @@ function manIncreaseStation(stationID) {
 	var switchStat = seatMap[newID]
 	seatMap[newID] = tempStation
 	seatMap[stationID] = switchStat
-	console.log(seatMap[newID])
+	//console.log(seatMap[newID])
 }
 
 // Loops through each station and resets it to default values
@@ -200,8 +200,8 @@ function defaultFillStation(w, h) {
 	var row = 1
 	var offset = 0
 	
-	console.log("width: " + w)
-	console.log("height: " +  h)
+	//console.log("width: " + w)
+	//console.log("height: " +  h)
 
 	var width = parseInt(w,10)
 	var height = parseInt(h,10)
@@ -210,7 +210,7 @@ function defaultFillStation(w, h) {
         var stationId = $(element).attr('id');
         var tempStation = seatMap[stationId]
         var newID = 0
-        console.log("index: " + index)
+        //console.log("index: " + index)
         if (index>0 && index%width == 0 ){
         	row++
         	offset = 0
@@ -222,16 +222,16 @@ function defaultFillStation(w, h) {
         else
         	newID = index+1
 
-        console.log("row: " + row)
-        console.log("newID: " + newID)
+        //console.log("row: " + row)
+        //console.log("newID: " + newID)
         
         tempStation["seatPosition"] = newID
         newMap[newID] = tempStation
 
         $(element).attr('id', newID)
         $(element).children().text(newID)
-        console.log(tempStation);
+        //console.log(tempStation);
     });
     seatMap = newMap
-    console.log(seatMap)
+    //console.log(seatMap)
 }

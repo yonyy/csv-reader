@@ -6,6 +6,7 @@ block append link
 		link(href="css/classroom.css", rel="stylesheet")
 	link(href="css/seatingChart.css", rel="stylesheet")
 block append script
+	script(src="js/sort.js")
 	script(src="//mrrio.github.io/jsPDF/dist/jspdf.debug.js")
 	script(src="//cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.0/seedrandom.min.js")
 	script(src="js/jquery.redirect.js")
@@ -65,6 +66,8 @@ block content
 							|  Create
 					p(class="classHeader") Hover over a cell to see its information
 					p(class="classHeader") Click "Download" to download a pdf of the seating chart
+			div(class="row")
+				div(class="col-md-offset-3 col-lg-6 errorMessage")
 			div(class="row")
 				div(class="col-lg-12")
 					ol(class="breadcrumb")
@@ -144,6 +147,67 @@ block content
 							h3(class="panel-title")
 								span(class="glyphicon glyphicon-th")
 								|  #{className}
+							div.content
+								div#settings
+									i.fa.fa-cog#setting-icon
+								div#menu
+									div#arrow
+									div#dc-row.assign
+										div
+											input#dc(type='number', value='0')
+											|   Columns apart
+									div#dr-row.assign
+										div
+											input#dr(type='number', value='0')
+											|   Rows apart
+									a(class="arrangement" id="col") Assign by Columns
+									a(class="arrangement" id="row") Assign by Rows
+									button#done.btn.btn-default(role='button')
+										| Done
+							script.
+								var clicked = false;
+								$( "#settings, #admin_text" ).on( "click", function() {
+									if (!clicked) {
+										clicked = true
+										$('#setting-icon').animate({"padding-right":"96%"}, "fast")
+										$( "#menu" ).slideToggle( "fast" );
+									}
+									else {
+										clicked = false
+										$( "#menu" ).slideToggle( "fast" );
+										$('#setting-icon').animate({"padding-right":"5%"}, "fast")
+									}
+								});
+
+								$('.arrangement').on('click', function(){
+									$('.arrangement').not(this).css({"background": "#F8F8F8"})
+									$(this).css({"background": "#CFD8DC" })
+									if($(this).attr("id") == "row") col = false
+									else col = true
+								});
+
+								$('#done').on('click', function(){
+									var dr = $('#dr')
+									var dc = $('#dc')
+									var valid = true
+									if(dr.val() < 0) {
+										$('#dr-row').css({"background": "#F44336"});
+										valid = false
+									}
+									else {
+										$('#dr-row').css({"background": "#F8F8F8"});
+									}
+
+									if(dc.val() < 0) {
+										$('#dc-row').css({"background": "#F44336"});
+										valid = false
+									}
+									else
+										$('#dc-row').css({"background": "#F8F8F8"});
+
+									if (valid) spreadOut(parseInt(dc.val(),10), parseInt(dr.val(),10), col)
+
+								});
 						div(class="panel-body")
 							div(class="finalGridContainer")
 			div(class="row")

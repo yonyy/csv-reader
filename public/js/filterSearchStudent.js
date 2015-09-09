@@ -6,9 +6,9 @@ var globalRoster = []	// The roster that will be uploaded to the DB containing t
 // Sets studentMap and creates the autocomplete box
 function setRoster(roster) {
 	globalRoster = roster
-	console.log(roster)
+	//console.log(roster)
 	students = roster.students
-	console.log(students)
+	//console.log(students)
 	/* Creates a temporary map of the roster, K: student email, V: index in the student array
  	* This will be used when assigning the students as left handed or OSD. */
 	for(var i = 0; i < students.length; i++) {
@@ -23,7 +23,7 @@ function filterStudents() {
 	var text = $('.search').val().toLowerCase()
 	var td = 6
 	var contains = false
-	console.log(text)
+	//console.log(text)
 	/* Look through each table data and check if any table data contains the text */
 	$('tbody tr td').each(function(index, element){
 		if (index % td == 0) /* Want to look through each row, since each row contains 6 td, reset bool */
@@ -72,5 +72,5 @@ function searchList() {
         source: uniqueNames
     });
 	
-	console.log(listArray)    
+	//console.log(listArray)    
 }

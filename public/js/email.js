@@ -17,7 +17,7 @@ function emailRoster(className) {
 			});
 		}
 	}
-	console.log(className);
+	//console.log(className);
 	// A simple HTTP POST and GET Redirection Plugin for jQuery
 	$.redirect('/email',{roster : JSON.stringify(studentsInfo), className : className}, 'POST');
 
