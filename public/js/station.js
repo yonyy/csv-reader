@@ -149,6 +149,7 @@ function clearClass() {
         tempStation["seatPosition"] = newID
         newMap[index+1] = tempStation
         
+        // assign id to default value
 		$(element).attr('id', index+1)
 		$(element).children().text(newID)
         //console.log(tempStation);
