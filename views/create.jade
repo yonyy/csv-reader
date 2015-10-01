@@ -1,6 +1,9 @@
 //- Basic template for createLab and createClass
 extends ./layout.jade
+block append link
+	link(href="css/create.css", rel="stylesheet")
 block append script
+	script(src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.core.min.js")
 	script(src="js/jquery.redirect.js")
 	script(src="js/home.js")
 	script(src="js/classroom.js")
@@ -21,13 +24,93 @@ block content
 						li(class="active")
 							i(class="fa fa-edit")
 							|  Create
-					p(class="lead") Press "Choose File" to upload a roster (.csv). Please make sure your roster follows the following #[a(href="/index#info") format]
+					p(class="lead") Press "Choose File" to upload the roster from TritonLink (.xlsx, .xls). Please make sure your roster follows the following #[a(href="/index#info") format]
 					p(class="lead") Enter dimensions for the classroom
 			div(class="row")
 				div(class="col-md-offset-3 col-lg-6 errorMessage")
 			div(class="row")
 				block formInputs
 					form(class="form", name="dimensions")
+						div(class="row")
+							div(class="col-lg-6")
+								block nameBlock
+									div(class="form-group classroomName")
+										block name
+										input(type="text", class="form-control", name="className", id="className")
+								block heightBlock
+									div(class="col-lg-6 form-group")
+										label(for="heightInsert") Height
+										input(type="number", class="form-control", name="height", id="heightInsert", placeholder="10")
+								block widthBlock
+									div(class="col-lg-6 form-group")
+										label(for="widthInsert") Width
+										input(type="number", class="form-control", name="width", id="widthInsert", placeholder="12")
+								block numPerSeatBlock
+									div(class="col-lg-4 form-group")
+										label(for="perStationInsert") Students per station
+										input(type="number", class="form-control", name="numPerStation", id="perStationInsert", value="2")
+								block seedBlock
+									div(class="form-group")
+										label(for="classSeed") Seed (Used to generate a random yet repeatable seating chart) [Optional]
+										input(type="number", class="form-control", name="seed", id="seedInsert")
+							block existingRooms
+						block existingRoster
+							div(class="row")
+								div(class="col-lg-6")
+									div(class="form-group")
+										label(for="fileInsert") File Input
+										input(type="file", accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel", id="fileInsert", name="fileInput", onchange="readRoster()")
+								div(class="col-lg-6")
+									div(class="form-group")
+										label Existing rosters
+										select(class="form-control existingRoster", name="fileInput")
+											option(selected="selected" id="r0", value='0') --Select--
+												- for roster in JSON.parse(rosters)
+													- var labVal = JSON.stringify(roster)
+													option(value="#{labVal}")=roster.rosterName + " (" + roster.totalStudents + " students)"
+						block inputHidden
+						block manualRosterBlock
+							div(class="row")
+								div(class="col-lg-12 rosterClick")
+									a#manualRosterClick Manually Paste Roster
+							div(class="manualRosterInputBox")
+								div(class="row")
+									div(class="col-lg-12")
+										h6 #[strong *Leave the columns blank if the input matches the default format. Otherwise, specifiy the columns, and there must be at least a column for #[code email], #[code last name] and #[code first name]. ]
+										h6 #[strong *#[code last name] and #[code first name] can be substituded for #[code student], but the students must still be sorted by last name]
+										h6 #[strong *The default delimeter is a tab.]
+								div(class="row")
+									div(class="col-lg-6")
+										label(for="filename") Roster Name 
+										input(type="text", class="form-control" id="filename")
+								div(class="row")
+									- for(var i = 0; i < 11; i++)
+										div.columnInfo.col-lg-1
+											- var defaultColumns = ["Sec ID", "PID", "Student", "Credits", "College", "Major", "Level", "Email"]
+											- if (i < defaultColumns.length)
+												- var defaultVal = defaultColumns[i]
+												input(type="text", class="form-control index", id="#{i}", placeholder="Cols #{i+1}" value="#{defaultVal}")
+											- else
+												input(type="text", class="form-control index", id="#{i}", placeholder="Cols #{i+1}")
+
+								div(class="row")
+									div(class="col-lg-12")
+										label(for="rosterTextInput") Paste Roster
+										textarea(class="form-control", id="rosterTextInput" rows="10")
+								div.row
+							script.
+								var i = 0
+								$('#manualRosterClick').click(function(){
+									if (i%2 == 1)
+										$(this).text('Manually Paste Roster')
+									else
+										$(this).text('Close')
+									$('.manualRosterInputBox').slideToggle("fast")
+									i++
+								});
+						block submitBlock
+							div(class="col-md-offset-5")
+								a(class="btn btn-default submitForm", role="button") Submit
 		block inputScripts
 			script.
 				$('#className, #heightInsert, #widthInsert').keyup(function(){
@@ -70,22 +153,39 @@ block content
 				$('#fileInsert').change(function(){
 					if($(this).val() != "") {
 						$('.existingRoster').attr('disabled', true)
-						newRoster = true;
+						$('#rosterTextInput').attr('disabled', true)
+						newUpload = true;
 					}
 					else {
 						$('.existingRoster').attr('disabled', false)
+						$('#rosterTextInput').attr('disabled', false)
 					} 
 				});
 
 				$('.existingRoster').change(function(){
 					if($(this).val() != 0) {
 						$('#fileInsert').attr('disabled', true)
+						$('#rosterTextInput').attr('disabled', true)
 						total_students = JSON.parse($(this).val()).totalStudents
-						newRoster = false;
+						newUpload = false;
 					}
 					else {
 						$('#fileInsert').attr('disabled', false)
+						$('#rosterTextInput').attr('disabled', false)
 					} 
+				});
+				$('#rosterTextInput').keyup(function(){
+					if (!$('#rosterTextInput').val()) {
+						$('.existingRoster').attr('disabled', false)
+						$('#fileInsert').attr('disabled', false)
+						manualRoster = false
+						console.log("insert")
+					}
+					else {
+						$('.existingRoster').attr('disabled', true)
+						$('#fileInsert').attr('disabled', true)
+						manualRoster = true
+					}
 				});
 				$('.submitForm').click(function(){
 					checkRosterAndClass($('.classType').val())

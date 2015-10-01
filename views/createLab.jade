@@ -5,54 +5,25 @@ block labActive
 			i(class="glyphicon glyphicon-console")
 			|  Create Lab
 
-block formInputs
-	form(class="form", name="dimensions")
-		div(class="row")
-			div(class="col-lg-6")
-				div(class="form-group classroomName")
-					label(for="className") Lab room Name
-					input(type="text", class="form-control", name="className", id="className")
-				div(class="col-lg-4 form-group")
-					label(for="heightInsert") Height
-					input(type="number", class="form-control", name="height", id="heightInsert", placeholder="10")
-				div(class="col-lg-4 form-group")
-					label(for="widthInsert") Width
-					input(type="number", class="form-control", name="width", id="widthInsert", placeholder="12")
-				div(class="col-lg-4 form-group")
-					label(for="perStationInsert") Students per station
-					input(type="number", class="form-control", name="numPerStation", id="perStationInsert", value="2")
-				div(class="form-group")
-					label(for="classSeed") Seed (Used to generate a random yet repeatable seating chart) [Optional]
-					input(type="number", class="form-control", name="seed", id="seedInsert")
-			div(class="col-lg-6")
-				div(class="form-group")
-					label Existing lab rooms
-					select(class="form-control existingClass", name="className")
-						option(selected="selected" id="op0" value='0') --Select--
-						- for labroom in JSON.parse(labrooms)
-							- var labVal = JSON.stringify(labroom)
-							option(value="#{labVal}")=labroom.className + " (" + labroom.totalSeats + " seats, " + labroom.numPerStation +" per seat)"
-						//- option(id="op1" value='1') CSE B260
-						//- option(id="op2" value='2') CSE B250
-						//- option(id="op3" value='3') CSE B240
-		div(class="row")
-			div(class="col-lg-6")
-				div(class="form-group")
-					label(for="fileInsert") File Input
-					input(type="file", accept=".csv", id="fileInsert", name="fileInput", onchange="readRoster()")
-			div(class="col-lg-6")
-				div(class="form-group")
-					label Existing rosters
-					select(class="form-control existingRoster", name="fileInput")
-						option(selected="selected" id="r0", value='0') --Select--
-							- for roster in JSON.parse(rosters)
-								- var labVal = JSON.stringify(roster)
-								option(value="#{labVal}")=roster.rosterName + " (" + roster.totalStudents + " students)"
-						//- option(id="r1" value='1') CSE 15L W14 Section 002
-						//- option(id="r2" value='2') CSE 12 W14 Section 001
-		input(type="hidden", class="classType", name="classType", value="lab")
-		//- input(type="hidden", name="students", id="students", value="")
-		//- input(type="hidden", name="totalStudents", id="totalStudents", value="")
-		//- input(type="hidden", name="totalGhosts", value = "0")
-		div(class="col-md-offset-5")
-			a(class="btn btn-default submitForm", role="button") Submit
+block append name
+	label(for="className") Lab room Name
+block heightBlock
+	div(class="col-lg-4 form-group")
+		label(for="heightInsert") Height
+		input(type="number", class="form-control", name="height", id="heightInsert", placeholder="10")
+block widthBlock
+	div(class="col-lg-4 form-group")
+		label(for="widthInsert") Width
+		input(type="number", class="form-control", name="width", id="widthInsert", placeholder="12")
+block existingRooms
+	div(class="col-lg-6")
+		div(class="form-group")
+			label Existing lab rooms
+			select(class="form-control existingClass", name="className")
+				option(selected="selected" id="op0" value='0') --Select--
+				- for labroom in JSON.parse(labrooms)
+					- var labVal = JSON.stringify(labroom)
+					option(value="#{labVal}")=labroom.className + " (" + labroom.totalSeats + " seats, " + labroom.numPerStation +" per seat)"
+
+block inputHidden
+	input(type="hidden", class="classType", name="classType", value="lab")

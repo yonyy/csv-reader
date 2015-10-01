@@ -31,7 +31,8 @@ function validateClassroom(classType) {
 
     //console.log(perStation)
     //console.log($('#className').val() + " " + $('#heightInsert').val() +  " " + $('#widthInsert').val());
-    //console.log(total_students);
+    console.log(total_students);
+    console.log(classroomSize)
 
     // remove previous error/warning messages
     $('.alert').remove();
@@ -67,7 +68,7 @@ function validateClassroom(classType) {
     }
     
     // validating classroom size
-    if (classroomSize < total_students) {
+/*    if (classroomSize < total_students) {
         $('.errorMessage').prepend("<div class=\'alert alert-danger\' id=\'errorArea\'> <strong>Error!</strong> Not a big enough classroom </div>")
         $('.form div:nth-child(1) div:nth-child(1) div:nth-child(2)').addClass('has-error')
         $('.form div:nth-child(1) div:nth-child(1) div:nth-child(3)').addClass('has-error')
@@ -76,7 +77,7 @@ function validateClassroom(classType) {
     } else {
         $('.form div:nth-child(1) div:nth-child(1) div:nth-child(2)').removeClass('has-error')
         $('.form div:nth-child(1) div:nth-child(1) div:nth-child(3)').removeClass('has-error')
-    }
+    }*/
 
     // validating if students per seat is > 0
     if (classType == "lab") {

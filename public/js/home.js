@@ -1,8 +1,8 @@
 // File that contains the neccessary functions needed in the create page
 
-var newRoster = true;
+var newUpload = true;
 var newClass = true;
-
+var manualRoster = false
 /*$('.submitForm').click(function() {
 	//- sessionStorage.setItem('all_students', JSON.stringify(all_students));
 	$('#students').val(JSON.stringify(all_students));
@@ -26,8 +26,21 @@ var newClass = true;
 function checkRosterAndClass(classType) {
     var new_room = {}
     var new_roster = {}
+
+    if (manualRoster) {
+        readManualRoster()
+        new_roster = new Roster(fileName, all_students, total_students)
+    } else if (newUpload) {
+        if (validateRoster())   // checks that roster isnt empty
+            new_roster = new Roster(fileName,all_students,total_students)
+        else
+            return false
+    } else {
+        new_roster = JSON.parse($('.existingRoster').val())
+    }
+
     if (newClass) {
-        if(validateClassroom(classType)) {
+        if(validateClassroom(classType)) {  // checks that all fields have been filled
             /* Create classroom if it passes all of the checks */
             var width = parseInt($('#widthInsert').val(),10);
             var height = parseInt($('#heightInsert').val(),10);
@@ -37,20 +50,50 @@ function checkRosterAndClass(classType) {
         }
         else
             return false
-    }
-    else {
+    } else {
             new_room = JSON.parse($('.existingClass').val())
     }
-    if (newRoster)
-        if (validateRoster())
-            new_roster = new Roster(fileName,all_students,total_students)
-        else
-            return false
+
+    if (!compareRosterAndClass(classType)) return false
+    redirect(new_roster,new_room,classType)
+}
+
+function compareRosterAndClass(classType){
+    var classroomSize = 0
+    var perStation = 1
+    var width = parseInt($('#widthInsert').val(),10);
+    var height = parseInt($('#heightInsert').val(),10);
+    
+    if (newClass) {
+        if (classType == "lab") perStation =  parseInt($("#perStationInsert").val(), 10)
+        classroomSize = (height*width)*perStation
+    }
     else {
-        new_roster = JSON.parse($('.existingRoster').val())
+        var tempParse = JSON.parse($('.existingClass').val())
+        classroomSize = tempParse.totalSeats * tempParse.numPerStation
+    }
+    if (classroomSize < total_students){
+        throwSizeError()
+        return false
     }
 
-    redirect(new_roster,new_room,classType)
+    return true 
+    // validating classroom size
+}
+
+function throwSizeError() {
+    $('.alert').remove();
+    $('.errorMessage').prepend("<div class=\'alert alert-danger\' id=\'errorArea\'> <strong>Error!</strong> Not a big enough classroom </div>")
+    if (newClass) {
+        $('.form div:nth-child(1) div:nth-child(1) div:nth-child(2)').addClass('has-error')
+        $('.form div:nth-child(1) div:nth-child(1) div:nth-child(3)').addClass('has-error')
+    }
+    else {
+        $('.form div:nth-child(1) div:nth-child(1) div:nth-child(2)').removeClass('has-error')
+        $('.form div:nth-child(1) div:nth-child(1) div:nth-child(3)').removeClass('has-error')
+        $('.existingClass').addClass('has-error')
+    }
+    $(window).scrollTop(0)
 }
 
 /* Function that takes in the roster, classroom, and classType

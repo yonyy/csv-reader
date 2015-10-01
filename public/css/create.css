@@ -1,3 +1,19 @@
 div input {
 	margin-bottom: 10px;
 }
+
+#manualRosterClick, #manualRosterClose {
+	cursor: pointer;
+}
+
+.manualRosterInputBox {
+	display: none;
+}
+
+.columnInfo {
+}
+
+.index {
+	text-align: center;
+	width: 100px;
+}
