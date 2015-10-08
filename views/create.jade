@@ -2,13 +2,7 @@
 extends ./layout.jade
 block append link
 	link(href="css/create.css", rel="stylesheet")
-block append script
-	script(src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.core.min.js")
-	script(src="js/jquery.redirect.js")
-	script(src="js/home.js")
-	script(src="js/classroom.js")
-	script(src="js/roster.js")
-	script(src="js/student.js")
+
 block prepend bodyLink
 	body
 block content
@@ -98,95 +92,105 @@ block content
 										label(for="rosterTextInput") Paste Roster
 										textarea(class="form-control", id="rosterTextInput" rows="10")
 								div.row
-							script.
-								var i = 0
-								$('#manualRosterClick').click(function(){
-									if (i%2 == 1)
-										$(this).text('Manually Paste Roster')
-									else
-										$(this).text('Close')
-									$('.manualRosterInputBox').slideToggle("fast")
-									i++
-								});
+
 						block submitBlock
 							div(class="col-md-offset-5")
 								a(class="btn btn-default submitForm", role="button") Submit
-		block inputScripts
-			script.
-				$('#className, #heightInsert, #widthInsert').keyup(function(){
-					if (!$('#className').val() && !$('#heightInsert').val() && !$('#widthInsert').val()) {
-						$('.existingClass').attr('disabled', false)
-					}
-					else {
-						$('.existingClass').attr('disabled',true)
-						newClass = true;
-					}
-				});
+		script.
+			var i = 0;
+			$('#manualRosterClick').click(function(){
+				if (i%2 == 1)
+					$(this).text('Manually Paste Roster');
+				else
+					$(this).text('Close');
+				$('.manualRosterInputBox').slideToggle("fast");
+				i++
+			});
 
-				$('#heightInsert, #widthInsert').change(function() {
-					if (!$('#className').val() && !$('#heightInsert').val() && !$('#widthInsert').val()) {
-						$('.existingClass').attr('disabled', false)
-					}
-					else {
-						$('.existingClass').attr('disabled',true)
-					}
-				});
+			$('#className, #heightInsert, #widthInsert').keyup(function(){
+				if (!$('#className').val() && !$('#heightInsert').val() && !$('#widthInsert').val()) {
+					$('.existingClass').attr('disabled', false);
+				}
+				else {
+					$('.existingClass').attr('disabled',true);
+					newClass = true;
+				}
+			});
 
-				$('.existingClass').change(function(){
-					if($(this).val() != 0) {
-						$('#className').attr('disabled', true)
-						$('#heightInsert').attr('disabled', true)
-						$('#widthInsert').attr('disabled', true)
-						$('#perStationInsert').attr('disabled', true)
-						var tempParse = JSON.parse($(this).val())
-						classroomSize = tempParse.totalSeats * tempParse.numPerStation
-						newClass = false;
-					}
-					else {
-						$('#className').attr('disabled', false)
-						$('#heightInsert').attr('disabled', false)
-						$('#widthInsert').attr('disabled', false)
-						$('#perStationInsert').attr('disabled', false)
-					}
-				});
+			$('#heightInsert, #widthInsert').change(function() {
+				if (!$('#className').val() && !$('#heightInsert').val() && !$('#widthInsert').val()) {
+					$('.existingClass').attr('disabled', false);
+				}
+				else {
+					$('.existingClass').attr('disabled',true);
+				}
+			});
 
-				$('#fileInsert').change(function(){
-					if($(this).val() != "") {
-						$('.existingRoster').attr('disabled', true)
-						$('#rosterTextInput').attr('disabled', true)
-						newUpload = true;
-					}
-					else {
-						$('.existingRoster').attr('disabled', false)
-						$('#rosterTextInput').attr('disabled', false)
-					} 
-				});
+			$('.existingClass').change(function(){
+				if($(this).val() != 0) {
+					$('#className').attr('disabled', true);
+					$('#heightInsert').attr('disabled', true);
+					$('#widthInsert').attr('disabled', true);
+					$('#perStationInsert').attr('disabled', true);
+					var tempParse = JSON.parse($(this).val());
+					classroomSize = tempParse.totalSeats * tempParse.numPerStation;
+					newClass = false;
+				}
+				else {
+					$('#className').attr('disabled', false);
+					$('#heightInsert').attr('disabled', false);
+					$('#widthInsert').attr('disabled', false);
+					$('#perStationInsert').attr('disabled', false);
+				}
+			});
 
-				$('.existingRoster').change(function(){
-					if($(this).val() != 0) {
-						$('#fileInsert').attr('disabled', true)
-						$('#rosterTextInput').attr('disabled', true)
-						total_students = JSON.parse($(this).val()).totalStudents
-						newUpload = false;
-					}
-					else {
-						$('#fileInsert').attr('disabled', false)
-						$('#rosterTextInput').attr('disabled', false)
-					} 
-				});
-				$('#rosterTextInput').keyup(function(){
-					if (!$('#rosterTextInput').val()) {
-						$('.existingRoster').attr('disabled', false)
-						$('#fileInsert').attr('disabled', false)
-						manualRoster = false
-						console.log("insert")
-					}
-					else {
-						$('.existingRoster').attr('disabled', true)
-						$('#fileInsert').attr('disabled', true)
-						manualRoster = true
-					}
-				});
-				$('.submitForm').click(function(){
-					checkRosterAndClass($('.classType').val())
-				})
+			$('#fileInsert').change(function(){
+				if($(this).val() != "") {
+					$('.existingRoster').attr('disabled', true);
+					$('#rosterTextInput').attr('disabled', true);
+					newUpload = true;
+				}
+				else {
+					$('.existingRoster').attr('disabled', false);
+					$('#rosterTextInput').attr('disabled', false);
+				} 
+			});
+
+			$('.existingRoster').change(function(){
+				if($(this).val() != 0) {
+					$('#fileInsert').attr('disabled', true);
+					$('#rosterTextInput').attr('disabled', true);
+					total_students = JSON.parse($(this).val()).totalStudents;
+					newUpload = false;
+				}
+				else {
+					$('#fileInsert').attr('disabled', false);
+					$('#rosterTextInput').attr('disabled', false);
+				} 
+			});
+			$('#rosterTextInput').keyup(function(){
+				if (!$('#rosterTextInput').val()) {
+					$('.existingRoster').attr('disabled', false);
+					$('#fileInsert').attr('disabled', false);
+					manualRoster = false;
+					console.log("insert")
+				}
+				else {
+					$('.existingRoster').attr('disabled', true);
+					$('#fileInsert').attr('disabled', true);
+					manualRoster = true;
+				}
+			});
+			$('.submitForm').click(function(){
+				checkRosterAndClass($('.classType').val());
+			});
+
+
+
+block append script
+	script(src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.core.min.js")
+	script(src="js/jquery.redirect.js")
+	script(src="js/home.js")
+	script(src="js/classroom.js")
+	script(src="js/roster.js")
+	script(src="js/student.js")

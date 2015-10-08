@@ -57,7 +57,7 @@ function validateClassroom(classType) {
     }
 
     // validating width
-    if ($('#widthInsert').val() == '' || width <= 0 || width > 27) {
+    if ($('#widthInsert').val() == '' || width <= 0 || width > 30) {
         $('.errorMessage').prepend("<div class=\'alert alert-danger\' id=\'errorWidth\'> <strong>Error!</strong> Invalid width </div>")
         $('.form div:nth-child(1) div:nth-child(1) div:nth-child(3)').addClass('has-error')
         $(window).scrollTop(0)

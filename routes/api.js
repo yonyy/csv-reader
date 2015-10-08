@@ -15,6 +15,9 @@ router.use(methodOverride(function(req, res){
       }
 }));
 
+/************************
+	Roster API
+************************/
 router.route('/rosters')
 	.get(function(req, res, next){
 		mongoose.model('Roster').find({}, function (err, rosters){
@@ -56,17 +59,34 @@ router.route('/rosters/:id')
 					}
 					else {
 						console.log('DELETE removing ID: ' + roster._id);
-						res.json({
-							message : 'deleted',
-							item : roster
-						});
+						res.json(roster);
 					}
 				})
 			}
 		})
 	})
 
+	.put(function(req, res, next){
+		mongoose.model('Roster').findById(req.params.id, function (err, roster){
+			if (err) {
+				console.log(err)
+				res.json(err)
+			}
+			else {
+				var newRoster = req.body.roster
+				roster = newRoster
+				roster.save(function (err, r){
+					console.log("Updated")
+					res.json(r)
+				})
+			}
+		})
+	})
 
+
+/************************
+	Classroom & Labs API
+************************/
 router.route('/rooms')
 	.get(function(req, res, next){
 		mongoose.model('Classroom').find({}, function (err, classrooms){
@@ -108,16 +128,16 @@ router.route('/rooms/:id')
 					}
 					else {
 						console.log('DELETE removing ID: ' + classroom._id);
-						res.json({
-							message : 'deleted',
-							item : classroom
-						});
+						res.json(classroom);
 					}
 				})
 			}
 		})
 	})
 
+/************************
+	Classroom API
+************************/
 router.route('/classrooms')
 	.get(function(req, res, next){
 		mongoose.model('Classroom').find({classType: 'classroom'}, function (err, classrooms){
@@ -159,16 +179,17 @@ router.route('/classrooms/:id')
 					}
 					else {
 						console.log('DELETE removing ID: ' + classroom._id);
-						res.json({
-							message : 'deleted',
-							item : classroom
-						});
+						res.json(classroom);
 					}
 				})
 			}
 		})
 	});
 
+
+/************************
+	Lab API
+************************/
 router.route('/labs')
 	.get(function(req, res, next){
 		mongoose.model('Classroom').find({classType: 'lab'}, function (err, classrooms){
@@ -210,10 +231,7 @@ router.route('/labs/:id')
 					}
 					else {
 						console.log('DELETE removing ID: ' + classroom._id);
-						res.json({
-							message : 'deleted',
-							item : classroom
-						});
+						res.json(classroom);
 					}
 				})
 			}

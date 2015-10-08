@@ -49,7 +49,7 @@ function fillEmailForm(studentstoEmail, className) {
 	}
 	$('#inputReciever').val(toList);
 	 var sampleAddressText = "Dear [fullname], \n\n"
-	 var sampleBodyText = "Here is your assigned seat for the ________.\nPlease arrive early to find your seat.\nIf you cannot find your seat, please ask for assistance.\nWe have seating charts available in the front of the classroom..\n\n" 
+	 var sampleBodyText = "Here is your assigned seat for the ________.\nPlease arrive early to find your seat.\nIf you cannot find your seat, please ask for assistance.\nWe have seating charts available in the front of the classroom.\n\n" 
 	 var sampleInfoText = "Quiz - ________ at ________ in " + className.toString() + "\n";
 	 var sampleSeatText = "Seat: [seat] \n"
 	 var sampleIdText = "Exam Serial Number: [id] \n\n";

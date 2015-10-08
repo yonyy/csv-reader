@@ -5,16 +5,24 @@ block labActive
 			i(class="glyphicon glyphicon-console")
 			|  Create Lab
 
-block append name
+block name
 	label(for="className") Lab room Name
+
+block numPerSeatBlock
+	div(class="col-lg-4 form-group")
+		label(for="perStationInsert") Students per station
+		input(type="number", class="form-control", name="numPerStation", id="perStationInsert", value="2")
+
 block heightBlock
 	div(class="col-lg-4 form-group")
 		label(for="heightInsert") Height
 		input(type="number", class="form-control", name="height", id="heightInsert", placeholder="10")
+
 block widthBlock
 	div(class="col-lg-4 form-group")
 		label(for="widthInsert") Width
 		input(type="number", class="form-control", name="width", id="widthInsert", placeholder="12")
+
 block existingRooms
 	div(class="col-lg-6")
 		div(class="form-group")

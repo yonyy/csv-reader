@@ -24,9 +24,24 @@ function createStudents(dataArr) {
 		var firstname = studentInfo[firstnameIndex]
 		var lastname = studentInfo[lastnameIndex]
 		var email = studentInfo[emailIndex]
-		var examID = (i-3).toString()
-		studentsArr.push(new Student(lastname, firstname, email, examID, false,false,null)); 
+/*		var studentID = (i-3).toString()*/
+		studentsArr.push(new Student(lastname, firstname, email, 0, false,false,null)); 
 	}
+
+	studentsArr.sort(function sortByName(stud1, stud2) {
+		if (stud1.lastname < stud2.lastname) return -1;
+		if (stud1.lastname > stud2.lastname) return 1;
+		if (stud1.lastname == stud2.lastname) {
+			if (stud1.firstname < stud2.firstname) return -1
+				else return 1
+		}
+		return 0;
+	});
+
+	for(var i = 0; i < studentsArr.length; i++) {
+		studentsArr[i].studentID = i+1
+	}
+
 	total_students = studentsArr.length;
 	return studentsArr;
 }

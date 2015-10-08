@@ -11,6 +11,7 @@ var rosters = require('./model/roster');
 
 var api = require('./routes/api')
 var routes = require('./routes/index');
+var rostersRoute = require('./routes/rosters')
 var classroom = require('./routes/classroom');
 var lab = require('./routes/lab')
 var seatingchart = require('./routes/seatingcharts')
@@ -39,15 +40,16 @@ app.use(methodOverride('_method'));
 
 /* Send home page file */
 app.use('/', routes);
-app.use('/create', createClass)
-app.use('/createLab', createLab)
+app.use('/create', createClass);
+app.use('/rosters',rostersRoute);
+app.use('/createLab', createLab);
 app.use('/classroom', classroom);
-app.use('/lab', lab)
+app.use('/lab', lab);
 app.use('/student', student);
 app.use('/email', email);
 app.use('/seating_chart', seatingchart)
-app.use('/send', send)
-app.use('/api', api)
+app.use('/send', send);
+app.use('/api', api);
 
 app.listen(app.get("port"), function() {
   console.log("Server up and running. Go to http://localhost:" + app.get("port"));

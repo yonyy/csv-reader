@@ -24,6 +24,12 @@ function sortByName(stud1, stud2) {
     return -1;
   if (stud1.lastname > stud2.lastname)
     return 1;
+  if (stud1.lastname == stud2.lastname) {
+      if (stud1.firstname < stud2.firstname)
+        return -1
+      else
+        return 1
+  }
   return 0;
 }
 
