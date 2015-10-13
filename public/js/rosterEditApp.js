@@ -146,9 +146,7 @@ angular.module('app', ['ngRoute'])
 	    	var differences = vm.students.filter(function(value){return studentArray.indexOf(value) < 0;});
 	    	differences = differences.concat(studentArray.filter(function(value){
 	    		return vm.students.indexOf(value) < 0
-	    	})).filter(function(value, index){
-	    		return differences.indexOf(value) == index;
-	    	});
+	    	}))
 
 	    	for (var i = 0; i < differences.length; i++) {
 	    		if (vm.students.indexOf(differences[i]) < 0)
