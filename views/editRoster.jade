@@ -14,6 +14,7 @@ block script
 	script(src="../../js/jquery-1.11.3.js")
 	script(src="../../js/bootstrap.min.js")
 	script(src="../../../js/rosterEditApp.js")
+	script(src="../../../js/student.js")
 
 block prepend bodyLink
 	body(ng-app="app" ng-controller="MainController as main")
@@ -28,7 +29,10 @@ block content
 		div(class="container-fluid")
 			div(class="row")
 				div(class="col-lg-12")
-					h1(class="page-header") Rosters
+					h1(class="page-header" ng-hide="titleEditing" ng-click="titleEditing = true") {{main.title}}
+					form(ng-show="titleEditing" ng-submit="titleEditing = false")
+						input(type="text" class="form-control" value="main.title" ng-model="main.title")
+						button(class="btn btn-default" type="submit") Save
 					ol(class="breadcrumb")
 						li
 							i(class="fa fa-dashboard")
@@ -42,6 +46,19 @@ block content
 						li(class="active")
 							span(class="glyphicon glyphicon-th-list")
 							|  Edit
+			div(class="alert alert-success" ng-show="updated") Successfully Updated the Roster!
+				div(class="row" ng-if="main.added.length > 0 || main.removed.length > 0 ")
+					div(class="col-lg-6")
+						|  Added
+						ul
+							li(ng-repeat="newStud in main.added")
+								span {{newStud.lastname}}, {{newStud.firstname}}
+					div(class="col-lg-6")
+						|  Removed
+						ul
+							li(ng-repeat="delStud in main.removed")
+								span {{delStud.lastname}}, {{delStud.firstname}}
+			div(class="alert alert-danger" ng-show="errorUpdate") Error updating the roster!
 			div(class="row")
 				div(class="input-group")
 					span(class="input-group-addon")
@@ -51,68 +68,89 @@ block content
 			div(class="row")
 				div(class="col-lg-12")
 					ul(class="list-group")
-						li(class="list-group-item .hvr-underline-from-center" ng-repeat="student in main.students | filter:main.searchInput")
+						li(class="list-group-item .hvr-underline-from-center" ng-repeat="student in main.students | filter:main.searchInput | orderBy: 'lastname'")
 							span(ng-hide="editing")
 								|  {{student.lastname}}, {{student.firstname}} Email: {{student.email}} Exam ID: {{student.studentID}}
 							span(class="option")
-								button(class="btn btn-default option" ng-click="editing = true") Edit
-								button(class="btn btn-default option" ng-click="deleteRoster(roster._id)") Delete
+								span(class="badge" ng-click="editing = true") Edit
+								span(class="badge" ng-click="deleteStudent($index)") Delete
 							form(role="form" ng-show="editing" ng-submit="editing = false")
 								div(class="row")
 									div(class="col-lg-6")
 										div(class="col-lg-4 form-group")
 											label(for="lastname") Last Name
-											input(type="text", ng-model="student.lastname" class="form-control", id="lastname", placeholder="student.lastname" ng-required)
+											input(type="text", ng-model="student.lastname" class="form-control", id="lastname", placeholder="student.lastname" ng-minlength=1 required)
 										div(class="col-lg-4 form-group")
 											label(for="firstname") First Name
-											input(type="text", ng-model="student.firstname" class="form-control", id="firstname", placeholder="student.firstname" ng-required)
+											input(type="text", ng-model="student.firstname" class="form-control", id="firstname", placeholder="student.firstname" ng-minlength=1 required)
 										div(class="col-lg-4 form-group")
 											label(for="email") Email
-											input(type="text", ng-model="student.email" class="form-control", id="email", placeholder="student.email" ng-required)
+											input(type="text", ng-model="student.email" class="form-control", id="email", placeholder="student.email" ng-minlength=1 required)
 								div(class="save")
-									button(class="btn btn-default" type="submit") Save
-					form(class="form" ng-show="visible" ng-submit="newStudent()")
-						div(class="row")
-							div(class="col-lg-6")
-								div(class="col-lg-4 form-group")
-									label(for="lastname") Last Name
-									input(type="text", ng-model="studentLastName" class="form-control", id="lastname" ng-required)
-								div(class="col-lg-4 form-group")
-									label(for="firstname") First Name
-									input(type="text", ng-model="studentFirstName" class="form-control", id="firstname" ng-required)
-								div(class="col-lg-4 form-group")
-									label(for="email") Email
-									input(type="text", ng-model="studentEmail" class="form-control", id="email" ng-required)
-						div(class="row")
-							div(class="col-lg-6")
-								div(class="col-lg-3")
-									label Is Left Handed
-									select(class="form-control", ng-model="studentHand")
-										option(selected="selected", value="false") false
-										option(value="true") true
-								div(class="col-lg-3")
-									label is OSD
-									select(class="form-control", ng-model="studentOSD")
-										option(selected="selected", value="false") false
-							
-										option(value="true") true
-						div(class="space")
-						div(class="save")
-							button(class="btn btn-default" type="submit") Save
-											div(class="row")
+									button(class="btn btn-default" type="submit" ng-click="updateID()") Save
+									button(class="btn btn-default" ng-click="editing = false") Close 
 			div(class="row")
-				a(ng-click= "manual = true") Manually Paste a new Roster
-				form(class="form" ng-show="manual" ng-submit="newManualRoster()")
-					div(class="col-lg-12")
-						label(for="rosterTextInput") Paste Roster
-						textarea(class="form-control", id="rosterTextInput" rows="10" ng-model="manualRoster" ng-required)
-					button(class="btn btn-default" type="submit") Update
-					button(class="btn btn-default" ng-click="manual = false") Cancel
+				form(role="form" ng-show="addStud" ng-submit="addStudent()")
+					div(class="row")
+						div(class="col-lg-12")
+							div(class="col-lg-2 form-group")
+								label(for="lastname") Last Name
+								input(type="text", ng-model="studentLastName" class="form-control", id="lastname" ng-required)
+							div(class="col-lg-2 form-group")
+								label(for="firstname") First Name
+								input(type="text", ng-model="studentFirstName" class="form-control", id="firstname" ng-required)
+							div(class="col-lg-2 form-group")
+								label(for="email") Email
+								input(type="email", ng-model="studentEmail" class="form-control", id="email" ng-required)
+					div(class="row")
+						div(class="col-lg-12")
+							div(class="col-lg-2 form-group")
+								label Is Left Handed
+								select(class="form-control", ng-model="studentHand")
+									option(value="false") False
+									option(value="true") True
+							div(class="col-lg-2 form-group")
+								label is OSD
+								select(class="form-control", ng-model="studentOSD")
+									option(value="false") False
+									option(value="true") True
+					div(class="row")
+						div(class="col-lg-2 form-group")
+							button(class="btn btn-default saveNewStud" type="submit") Save
+			div(class="row")
+				div(class="col-lg-12")
+					a(ng-click= "manual = true") Manually Paste a new Roster
+			div(class="row")
+				div(ng-show="manual" class="col-lg-12")
+					h6 #[strong *Leave the columns blank if the input matches the default format. Otherwise, specifiy the columns, and there must be at least a column for #[code email], #[code last name] and #[code first name]. ]
+					h6 #[strong *#[code last name] and #[code first name] can be substituded for #[code student]. You can specifiy an #[code exam id ], but if left blank, it will automatically assign an #[code exam id] based of its sorted position]
+					h6 #[strong *The default delimeter is a tab.]
+			div(class="row")
+				form(role="form" ng-show="manual" ng-submit="newManualRoster()")
+					div(class="row")
+						div(class="col-lg-12 form-group")
+							div(class="col-lg-2" ng-repeat="column in main.columns track by $index")
+								input(type="text", class="form-control" value="column.val" ng-model="column.val" placeholder="Col {{$index+1}}")
+					div(class="row")
+						div(class="col-lg-12 form-group")
+							div(class="col-lg-1")
+								select(class="form-control" ng-model="deli" ng-options="delimeter.value as delimeter.name for delimeter in main.delimeters")
+					div(class="row")
+						div(class="col-lg-12 form-group")
+							div(class="col-lg-12")
+								label(for="rosterTextInput") Paste Roster
+								textarea(class="form-control", id="rosterTextInput" rows="10" ng-model="manualRoster" ng-required)
+					div(class="row")
+						div(class="col-lg-12 form-group")
+							div(class="col-lg-4")
+								button(class="btn btn-default" type="submit") Update
+								button(class="btn btn-default" ng-click="manual = false") Cancel
 			div(class="row")
 				div(class="container")
-					a(class="btn btn-default" ng-click="visible = true")
-						i(class="icon-plus")
+					div(class="col-lg-6 col-lg-offset-5")
+						a(class="btn btn-default" ng-click="addStud = true")
 							|  Add
-					a(class="btn btn-default" ng-click="updateRoster()")
-						i(class="icon-minus")
-							|  Save and Close
+						a(class="btn btn-default" ng-click="updateRoster()")
+							|  Save
+						a(class="btn btn-default" ng-click="backToRoster()")
+							|  Back

@@ -139,6 +139,8 @@ function spreadOut(colOffset, rowOffset, sortByCol) {
 			else assignSeatsByRow(finalSeed, colOffset, rowOffset)
 			attachInfo()
 		}
+		$('.errorMessage').prepend("<div class=\'alert alert-success\' id=\'completeArrangement\'> <strong>Success!</strong> Rerragement is done</div>")
+		$(window).scrollTop(0)
 	} else {
 		$('.errorMessage').prepend("<div class=\'alert alert-danger\' id=\'errorSeatTotal\'> <strong>Error!</strong> There is not enough space to sit students " + colOffset +" column(s) and " + rowOffset + " row(s) apart</div>")
 		$(window).scrollTop(0)

@@ -30,19 +30,19 @@ block content
 								block nameBlock
 									div(class="form-group classroomName")
 										block name
-										input(type="text", class="form-control", name="className", id="className")
+										input(type="text", class="form-control", name="className", id="className", onkeyup="classController()" onchange="classController()")
 								block heightBlock
 									div(class="col-lg-6 form-group")
 										label(for="heightInsert") Height
-										input(type="number", class="form-control", name="height", id="heightInsert", placeholder="10")
+										input(type="number", class="form-control", name="height", id="heightInsert", placeholder="10", onkeyup="classController()" onchange="classController()")
 								block widthBlock
 									div(class="col-lg-6 form-group")
 										label(for="widthInsert") Width
-										input(type="number", class="form-control", name="width", id="widthInsert", placeholder="12")
+										input(type="number", class="form-control", name="width", id="widthInsert", placeholder="12" onkeyup="classController()" onchange="classController()")
 								block numPerSeatBlock
 									div(class="col-lg-4 form-group")
 										label(for="perStationInsert") Students per station
-										input(type="number", class="form-control", name="numPerStation", id="perStationInsert", value="2")
+										input(type="number", class="form-control", name="numPerStation", id="perStationInsert", value="2" onkeyup="classController()" onchange="classController()")
 								block seedBlock
 									div(class="form-group")
 										label(for="classSeed") Seed (Used to generate a random yet repeatable seating chart) [Optional]
@@ -53,11 +53,11 @@ block content
 								div(class="col-lg-6")
 									div(class="form-group")
 										label(for="fileInsert") File Input
-										input(type="file", accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel", id="fileInsert", name="fileInput", onchange="readRoster()")
+										input(type="file", accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel", id="fileInsert", name="fileInput", onchange="rosterController()")
 								div(class="col-lg-6")
 									div(class="form-group")
 										label Existing rosters
-										select(class="form-control existingRoster", name="fileInput")
+										select(class="form-control existingRoster", name="fileInput" onchange="rosterController()")
 											option(selected="selected" id="r0", value='0') --Select--
 												- for roster in JSON.parse(rosters)
 													- var labVal = JSON.stringify(roster)
@@ -76,119 +76,44 @@ block content
 								div(class="row")
 									div(class="col-lg-6")
 										label(for="filename") Roster Name 
-										input(type="text", class="form-control" id="filename")
+										input(type="text", class="form-control" id="filename" onchange="rosterController()")
 								div(class="row")
 									- for(var i = 0; i < 11; i++)
 										div.columnInfo.col-lg-1
 											- var defaultColumns = ["Sec ID", "PID", "Student", "Credits", "College", "Major", "Level", "Email"]
 											- if (i < defaultColumns.length)
 												- var defaultVal = defaultColumns[i]
-												input(type="text", class="form-control index", id="#{i}", placeholder="Cols #{i+1}" value="#{defaultVal}")
+												input(type="text", class="form-control index", class="colVal" id="#{i}", placeholder="Cols #{i+1}" value="#{defaultVal}")
 											- else
-												input(type="text", class="form-control index", id="#{i}", placeholder="Cols #{i+1}")
+												input(type="text", class="form-control index", class="colVal" id="#{i}", placeholder="Cols #{i+1}")
 
 								div(class="row")
 									div(class="col-lg-12")
 										label(for="rosterTextInput") Paste Roster
-										textarea(class="form-control", id="rosterTextInput" rows="10")
+										textarea(class="form-control", id="rosterTextInput" rows="10" onkeyup="rosterController()" onchange="rosterController()")
 								div.row
 
 						block submitBlock
 							div(class="col-md-offset-5")
 								a(class="btn btn-default submitForm", role="button") Submit
-		script.
-			var i = 0;
-			$('#manualRosterClick').click(function(){
-				if (i%2 == 1)
-					$(this).text('Manually Paste Roster');
-				else
-					$(this).text('Close');
-				$('.manualRosterInputBox').slideToggle("fast");
-				i++
-			});
+			script.
+				var i = 0;
+				$('#manualRosterClick').click(function(){
+					if (i%2 == 1)
+						$(this).text('Manually Paste Roster');
+					else
+						$(this).text('Close');
+					$('.manualRosterInputBox').slideToggle("fast");
+					i++
+				});
 
-			$('#className, #heightInsert, #widthInsert').keyup(function(){
-				if (!$('#className').val() && !$('#heightInsert').val() && !$('#widthInsert').val()) {
-					$('.existingClass').attr('disabled', false);
-				}
-				else {
-					$('.existingClass').attr('disabled',true);
-					newClass = true;
-				}
-			});
-
-			$('#heightInsert, #widthInsert').change(function() {
-				if (!$('#className').val() && !$('#heightInsert').val() && !$('#widthInsert').val()) {
-					$('.existingClass').attr('disabled', false);
-				}
-				else {
-					$('.existingClass').attr('disabled',true);
-				}
-			});
-
-			$('.existingClass').change(function(){
-				if($(this).val() != 0) {
-					$('#className').attr('disabled', true);
-					$('#heightInsert').attr('disabled', true);
-					$('#widthInsert').attr('disabled', true);
-					$('#perStationInsert').attr('disabled', true);
-					var tempParse = JSON.parse($(this).val());
-					classroomSize = tempParse.totalSeats * tempParse.numPerStation;
-					newClass = false;
-				}
-				else {
-					$('#className').attr('disabled', false);
-					$('#heightInsert').attr('disabled', false);
-					$('#widthInsert').attr('disabled', false);
-					$('#perStationInsert').attr('disabled', false);
-				}
-			});
-
-			$('#fileInsert').change(function(){
-				if($(this).val() != "") {
-					$('.existingRoster').attr('disabled', true);
-					$('#rosterTextInput').attr('disabled', true);
-					newUpload = true;
-				}
-				else {
-					$('.existingRoster').attr('disabled', false);
-					$('#rosterTextInput').attr('disabled', false);
-				} 
-			});
-
-			$('.existingRoster').change(function(){
-				if($(this).val() != 0) {
-					$('#fileInsert').attr('disabled', true);
-					$('#rosterTextInput').attr('disabled', true);
-					total_students = JSON.parse($(this).val()).totalStudents;
-					newUpload = false;
-				}
-				else {
-					$('#fileInsert').attr('disabled', false);
-					$('#rosterTextInput').attr('disabled', false);
-				} 
-			});
-			$('#rosterTextInput').keyup(function(){
-				if (!$('#rosterTextInput').val()) {
-					$('.existingRoster').attr('disabled', false);
-					$('#fileInsert').attr('disabled', false);
-					manualRoster = false;
-					console.log("insert")
-				}
-				else {
-					$('.existingRoster').attr('disabled', true);
-					$('#fileInsert').attr('disabled', true);
-					manualRoster = true;
-				}
-			});
-			$('.submitForm').click(function(){
-				checkRosterAndClass($('.classType').val());
-			});
-
-
+				$('.submitForm').click(function(){
+					checkRosterAndClass($('.classType').val());
+				});
 
 block append script
 	script(src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.core.min.js")
+	script(src="js/createController.js")
 	script(src="js/jquery.redirect.js")
 	script(src="js/home.js")
 	script(src="js/classroom.js")

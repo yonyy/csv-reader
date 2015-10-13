@@ -42,7 +42,7 @@ block content
 					ul(class="list-group")
 						li(class="list-group-item .hvr-underline-from-center" ng-repeat="roster in main.rosters | filter:main.searchInput")
 							|  {{roster.rosterName}}
-							button(class="btn btn-default" ng-click="main.editRoster(roster._id)") Edit
-							button(class="btn btn-default" ng-click="main.deleteRoster(roster._id)") Delete
+							span(class="badge" ng-click="main.editRoster(roster._id)") Edit
+							span(class="badge" ng-click="main.deleteRoster(roster._id)") Delete
 							span(class="badge")
 								|  {{roster.totalStudents}}

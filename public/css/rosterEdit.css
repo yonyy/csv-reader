@@ -1,7 +1,10 @@
 .option {
-	float: left;
+	float: right;
 }
 
+.option span, a {
+	cursor: pointer;
+}
 .save {
 	margin-left: 1%;
 }
@@ -9,3 +12,7 @@
 .space {
 	height: 5px;
 }
+
+.saveNewStud {
+	margin-left: 15px;
+} 

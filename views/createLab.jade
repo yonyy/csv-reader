@@ -11,23 +11,23 @@ block name
 block numPerSeatBlock
 	div(class="col-lg-4 form-group")
 		label(for="perStationInsert") Students per station
-		input(type="number", class="form-control", name="numPerStation", id="perStationInsert", value="2")
+		input(type="number", class="form-control", name="numPerStation", id="perStationInsert", value="2" onkeyup="classController()" onchange="classController()")
 
 block heightBlock
 	div(class="col-lg-4 form-group")
 		label(for="heightInsert") Height
-		input(type="number", class="form-control", name="height", id="heightInsert", placeholder="10")
+		input(type="number", class="form-control", name="height", id="heightInsert", placeholder="10" onkeyup="classController()" onchange="classController()")
 
 block widthBlock
 	div(class="col-lg-4 form-group")
 		label(for="widthInsert") Width
-		input(type="number", class="form-control", name="width", id="widthInsert", placeholder="12")
+		input(type="number", class="form-control", name="width", id="widthInsert", placeholder="12" onkeyup="classController()" onchange="classController()")
 
 block existingRooms
 	div(class="col-lg-6")
 		div(class="form-group")
 			label Existing lab rooms
-			select(class="form-control existingClass", name="className")
+			select(class="form-control existingClass", name="className" onchange="classController()")
 				option(selected="selected" id="op0" value='0') --Select--
 				- for labroom in JSON.parse(labrooms)
 					- var labVal = JSON.stringify(labroom)

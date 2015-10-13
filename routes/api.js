@@ -73,10 +73,14 @@ router.route('/rosters/:id')
 				res.json(err)
 			}
 			else {
-				var newRoster = req.body.roster
-				roster = newRoster
+				var newStudents = req.body.students
+				console.log(newStudents)
+				roster.students = newStudents
+				roster.totalStudents = newStudents.length
+				roster.rosterName = req.body.title
 				roster.save(function (err, r){
 					console.log("Updated")
+					console.log(r)
 					res.json(r)
 				})
 			}
