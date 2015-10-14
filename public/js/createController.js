@@ -35,8 +35,22 @@ function classController() {
 	}
 }
 
-function rosterController() {
-	console.log("rosterController")
+// Pasting a Roster
+function manualRosterController() {
+	if (!$('#rosterTextInput').val()) {
+		$('.existingRoster').attr('disabled', false);
+		$('#fileInsert').attr('disabled', false);
+		manualRoster = false;
+	}
+	else {
+		$('.existingRoster').attr('disabled', true);
+		$('#fileInsert').attr('disabled', true);
+		manualRoster = true;
+	}
+}
+
+// Uploading a new Roster
+function uploadRosterController() {
 	if($('#fileInsert').val() != "") {
 		$('.existingRoster').attr('disabled', true);
 		$('#rosterTextInput').attr('disabled', true);
@@ -51,10 +65,12 @@ function rosterController() {
 		$('#filename').attr('disabled', false);
 		$('.colVal').attr('disabled', false);
 	} 
+}
 
+// Choosing an existing Roster
+function existingRosterController() {
 	if($('.existingRoster').val() != 0) {
 		$('#fileInsert').attr('disabled', true);
-		console.log("fileInsert disabled")
 		$('#rosterTextInput').attr('disabled', true);
 		$('#filename').attr('disabled', true);
 		$('.colVal').attr('disabled', true);
@@ -68,15 +84,4 @@ function rosterController() {
 		$('.colVal').attr('disabled', false);
 	} 
 
-	if (!$('#rosterTextInput').val()) {
-		$('.existingRoster').attr('disabled', false);
-		$('#fileInsert').attr('disabled', false);
-		manualRoster = false;
-		console.log("insert");
-	}
-	else {
-		$('.existingRoster').attr('disabled', true);
-		$('#fileInsert').attr('disabled', true);
-		manualRoster = true;
-	}
 }

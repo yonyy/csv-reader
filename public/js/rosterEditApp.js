@@ -11,7 +11,6 @@ angular.module('app', ['ngRoute'])
 		});
 	})
 	.controller("MainController", ['$rootScope', '$scope', '$routeParams', '$route', '$http', '$location', '$window', function($rootScope, $scope, $routeParams, $route, $http, $location, $window){
-		console.log($location.url())
 	    var vm = this;
 	    vm.title = '';
 	    vm.students = []
@@ -69,9 +68,9 @@ angular.module('app', ['ngRoute'])
 	    }
 
 	    $scope.addStudent = function() {
-	    	console.log("new student")
-	    	console.log($scope.studentFirstName)
-	    	vm.students.push(new Student($scope.studentLastName, $scope.studentFirstName, $scope.studentEmail, 0, false, false, null));
+	    	var lh = ($scope.studentHand == "false") ? false : true;
+	    	var osd = ($scope.studentOSD == "false") ? false : true;
+	    	vm.students.push(new Student($scope.studentLastName, $scope.studentFirstName, $scope.studentEmail, 0, lh, osd, null));
 	    	vm.students = vm.sortStudents(vm.students);
 
 			$scope.updateID();
@@ -83,7 +82,6 @@ angular.module('app', ['ngRoute'])
 	    }
 
 	    $scope.updateID = function() {
-	    	console.log("updating")
 	    	for (var i = 0; i < vm.students.length; i++) {
 				vm.students[i].studentID = i+1;
 			};
@@ -155,8 +153,6 @@ angular.module('app', ['ngRoute'])
 	    			vm.removed.push(differences[i]);
 	    	}
 
-	    	console.log(vm.added)
-	    	console.log(vm.removed)
 	    	if (examIndex == -1) {
 				for(var i = 0; i < studentArray.length; i++) {
 					studentArray[i].studentID = i+1

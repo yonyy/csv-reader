@@ -53,11 +53,11 @@ block content
 								div(class="col-lg-6")
 									div(class="form-group")
 										label(for="fileInsert") File Input
-										input(type="file", accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel", id="fileInsert", name="fileInput", onchange="rosterController()")
+										input(type="file", accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel", id="fileInsert", name="fileInput", onchange="uploadRosterController()")
 								div(class="col-lg-6")
 									div(class="form-group")
 										label Existing rosters
-										select(class="form-control existingRoster", name="fileInput" onchange="rosterController()")
+										select(class="form-control existingRoster", name="fileInput" onchange="existingRosterController()")
 											option(selected="selected" id="r0", value='0') --Select--
 												- for roster in JSON.parse(rosters)
 													- var labVal = JSON.stringify(roster)
@@ -76,7 +76,7 @@ block content
 								div(class="row")
 									div(class="col-lg-6")
 										label(for="filename") Roster Name 
-										input(type="text", class="form-control" id="filename" onchange="rosterController()")
+										input(type="text", class="form-control" id="filename")
 								div(class="row")
 									- for(var i = 0; i < 11; i++)
 										div.columnInfo.col-lg-1
@@ -90,7 +90,7 @@ block content
 								div(class="row")
 									div(class="col-lg-12")
 										label(for="rosterTextInput") Paste Roster
-										textarea(class="form-control", id="rosterTextInput" rows="10" onkeyup="rosterController()" onchange="rosterController()")
+										textarea(class="form-control", id="rosterTextInput" rows="10" onkeyup="manualRosterController()" onchange="manualRosterController()")
 								div.row
 
 						block submitBlock
