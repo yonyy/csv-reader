@@ -148,66 +148,6 @@ block content
 								span(class="glyphicon glyphicon-th")
 								|  #{className}
 							div.content
-								div#settings
-									i.fa.fa-cog#setting-icon
-								div#menu
-									div#arrow
-									div#dc-row.assign
-										div
-											input#dc(type='number', value='0')
-											|   Columns apart
-									div#dr-row.assign
-										div
-											input#dr(type='number', value='0')
-											|   Rows apart
-									a(class="arrangement" id="col") Assign by Columns
-									a(class="arrangement" id="row") Assign by Rows
-									button#done.btn.btn-default(role='button')
-										| Done
-							script.
-								var clicked = false;
-								$( "#settings, #admin_text" ).on( "click", function() {
-									if (!clicked) {
-										clicked = true
-										$('#setting-icon').animate({"padding-right":"96%"}, "fast")
-										$( "#menu" ).slideToggle( "fast" );
-									}
-									else {
-										clicked = false
-										$( "#menu" ).slideToggle( "fast" );
-										$('#setting-icon').animate({"padding-right":"5%"}, "fast")
-									}
-								});
-
-								$('.arrangement').on('click', function(){
-									$('.arrangement').not(this).css({"background": "#F8F8F8"})
-									$(this).css({"background": "#CFD8DC" })
-									if($(this).attr("id") == "row") col = false
-									else col = true
-								});
-
-								$('#done').on('click', function(){
-									var dr = $('#dr')
-									var dc = $('#dc')
-									var valid = true
-									if(dr.val() < 0) {
-										$('#dr-row').css({"background": "#F44336"});
-										valid = false
-									}
-									else {
-										$('#dr-row').css({"background": "#F8F8F8"});
-									}
-
-									if(dc.val() < 0) {
-										$('#dc-row').css({"background": "#F44336"});
-										valid = false
-									}
-									else
-										$('#dc-row').css({"background": "#F8F8F8"});
-
-									if (valid) spreadOut(parseInt(dc.val(),10), parseInt(dr.val(),10), col)
-
-								});
 						div(class="panel-body")
 							div(class="finalGridContainer")
 			div(class="row")
