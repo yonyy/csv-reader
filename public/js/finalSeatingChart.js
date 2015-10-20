@@ -143,26 +143,20 @@ function assignSeatsByRow(seed, colOffset, rowOffset) {
 	console.log("Roster: " + rosterSize)
 	console.log("Seats available: " + nonGhosts)
 	var percentage = rosterSize/nonGhosts;
-	if (percentage >= .90) {
-		colOffset = 0;
+	if (percentage >= .80) {
 		rowOffset = 0;
-	} else if (percentage >= .80) {
-		rowOffset = 1;
-		colOffset = 0;
-	} else if (percentage >= .60){
-		rowOffset = 1;
 		colOffset = 1;
+	} else if (percentage >= .60){	// Dont change to rowOffset: 1 colOffset: 2. Causes an infinite while loop
+		rowOffset = 1;
+		colOffset = 2;
 	} else if (percentage >= .40) {
 		rowOffset = 1;
 		colOffset = 2;
 	} else if (percentage >= .20) {
-		rowOffset = 2;
-		colOffset = 2;
-	} else if (percentage >= .10){
-		rowOffset = 2;
-		colOffset = 3;
+		rowOffset = 1;
+		colOffset = 1;
 	} else if (percentage >= .0) {
-		rowOffset = 3;
+		rowOffset = 1;
 		colOffset = 3;
 	}
 
@@ -217,7 +211,8 @@ function assignSeatsByRow(seed, colOffset, rowOffset) {
 			}
 		}
 	}
-
+	console.log(counter + " students assigned")
+	console.log("rightStudents: " + rightStudents.length + " leftStudents: " + leftStudents.length)
 	//var colStartPosition = gridCol-2;
 	var colStartPosition = 1;
 	var rowStartPosition = gridRow-2;
@@ -231,6 +226,7 @@ function assignSeatsByRow(seed, colOffset, rowOffset) {
 				if(seat.isGhost) { continue; }
 				if((rightIndex + leftIndex) >= tempList.length) { continue; }
 				if(seat.student == null) { 
+					console.log("empty seat")
 					if(seat.isLeftHanded) {
 						// If the students is left handed choose from the left handed array
 						// only if there are any left handed students left otherwise choose from
@@ -269,9 +265,10 @@ function assignSeatsByRow(seed, colOffset, rowOffset) {
 		else {
 			if (colOffset > 0) colOffset--;
 		}*/
-		colStartPosition++;
+		if (colStartPosition < gridCol-1) colStartPosition++;
 		if (colStartPosition%2 == 0) rowStartPosition = gridRow-1;
 		else rowStartPosition = gridRow-2;
+		console.log("leftIndex: " + leftIndex + " rightIndex: " + rightIndex + " tempList: " + tempList.length)
 	}
 
 	if (rightIndex + leftIndex < tempList.length) console.log("STILL STUDENTS MISSING")
