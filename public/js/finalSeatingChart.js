@@ -561,14 +561,11 @@ function assignStationsByRow(seed, colOffset, rowOffset) {
 	while (index < maxStudents){
 		for(var j = colStartPosition; j < gridCol; j+=colOffset+1) {
 			for(var i = rowStartPosition; i >= 0; i-=rowOffset+1) {
-				var tempStudent;
 				var seat = seatArr[i*gridCol+j];
 				if(seat.isGhost) { continue; }
 				if(seat.student == null) { 
-					var seat = seatArr[i*gridCol+j]; 
 					var partners = []
 					//console.log("i: " + i + " j: " + j + " index: " + (j*gridCol+i))
-					if(seat.isGhost) {continue;}
 					for (var k = 0; k < parseInt(seat.numPerStation,10); k++) {
 						//console.log("index: " + index + "tempList.length "+ tempList.length)
 						if(index >= maxStudents) {
