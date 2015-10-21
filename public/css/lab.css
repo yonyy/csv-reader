@@ -8,6 +8,7 @@
 }
 
 .grid--item {
+  cursor: pointer;
   display: inline-block;
   margin-left: 5px;
   margin-top: 5px;
@@ -33,6 +34,7 @@
 }
 
 .stationNumber {
+  cursor: pointer;
   width: 100%;
   position: absolute;
   top: 15px;

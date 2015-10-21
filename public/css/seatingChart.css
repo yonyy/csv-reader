@@ -122,3 +122,11 @@
 #downloadRoster, #emailRoster, #close-button {
   margin-left: 5px;
 }
+
+#manualSeatingButton {
+  cursor: pointer;
+}
+
+.manualSeating {
+  display: none;
+}

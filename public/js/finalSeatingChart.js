@@ -8,9 +8,9 @@ var seatArr = []	// Array of the seats*/
 var grid = "";	// HTML body that contains the classroom
 var gridCol = 0;		// Value containing the classroom width
 var gridRow = 0;		// Value containing the classroom height
-var finalSeatMap = {};		// Hashmap of Seats K: id V: seat
-var students = [];		// Array of students
-var seatArr = [];		// Array of the seats
+var finalSeatMap = {};		// Hashmap of Seats K: seat id V: seat
+var students = [];		// Array of all students including Empty Students
+var seatArr = [];		// Array of the seats with assignment
 var rosterSize = 0;
 var numPerStation = 1;
 var lab = false;
@@ -41,10 +41,12 @@ function loadGrid(gridHTML, classroom, seats, roster, seed, classType) {
 		lab = true
 		assignStationsByRow(seed,0,0);
 		attachStationInfo()
+		createSeatTable();
 	}
 	else {
 		assignSeatsByRow(seed,0,0);
 		attachInfo();
+		createSeatTable();
 	}
 }
 
@@ -81,6 +83,202 @@ function attachInfo() {
 	})
 }
 
+function createSeatTable() {
+	var $table = $('.studentSeatList');
+	students.sort(sortByName);
+	$.each(students, function(index, stud){
+		if (stud.studentID != "") {
+			var tr = "<tr>";
+			var tdLastName = "<td>" + stud.lastname + "</td>"
+			var tdFirstName = "<td>" + stud.firstname + "</td>"
+			var tdSeat = "<td><input type=\'text\' onchange=\'changeSeat("+ index + ")\' value=\'"+ stud.seat.seatPosition + "\' id=\'" + stud.lastname + stud.studentID + "\'></td>"
+			
+			if (lab) tdSeat = "<td><input type=\'text\' onchange=\'changeStation("+ index + ")\' value=\'"+ stud.seat.seatPosition + "\' id=\'" + stud.lastname + stud.studentID + "\'></td>"
+			
+			tr += tdLastName + tdFirstName + tdSeat + "</tr>"
+			$table.append(tr)
+		}
+	})
+}
+
+function changeStation(studentIndex) {
+	$('.errorSeatChange').remove()
+	$('.successSeatChange').remove()
+
+	var chosenStud = students[studentIndex];
+	var oldStationID = chosenStud.seat.seatPosition;
+	var oldStation = finalSeatMap[oldStationID];
+
+	var newStationID = $('#' + chosenStud.lastname + chosenStud.studentID).val();
+	var newStation = null;
+	var emptyStudentIndex = -1;
+	var emptyStudent = null;
+
+	var nowEmpty = true;
+	var index = 0;
+	if (newStationID != "") {
+		if (!(newStationID in finalSeatMap)){
+			console.log(newStationID)
+			$('.changeSeatMessage').append("<div class=\'alert alert-danger errorSeatChange\'>Enter a valid seat</div>")
+			return;
+		} else {
+			newStation = finalSeatMap[newStationID];
+			emptyStudentIndex = $.map(students, function(s, index) {
+				if(s.seat.seatPosition == newStationID) {
+					if (s.studentID == ""){
+						return index;
+					}
+				}
+			})[0]
+			emptyStudent = students[emptyStudentIndex]
+		}
+	}
+
+	if (newStation != null){
+		if (newStation.isGhost){
+			$('.changeSeatMessage').append("<div class=\'alert alert-danger errorSeatChange\'>Can't assign to a ghost seat</div>")
+			return;
+		} else {
+			var count = 0;
+			for (var i = 0; i < newStation.students.length; i++) {
+				if (newStation.students[i].studentID != "") count++
+			}
+
+			if (count == numPerStation){
+				$('.changeSeatMessage').append("<div class=\'alert alert-danger errorSeatChange\'>Can't assign to a non-empty seat</div>")
+				return;
+			}
+		}
+
+		for (var i = 0; i < oldStation.students.length; i++) {
+			if (oldStation.students[i].studentID == chosenStud.studentID) {
+				oldStation.students[i] = emptyStudent;
+			}
+			if (oldStation.students[i].studentID != "") nowEmpty = false;
+		}
+
+		emptyStudent.seat = oldStation;
+		newStation.students[emptyStudent.stationIndex] = chosenStud
+		newStation.isEmpty = false;
+		updateStationObjectInfo(newStationID, newStation);
+	}
+
+	if (nowEmpty) {
+		oldStation.isEmpty = true;
+		$('#'+oldStationID).css("background","#FF5722");
+	}
+	updateStationObjectInfo(oldStationID, oldStation);
+	chosenStud.seat = newStation;
+
+	$('.changeSeatMessage').append("<div class=\'alert alert-success successSeatChange\'>Updated seating assignment</div>");
+	if (newStation != null) students[emptyStudentIndex] = emptyStudent;
+	students[studentIndex] = chosenStud;
+	console.log(newStation)
+	console.log(chosenStud)
+	console.log(oldStation)
+	console.log(emptyStudent)
+
+}
+
+function changeSeat(studentIndex) {
+	$('.errorSeatChange').remove()
+	$('.successSeatChange').remove()
+
+	var chosenStud = students[studentIndex];
+	var oldSeatID = chosenStud.seat.seatPosition;
+	var oldSeat = finalSeatMap[oldSeatID];
+
+	var newSeatID = $('#' + chosenStud.lastname + chosenStud.studentID).val();
+	var newSeat = null;
+	var emptyStudentIndex = -1;
+	var emptyStudent = null;
+
+	if (newSeatID != "") {
+		if (!(newSeatID in finalSeatMap)){
+			console.log(newSeatID)
+			$('.changeSeatMessage').append("<div class=\'alert alert-danger errorSeatChange\'>Enter a valid seat</div>")
+			return;
+		} else {
+			newSeat = finalSeatMap[newSeatID];
+			emptyStudentIndex = $.map(students, function(s, index) {
+				if(s.seat.seatPosition == newSeatID) {
+					return index;
+				}
+			})[0]
+			emptyStudent = students[emptyStudentIndex]
+		}
+	}
+
+	if (newSeat != null){
+		if (newSeat.isGhost){
+			$('.changeSeatMessage').append("<div class=\'alert alert-danger errorSeatChange\'>Can't assign to a ghost seat</div>")
+			return;
+		} else if (!newSeat.isEmpty) {
+			$('.changeSeatMessage').append("<div class=\'alert alert-danger errorSeatChange\'>Can't assign to a non-empty seat</div>")
+			return;
+		}
+
+		oldSeat.student = emptyStudent;
+		emptyStudent.seat = oldSeat;
+		newSeat.student = chosenStud;
+		newSeat.isEmpty = false;
+		updateObjectInfo(newSeatID, newSeat);
+	}
+
+	oldSeat.isEmpty = true;
+	updateObjectInfo(oldSeatID, oldSeat);
+	chosenStud.seat = newSeat;
+
+	$('#'+oldSeatID).css("background","#FF5722");
+	$('.changeSeatMessage').append("<div class=\'alert alert-success successSeatChange\'>Updated seating assignment</div>");
+	if (newSeat != null) students[emptyStudentIndex] = emptyStudent;
+	students[studentIndex] = chosenStud;
+
+	console.log(newSeat)
+	console.log(chosenStud)
+	console.log(oldSeat)
+	console.log(emptyStudent)
+}
+
+function updateObjectInfo(newSeatID, newSeat) {
+	var studentProfile = "";
+	var studentObj = newSeat.student;
+	if (studentObj.studentID != "") {
+		$('#'+newSeatID).css('background',takenColor)
+		var name = "<p>Name: "+ studentObj.lastname + ", " + studentObj.firstname+"</p>";
+		var email = "<p>Email: " + studentObj.email + "</p>";
+		var studentID = "<p>ID: " + studentObj.studentID + "</p>";
+		var seatID = "<p>Seat: " + studentObj.seat.seatPosition + "</p>";
+		var hand = studentObj.isLeftHanded ? "<p>Left-Handed</p>" : "<p>Right Handed</p>"
+		studentProfile = "<span class=\"objectInfo\">" + name + email + studentID + seatID + hand + "</span>"
+	}
+	else
+		studentProfile = "<span class=\"objectInfo\">Empty</span>"
+	$('#' + newSeatID).html(studentProfile);
+}
+
+function updateStationObjectInfo(newStationID, newStation) {
+	console.log("updateStationObjectInfo")
+	var stationSpan = "<span class=\'stationNumber\''>" + newStation.seatPosition + "</span>"
+	var studentObjs = newStation.students;
+	var names = "<p>Names: "
+	var emails = "<p>Emails: "
+	var studentIDs = "<p>IDs: "
+	for (var i = 0; i < studentObjs.length; i++) {
+		names += "<p>"+studentObjs[i].lastname + ", " + studentObjs[i].firstname+"</p>";
+		if (studentObjs[i].studentID != "") {
+			$('#'+newStationID).css('background',takenColor)
+			emails += studentObjs[i].email + ", ";
+			studentIDs += studentObjs[i].studentID + ", ";
+		}
+	}
+	names += "</p>"
+	emails += "</p>"
+	studentIDs += "</p>"
+	var seatID = "<p>Seat: " + studentObjs[0].seat.seatPosition + "</p>";
+	var studentProfile = "<span class=\"objectInfo\">" + names + emails + studentIDs + seatID +"</span>"
+	$('#' + newStationID).html(stationSpan + studentProfile);
+}
 /* Creates a span element, and inside it contains the student's information.
  * This can be seen when the user hovers over the station */
 function attachStationInfo() {
@@ -308,26 +506,20 @@ function assignStationsByRow(seed, colOffset, rowOffset) {
 	console.log("Roster: " + rosterSize)
 	console.log("Seats available: " + nonGhosts)
 	var percentage = rosterSize/(nonGhosts*numPerStation);
-	if (percentage >= .90) {
-		colOffset = 0;
+	if (percentage >= .80) {
 		rowOffset = 0;
-	} else if (percentage >= .80) {
-		rowOffset = 1;
-		colOffset = 0;
-	} else if (percentage >= .60){
-		rowOffset = 1;
 		colOffset = 1;
+	} else if (percentage >= .60){	// Dont change to rowOffset: 1 colOffset: 2. Causes an infinite while loop
+		rowOffset = 1;
+		colOffset = 2;
 	} else if (percentage >= .40) {
 		rowOffset = 1;
 		colOffset = 2;
 	} else if (percentage >= .20) {
-		rowOffset = 2;
-		colOffset = 2;
-	} else if (percentage >= .10){
-		rowOffset = 2;
-		colOffset = 3;
+		rowOffset = 1;
+		colOffset = 1;
 	} else if (percentage >= .0) {
-		rowOffset = 3;
+		rowOffset = 1;
 		colOffset = 3;
 	}
 
@@ -345,6 +537,7 @@ function assignStationsByRow(seed, colOffset, rowOffset) {
 					//console.log("students.length: " + students.length)
 					var emptyStudent = new Student("EMPTY", "EMPTY", "", "", false, false, null);
 					emptyStudent.seat = seat;
+					emptyStudent.stationIndex = k;
 					partners.push(emptyStudent)
 					students.push(emptyStudent)
 					//console.log(k)
@@ -352,6 +545,7 @@ function assignStationsByRow(seed, colOffset, rowOffset) {
 				else {
 					var tempStudent = tempList[index++];
 					tempStudent.seat = seat;
+					tempStudent.stationIndex = k;
 					partners.push(tempStudent);
 					counter++;
 				}
@@ -381,6 +575,7 @@ function assignStationsByRow(seed, colOffset, rowOffset) {
 							//console.log("students.length: " + students.length)
 							var emptyStudent = new Student("EMPTY", "EMPTY", "", "", false, false, null);
 							emptyStudent.seat = seat;
+							emptyStudent.stationIndex = k;
 							partners.push(emptyStudent)
 							students.push(emptyStudent)
 							//console.log(k)
@@ -388,6 +583,7 @@ function assignStationsByRow(seed, colOffset, rowOffset) {
 						else {
 							var tempStudent = tempList[index++]
 							tempStudent.seat = seat;
+							tempStudent.stationIndex = k;
 							partners.push(tempStudent)
 							counter++;
 						}
@@ -400,7 +596,7 @@ function assignStationsByRow(seed, colOffset, rowOffset) {
 		else {
 			if (colOffset > 0) colOffset--;
 		}*/
-		colStartPosition++;
+		if (colStartPosition < gridCol-1) colStartPosition++;
 		if (colStartPosition%2 == 0) rowStartPosition = gridRow-1;
 		else rowStartPosition = gridRow-2;
 	}
@@ -417,6 +613,7 @@ function assignStationsByRow(seed, colOffset, rowOffset) {
 				var emptyStudent = new Student("EMPTY", "EMPTY", "", "", false, false, null);
 				s.isEmpty = true;
 				emptyStudent.seat = s;
+				emptyStudent.stationIndex = k;
 				partners.push(emptyStudent)
 				students.push(emptyStudent);
 				//console.log(k)

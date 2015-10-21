@@ -6,6 +6,7 @@ function Student(lastname, firstname, email, id, isLH, isOSD, seat)	{
 	this.isLeftHanded = isLH;
 	this.isOSD = isOSD;
 	this.seat = seat;
+	this.stationIndex = 0;
 }
 
 /* A function that assigns the selected student as left handed or not based of the

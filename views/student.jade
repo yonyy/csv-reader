@@ -62,17 +62,17 @@ block content
 					table(class="table table-striped")
 						thead
 							tr
-								td
+								th
 									a(onclick="orderBy($(this).val())", value="last") Last Name 
-								td
+								th
 									a(onclick="orderBy($(this).val())", value="first") First Name 
-								td
+								th
 									a(onclick="orderBy($(this).val())", value="email") Email
-								td
+								th
 									a(onclick="orderBy($(this).val())", value="studentID") ID
-								td
+								th
 									a Left Handed
-								td
+								th
 									a isOSD
 						tbody
 							- var parsedRoster = JSON.parse(roster)

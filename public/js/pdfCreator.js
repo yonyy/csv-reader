@@ -85,7 +85,10 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
     /* Writing roster */
     for (var i = 0; i < students.length; i++) {
       if (currentY <= end_Y) {  // Add students in the current column
-        if (students[i] == null) continue;  // Dont write null students
+        if (students[i] == null){ 
+          console.log(students[i]);
+          continue;  // Dont write null students
+        }
         if (students[i].studentID == "") {  // If it is an empty student push it to the array
           /* Display the empty students along with all students for row and for column charts
            * For alphabetic charts, keep them at the end */
@@ -152,7 +155,7 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
       currentY += cellHeight
     }
   }
-
+  //Sort by station number
   if (stationLayout) {
     for(var i = 0; i < seatArr.length; i++) {
       var currStation = seatArr[i]

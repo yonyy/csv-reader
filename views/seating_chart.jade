@@ -128,18 +128,7 @@ block content
 							button(type="button", class="btn btn-default", id="emailRoster") Email Students
 							button(type="button", class="btn btn-default", id="close-button" data-dismiss="modal") Close
 							script.
-								$("input[type='radio']").on('change', function() {
-									$("input[type='radio']").not(this).prop('checked', false);
-								})
-								$('#downloadRoster').click(function() {
-									var checked = $("input[type='radio']:checked").val()
-									var pdfName = $('#pdfName').val()
-									var pdfTitle = $('#pdfTitle').val()
-									generatePDF(checked, pdfName, pdfTitle, $('#totalSeats').val(), $('#totalStudents').val())
-								})
-								$('#emailRoster').click(function() {
-									emailRoster($('#classroomName').val())
-								})
+
 			div(class="row")
 				div(class="col-lg-12")
 					div(class="panel panel-default")
@@ -147,20 +136,51 @@ block content
 							h3(class="panel-title")
 								span(class="glyphicon glyphicon-th")
 								|  #{className}
-							div.content
 						div(class="panel-body")
 							div(class="finalGridContainer")
 			div(class="row")
+				div(class="col-lg-12")
+					a(id="manualSeatingButton") Manually Change Seating Assignments
+			div(class="row manualSeating")
+				div(class="col-lg-12")
+					div(class="panel panel-default")
+						div(class="panel-heading") 
+							h3(class="panel-title")
+								span(class="glyphicon glyphicon-cog")
+								|  Panel heading
+						div(class="panel-body")
+							p Here are the list of students with their assigned seats. You may choose to change their assigned seat to an available one.
+						div(class="changeSeatMessage")
+						table(class="table")
+							thead
+								tr
+									th Last Name
+									th First Name
+									th Seat
+							tbody.studentSeatList
+
+			div(class="row")
 				div(class="col-md-offset-6 col-lg-4")
 					button(class="btn btn-default pop-up-button", data-toggle="modal" data-target="#myModal") Download
-					script.
-						//- $('.pop-up').hide(0);
-						//- $('.pop-up-button').click(function(){
-						//- 	$('.pop-up').fadeIn(300);
-						//- 	$('.pop-up-button').hide(0);
-						//- 	$(window).scrollTop(0);
-						//- });
-						//- $('.pop-up .ex').click(function() {
-						//- 	$('.pop-up').hide(0);
-						//- 	$('.pop-up-button').show(0);
-						//- });
+		script.
+			$("input[type='radio']").on('change', function() {
+				$("input[type='radio']").not(this).prop('checked', false);
+			})
+			$('#downloadRoster').click(function() {
+				var checked = $("input[type='radio']:checked").val()
+				var pdfName = $('#pdfName').val()
+				var pdfTitle = $('#pdfTitle').val()
+				generatePDF(checked, pdfName, pdfTitle, $('#totalSeats').val(), $('#totalStudents').val())
+			})
+			$('#emailRoster').click(function() {
+				emailRoster($('#classroomName').val())
+			})
+			var i = 0;
+			$('#manualSeatingButton').click(function(){
+				$('.manualSeating').slideToggle("fast");
+				if (i%2 == 1)
+					$(this).text('Manually Change Seating Assignments');
+				else
+					$(this).text('Hide');
+				i++
+			});
