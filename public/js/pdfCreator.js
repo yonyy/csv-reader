@@ -203,6 +203,7 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
   }
 
   // Save and dowload
+  console.log("saving")
   doc.save(downloadString)
 }
 
