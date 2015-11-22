@@ -5,24 +5,16 @@ block append link
 	- else
 		link(href="css/classroom.css", rel="stylesheet")
 	link(href="css/seatingChart.css", rel="stylesheet")
+	link(rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css")
+
 block append script
-	script(src="js/sort.js")
-	script(src="//mrrio.github.io/jsPDF/dist/jspdf.debug.js")
-	script(src="//cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.0/seedrandom.min.js")
-	script(src="js/jquery.redirect.js")
-	script(src="js/student.js")
-	- if (classType == "lab")
-		script(src="js/station.js")
-	- else
-		script(src="js/seat.js")
-	script(src="js/finalSeatingChart.js")
-	script(src="js/pdfCreator.js")
-	script(src="js/email.js")
+	script(src="https://code.jquery.com/ui/1.11.4/jquery-ui.js")
+	script(src="js/draggable.js")
 block prepend bodyLink
 	- if (classType == "lab")
-		body(onload="loadGrid(#{gridHTML}, #{classroom}, #{seatMap}, #{roster}, #{seed}, \"lab\")")
+		body(onload="loadGrid(#{roster}, #{seed}, \"lab\")")
 	- else
-		body(onload="loadGrid(#{gridHTML}, #{classroom}, #{seatMap}, #{roster}, #{seed}, \"class\")")
+		body(onload="loadGrid(#{roster}, #{seed}, \"class\")")
 
 block labActive
 	- if(classType == "lab")
@@ -131,11 +123,13 @@ block content
 
 			div(class="row")
 				div(class="col-lg-12")
-					div(class="panel panel-default")
+					div(class="panel panel-default finalCanvas")
 						div(class="panel-heading")
 							h3(class="panel-title")
 								span(class="glyphicon glyphicon-th")
 								|  #{className}
+								span(class="glyphicon glyphicon-edit edit")
+								span(class="glyphicon glyphicon-save saveCanvas") 
 						div(class="panel-body")
 							div(class="finalGridContainer")
 			div(class="row")
@@ -163,6 +157,8 @@ block content
 				div(class="col-md-offset-6 col-lg-4")
 					button(class="btn btn-default pop-up-button", data-toggle="modal" data-target="#myModal") Download
 		script.
+			$('.saveCanvas').click(saveCanvas)
+			$('.edit').click(draggable);
 			$("input[type='radio']").on('change', function() {
 				$("input[type='radio']").not(this).prop('checked', false);
 			})
@@ -184,3 +180,17 @@ block content
 					$(this).text('Hide');
 				i++
 			});
+block append script
+	script(src="js/html2canvas.js")
+	script(src="js/sort.js")
+	script(src="//mrrio.github.io/jsPDF/dist/jspdf.debug.js")
+	script(src="//cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.0/seedrandom.min.js")
+	script(src="js/jquery.redirect.js")
+	script(src="js/student.js")
+	- if (classType == "lab")
+		script(src="js/station.js")
+	- else
+		script(src="js/seat.js")
+	script(src="js/finalSeatingChart.js")
+	script(src="js/pdfCreator.js")
+	script(src="js/email.js")

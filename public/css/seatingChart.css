@@ -130,3 +130,12 @@
 .manualSeating {
   display: none;
 }
+
+.edit {
+  float: right;
+}
+
+.saveCanvas {
+  float: right;
+  margin-right: 10px;
+}

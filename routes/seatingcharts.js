@@ -22,13 +22,12 @@ router.post('/', function(req, res, next) {
 	var width = req.body.width;
 	var height = req.body.height;
 	var students = req.body.students;*/
-	var gridHTML = req.body.gridHTML;
+	//var gridHTML = req.body.gridHTML;
 	var classroom = req.body.classroom;
 	var seed = req.body.seed
 	var classType = req.body.classType
 	var seatMap = req.body.seatMap
 	var roster = req.body.roster
-
 	var parsedClass = JSON.parse(classroom)
 	var className = parsedClass.className
 	mongoose.model('Classroom').findOne({className : className}, function (err, newClass){
@@ -61,7 +60,6 @@ router.post('/', function(req, res, next) {
 	
 /*	console.log(totalSeats)*/
 	res.render('seating_chart', {
-		gridHTML : gridHTML,
 		classroom : classroom,
 		roster : roster,
 		seatMap : seatMap,

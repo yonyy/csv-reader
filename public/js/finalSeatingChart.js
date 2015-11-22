@@ -18,15 +18,19 @@ var finalSeed = 0;
 var col = true;
 var takenColor = "#76FF03"
 
+//classroom, seats, roster, 
 /* Function that executes once the HTML body loads. Appends the grid HTML,
  * updates the onclick function, and begins assigning the students to a seat,
  * and attaching info */
-function loadGrid(gridHTML, classroom, seats, roster, seed, classType) {
-	grid = gridHTML
-	gridCol = parseInt(classroom.width,10)
-	gridRow = parseInt(classroom.height,10)
-	numPerStation = parseInt(classroom.numPerStation,10)
-	finalSeatMap = seats
+function loadGrid(roster, seed, classType) {
+	var sessionRoster = JSON.parse(sessionStorage.getItem('roster'));
+	var sessionClass = JSON.parse(sessionStorage.getItem('classroom'));
+	var sessionSeat = JSON.parse(sessionStorage.getItem('seats'))
+	grid = JSON.parse(sessionStorage.getItem('finalGridContainer'));
+	gridCol = parseInt(sessionClass.width,10)
+	gridRow = parseInt(sessionClass.height,10)
+	numPerStation = parseInt(sessionClass.numPerStation,10)
+	finalSeatMap = sessionSeat
 	finalSeed = seed
 	students = roster.students
     students.sort(sortByName);
@@ -34,7 +38,7 @@ function loadGrid(gridHTML, classroom, seats, roster, seed, classType) {
 	
 	//console.log(finalSeatMap)
 	//console.log(students)
-	$('.finalGridContainer').append(gridHTML);
+	$('.finalGridContainer').append(grid);
 	$('.seat_item').attr("onclick","displaySeatInfo($(this).attr('id'))");
 	$('.station_item').attr("onclick","displaySeatInfo($(this).attr('id'))");
 	if (classType == "lab") {
@@ -201,7 +205,7 @@ function changeSeat(studentIndex) {
 		} else {
 			newSeat = finalSeatMap[newSeatID];
 			emptyStudentIndex = $.map(students, function(s, index) {
-				if(s.seat.seatPosition == newSeatID) {
+				if(s.seat != null && s.seat.seatPosition == newSeatID) {
 					return index;
 				}
 			})[0]
@@ -223,6 +227,14 @@ function changeSeat(studentIndex) {
 		newSeat.student = chosenStud;
 		newSeat.isEmpty = false;
 		updateObjectInfo(newSeatID, newSeat);
+	}
+
+	if (newSeatID == "") {
+		students.splice(studentIndex,1)
+		chosenStud.seat =  null
+		emptyStudent = new Student("EMPTY", "EMPTY", "", "", false, false, oldSeat)
+		oldSeat.student = emptyStudent
+		students.push(emptyStudent)
 	}
 
 	oldSeat.isEmpty = true;
@@ -346,10 +358,10 @@ function assignSeatsByRow(seed, colOffset, rowOffset) {
 		colOffset = 1;
 	} else if (percentage >= .60){	// Dont change to rowOffset: 1 colOffset: 2. Causes an infinite while loop
 		rowOffset = 1;
-		colOffset = 2;
+		colOffset = 1;
 	} else if (percentage >= .40) {
 		rowOffset = 1;
-		colOffset = 2;
+		colOffset = 1;
 	} else if (percentage >= .20) {
 		rowOffset = 1;
 		colOffset = 1;
@@ -369,8 +381,8 @@ function assignSeatsByRow(seed, colOffset, rowOffset) {
 
 	//assign all by row. Seperate each student by specific amounts of rows and cols
 	//console.log("tempList.length: " + tempList.length)
-	for(var i = gridRow-1; i >= 0; i-=(rowOffset+1)) {
-		for(var j = 0; j < gridCol; j+=(colOffset+1)) {
+	for(var j = 0; j < gridCol; j+=(colOffset+1)) {
+		for(var i = gridRow-1; i >= 0; i-=(rowOffset+1)) {
 			var right = true;
 			var tempStudent;
 			var seat = seatArr[i*gridCol+j];
@@ -412,7 +424,7 @@ function assignSeatsByRow(seed, colOffset, rowOffset) {
 	console.log(counter + " students assigned")
 	console.log("rightStudents: " + rightStudents.length + " leftStudents: " + leftStudents.length)
 	//var colStartPosition = gridCol-2;
-	var colStartPosition = 1;
+	var colStartPosition = 0;
 	var rowStartPosition = gridRow-2;
 	// If any students are left, place them in any empty spot
 	while (rightIndex + leftIndex < tempList.length){
@@ -464,7 +476,7 @@ function assignSeatsByRow(seed, colOffset, rowOffset) {
 			if (colOffset > 0) colOffset--;
 		}*/
 		if (colStartPosition < gridCol-1) colStartPosition++;
-		if (colStartPosition%2 == 0) rowStartPosition = gridRow-1;
+		if (colStartPosition%2 == 1) rowStartPosition = gridRow-1;
 		else rowStartPosition = gridRow-2;
 		console.log("leftIndex: " + leftIndex + " rightIndex: " + rightIndex + " tempList: " + tempList.length)
 	}

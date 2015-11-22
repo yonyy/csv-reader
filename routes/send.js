@@ -6,6 +6,7 @@ var router = express.Router();
 var bodyParser = require('body-parser'); //parses information from POST
 var methodOverride = require('method-override'); //used to manipulate POST
 var textParser = require('./modules/textParser.js');
+var fs = require('fs');
 
 router.use(bodyParser.urlencoded({limit: '50mb', extended: true }))
 router.use(methodOverride(function(req, res){
@@ -54,7 +55,8 @@ router.post('/', function(req, res, next) {
 	var sentTotal = 0;
 	var expectedRecievers = 0;
 	var parsedBodyText = "";
-	
+	var emailLog = "";
+
 	async.series([
 		function sendEmails(callback) {
 			for(var i = 0; i < toList.length; i++) {
@@ -64,6 +66,8 @@ router.post('/', function(req, res, next) {
 						parsedBodyText = text
 					else
 						parsedBodyText = textParser.parseText(text, rosterMap[toList[i]]);
+
+					emailLog += toList[i] + '\n\n' + subject + '\n\n\n' + parsedBodyText + '\n\n\n';
 					expectedRecievers++;
 					console.log(toList[i]);
 					var mailOptions = {
@@ -86,6 +90,14 @@ router.post('/', function(req, res, next) {
 				}
 			}	
 			callback(null,sentTotal)
+		},
+		function saveLog(callback) {
+			fs.writeFile('emailLog.txt', emailLog, function (err) {
+			  if (err) throw err;
+			  console.log('It\'s saved!');
+			  res.download('emailLog.txt');
+			});
+			callback(null,emailLog)
 		},
 		function sendStatus(callback) {
 			console.log("sentTotal: " + sentTotal + " out of " + expectedRecievers)

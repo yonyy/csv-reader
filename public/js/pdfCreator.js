@@ -33,20 +33,20 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
     students.sort(sortByRow);
     formatStr = "Row Sorted"
   }
-	if (format == "ColumnSorted") {
+  else if (format == "ColumnSorted") {
     students.sort(sortByColumns);
     formatStr = "Column Sorted"
   }
-	if (format == "NameSorted") {
+  else if (format == "NameSorted") {
     students.sort(sortByName);
-    formatStr = "Name Sorted"
+    formatStr = "Last Name Sorted"
   }
-  if (format == "GridSorted") {
+  else if (format == "GridSorted") {
     seatArr.sort(sortByGrid);
     gridLayout = true;
     formatStr = "Grid Layout"
   }
-  if (format == "StationSorted") {
+  else if (format == "StationSorted") {
     seatArr.sort(sortByStation);
     stationLayout = true;
     formatStr = "Station Number Sorted"
@@ -57,26 +57,27 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
     doc = new jsPDF("l"); // Landscape orientatiokn for grid layout
 
   var emptySeats = [];  // array to hold empty seat strings. To be prined at the end of file
+  var nonEmptySeats = [];
   //console.log(filename)
   //console.log(title)
 
   currentX = startX;
   currentY = startY;
-  var titleString = title + " " + formatStr;
   var downloadString = filename + format;
   //console.log(titleString);
 
   doc.setFont("helvetica");
   doc.setProperties({
-      title: titleString,
+      title: title,
       subject: 'Seating Chart',
       author: 'Online Seating Chart Generator'
   });
 
-  doc.setFontSize(8)
+  doc.setFontSize(10)
 
   /* Writing the heading of the pdf */
-  doc.text(title_marginLeft,title_marginTop,titleString);
+  doc.text(title_marginLeft-60,title_marginTop,title);
+  doc.text(title_marginLeft+100, title_marginTop,formatStr)
   //doc.text(title_marginLeft,title_marginTop, titleString);
   doc.setFontSize(rosterFontSize);
 
@@ -85,36 +86,23 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
     /* Writing roster */
     for (var i = 0; i < students.length; i++) {
       if (currentY <= end_Y) {  // Add students in the current column
-        if (students[i] == null){ 
-          console.log(students[i]);
+        if (students[i] == null || students[i].seat == null){ 
           continue;  // Dont write null students
+          console.log(students[i].firstname + " " + students[i].lastname + " has no assigned seat")
         }
         if (students[i].studentID == "") {  // If it is an empty student push it to the array
           /* Display the empty students along with all students for row and for column charts
            * For alphabetic charts, keep them at the end */
-          if (format == "NameSorted")
-            emptySeats.push(createString(students[i]));
-          else {
-            doc.text(currentX, currentY, "000" + createString(students[i]))
-            currentY += row_gap
-          }
+          emptySeats.push(students[i]);
         }
         else {  // If not an empty student write it to the pdf
-          doc.text(currentX, currentY, createString(students[i]))
-          currentY += row_gap;  // Go down one row
+          nonEmptySeats.push(students[i]) // Go down one row
         }
       }
-      checkBoundaries(end_X, end_Y)
     };
 
-    /* Writing the empty students to the pdf */
-    for(var i = 0; i < emptySeats.length; i++) {
-      doc.text(currentX, currentY, emptySeats[i].toString());
-      currentY+= row_gap; // Same logic as above
-      checkBoundaries(end_X, end_Y)
-    }
   } /* Perform grid layout */
-  if (gridLayout){
+  else if (gridLayout){
     //cellWidth = 40;
     //cellHeight = 20
     startX = 15;
@@ -156,32 +144,48 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
     }
   }
   //Sort by station number
-  if (stationLayout) {
+  else if (stationLayout) {
     for(var i = 0; i < seatArr.length; i++) {
       var currStation = seatArr[i]
       if (!currStation.isGhost) {
         var partners = currStation.students;
         for (var k = 0; k < partners.length; k++) {
           if (partners[k].studentID == "")
-            emptySeats.push(createString(partners[k]))
-          else {
-            doc.text(currentX, currentY, createString(partners[k]))
-            currentY += row_gap;  // Go down one row
-          }
-          //console.log(currentY)
-          checkBoundaries(end_X, end_Y)
+            emptySeats.push(partners[k])
+          else
+            nonEmptySeats.push(partners[k])
         }
       }
     }
-    /* Writing the empty students to the pdf */
-    for(var i = 0; i < emptySeats.length; i++) {
-      //console.log(currentY)
-      doc.text(currentX, currentY, emptySeats[i].toString());
-      currentY+= row_gap; // Same logic as above
-      checkBoundaries(end_X, end_Y)
-    }
   }
 
+  if (!gridLayout) {
+    doc.text(currentX,currentY, "Assigned Seats:")
+    currentY += row_gap;
+    var top_end_y = end_Y*nonEmptySeats.length/(nonEmptySeats.length + emptySeats.length)
+    var bottom_end_y  = top_end_y + end_Y*emptySeats.length/(nonEmptySeats.length + emptySeats.length)
+
+    for (var i = 0; i < nonEmptySeats.length; i++) {
+      doc.text(currentX, currentY, createString(nonEmptySeats[i]))
+      currentY += row_gap
+      checkBoundaries(end_X, top_end_y)
+    };
+
+    startY =  top_end_y + row_gap;
+    currentX = startX
+    currentY = startY
+    
+    doc.text(currentX, currentY, "Available Seats:")
+    /* Writing the empty students to the pdf */
+    emptySeats.sort(sortByRow);
+    currentY += row_gap;
+    for(var i = 0; i < emptySeats.length; i++) {
+      //console.log(currentY)
+      doc.text(currentX, currentY, createString(emptySeats[i]));
+      currentY += row_gap; // Same logic as above
+      checkBoundaries(end_X, bottom_end_y)
+    }
+  }
   /* Writing class info to pdf */
   currentY += 3*row_gap
   if (!gridLayout) checkBoundaries(end_X,end_Y)
@@ -191,7 +195,7 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
   var seatsPerStatStr = "Students per Seats: " + seatPerStation
   var expectedEmptyStr = "Expected Empty Seats: " + ((totalSeats*seatPerStation) - totalStudents).toString();
   var actualEmptyStr = "Actual Empty Seats: ______";
-  
+  var tutorRole = "Tutor: _______\nResponsibility:"
   var bottomInfo = [totalStudentStr, totalSeatsStr, seatsPerStatStr, expectedEmptyStr, actualEmptyStr];
   
   // Adding classroom and updating x coord and y coord
@@ -199,6 +203,11 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
     //console.log(currentX,currentY)
     doc.text(currentX, currentY, bottomInfo[i]);
     currentY += row_gap;
+    if (!gridLayout) checkBoundaries(end_X, end_Y);
+  }
+  for (var i = 0; i < 4; i++) {
+    doc.text(currentX,currentY, tutorRole);
+    currentY += 4*row_gap
     if (!gridLayout) checkBoundaries(end_X, end_Y);
   }
 
@@ -209,14 +218,14 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
 
 function checkBoundaries(endx, endy) {
   /* Begin new column is reaches the end */
-  if (currentY > endy) {
+  if (currentY > endy && currentX < endx) {
     currentY = startY;
     currentX += col_gap;
   } /* If the current x is greater than the x-max, add new page */
-  if (currentX > endx) {
+  else if (currentY > endy && currentX > endx) {
     doc.addPage();
-    currentX = startX;
-    currentY = startY;
+    currentX = startX = 15;
+    currentY = startY = 10;
   }
 }
 

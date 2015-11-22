@@ -5,10 +5,11 @@ var COL_OFFSET = 4 // beginning row of the roster from Triton Link
 var firstnameIndex = 3
 var lastnameIndex = 2
 var emailIndex = 8
+var examIndex = -1
 
 // Constructor for Roster object. Resembles the Roster model in DB
 function Roster (rosterName, students, totalStudents) {
-	this.rosterName = rosterName
+	this.rosterName = (rosterName) ? rosterName : "Roster"
 	this.students = students
 	this.totalStudents = totalStudents
 }
@@ -65,6 +66,7 @@ function readManualRoster() {
 		if (fullnameIndex == -1 && str == "first name") firstnameIndex = index
 		if (fullnameIndex == -1 && str == "last name") lastnameIndex = index
 		if (str == "email") emailIndex = index
+		if (str == "exam id") examIndex = index
 	});
 
 	rawRoster = $('#rosterTextInput').val().split("\n")
@@ -88,6 +90,7 @@ function readManualRoster() {
 
 		var email = studentInfo[emailIndex]
 		var examID = (i+1).toString()
+		if (examIndex > -1) examID = studentInfo[examIndex]
 		studentsArr.push(new Student(lastname, firstname, email, examID, false,false,null)); 
 	}
 	total_students = studentsArr.length

@@ -37,5 +37,5 @@ function createString(student) {
 		seatPos = seatPos + "  "
 	if (seatPos.length == 2)
 		seatPos = seatPos + " ";
-	return (id + " ______ " + seatPos + " " + student.lastname + ", " + student.firstname).substring(0,42);
+	return (id + " ______ " + seatPos + " " + student.lastname + "," + student.firstname).substring(0,42);
 }

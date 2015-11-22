@@ -35,7 +35,6 @@ function sortByName(stud1, stud2) {
 
 /* Comparison function to sort by row */
 function sortByRow(stud1, stud2) {
-  //console.log(stud1)
   var seatPos1 = stud1.seat.seatPosition;
   var seatPos2 = stud2.seat.seatPosition;
   var row1 = seatPos1[0]

@@ -184,7 +184,7 @@ block content
 							//- sessionStorage.setItem('all_seats', JSON.stringify(seatMap));
 							//- sessionStorage.setItem('width', #{total_width}-1);
 							//- sessionStorage.setItem('height', #{total_height}-1);
-							//- sessionStorage.setItem('finalGridContainer', finalGridContainer);
+							sessionStorage.setItem('finalGridContainer', JSON.stringify(finalGridContainer));
 							$('.station_item').each(function(index, element){
 								globalOrder.push($(element).attr('id'))
 							})
@@ -192,7 +192,9 @@ block content
 							globalClassroom.seatOrder = globalOrder
 							globalClassroom.ghostSeats = ghostSeats
 							globalClassroom.totalSeats = actualTotal
-							$('.gridHTML').val(JSON.stringify(finalGridContainer))
-							$('.seatMap').val(JSON.stringify(seatMap))
+							//-$('.gridHTML').val(JSON.stringify(finalGridContainer))
+							//-$('.seatMap').val(JSON.stringify(seatMap))
 							$('.classroom').val(JSON.stringify(globalClassroom))
+							sessionStorage.setItem('classroom', JSON.stringify(globalClassroom))
+							sessionStorage.setItem('seats', JSON.stringify(seatMap))
 						});
