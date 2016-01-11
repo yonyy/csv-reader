@@ -17,7 +17,9 @@ router.use(methodOverride(function(req, res){
         return method
       }
 }));
-
+router.get('/', function(req, res, next) {
+	res.redirect('/')
+});
 router.post('/', function(req, res, next) {
 	var rosterArr = JSON.parse(req.body.roster);
 	//console.log(rosterArr);
@@ -85,6 +87,7 @@ router.post('/', function(req, res, next) {
 					    } else {
 					    	sentTotal++;
 					        console.log('Message sent: ' + info.response);
+					        console.log("sentTotal: " + sentTotal + " out of " + expectedRecievers)
 					    }
 					});
 				}

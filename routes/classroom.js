@@ -15,6 +15,10 @@ router.use(methodOverride(function(req, res){
       }
 }));
 
+router.get('/', function(req, res, next) {
+	res.redirect('/')
+});
+
 router.post('/', function(req, res, next) {
 /*	var className = req.body.className;
 	if (className == '')

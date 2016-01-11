@@ -1,9 +1,11 @@
 var isGhost = false;	// variable to keep track if ghost checkbox is clicked
 var isLeftHanded = false;	// variable to keep track if left handed option is clicked
+var isAisle = false;
 
 var ghostColor = "FFFFFF";	// background color of a ghost seat
 var leftColor = "#2196F3";	// background color of a left handed seat
 var rightColor = "#FF5722";	// background color of a right handed seat
+var aisleColor = "#B71C1C";
 
 var finalGridContainer = "";	// suppose to contain the HTML content of the grid once it is finalized
 var numGhosts = 0;	// keeps track of the total number of ghosts
@@ -19,6 +21,7 @@ function Seat(isGhost,isLeftHanded,student,isEmpty,seatPosition) {
 	this.student = student;
 	this.isEmpty = isEmpty;
 	this.seatPosition = seatPosition;
+	this.isAisle = false;
 }
 
 // k: seat[letter][number] v: Seat Obj
@@ -29,7 +32,7 @@ function createSeats(classroom) {
 	globalClassroom = classroom
 	$(".seat_item").each(function(index, element){
         var seatId = $(element).attr('id');
-		var seat = new Seat(false, false, null, false, seatId);
+		var seat = new Seat(false, false, null, true, seatId);
 		seatMap[seatId] = seat;
 		actualTotal++
 		//console.log(actualTotal)
@@ -97,12 +100,19 @@ function updateSeat(id, expectedSeats, totalStud) {
 		if (index > -1)
     		ghostSeats.splice(index, 1);
 	}
-	else if (!isLeftHanded && !isGhost) {
+	else if (isAisle) {
+		if (!seatObj.isAisle) {
+			seatObj["isAisle"] = true;
+			$('#'+id).css("background-color", aisleColor);
+		}
+	}
+	else if (!isLeftHanded && !isGhost && !isAisle) {
 		$('#'+id).css("background-color", rightColor);
 		if (numGhosts > 0 && seatObj["isGhost"])
 			numGhosts--;
 		seatObj["isLeftHanded"] = false;
 		seatObj["isGhost"] = false;
+		seatObj["isAisle"] = false;
 
 		// Remove id from both left and ghost seats array
 		var index = leftSeats.indexOf(id);

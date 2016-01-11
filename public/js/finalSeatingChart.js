@@ -17,6 +17,10 @@ var lab = false;
 var finalSeed = 0;
 var col = true;
 var takenColor = "#76FF03"
+var manual = false;
+var click = 0;
+var id1 = "";
+var id2 = "";
 
 //classroom, seats, roster, 
 /* Function that executes once the HTML body loads. Appends the grid HTML,
@@ -39,16 +43,17 @@ function loadGrid(roster, seed, classType) {
 	//console.log(finalSeatMap)
 	//console.log(students)
 	$('.finalGridContainer').append(grid);
-	$('.seat_item').attr("onclick","displaySeatInfo($(this).attr('id'))");
+	//$('.seat_item').attr("onclick","swap($(this).attr('id'))");
 	$('.station_item').attr("onclick","displaySeatInfo($(this).attr('id'))");
+	$('.seat_item').attr("onclick","displaySeatInfo($(this).attr('id'))");
 	if (classType == "lab") {
 		lab = true
-		assignStationsByRow(seed,0,0);
+		assignStationsByRow(seed);
 		attachStationInfo()
 		createSeatTable();
 	}
 	else {
-		assignSeatsByRow(seed,0,0);
+		assignSeatsByRow(seed);
 		attachInfo();
 		createSeatTable();
 	}
@@ -88,21 +93,80 @@ function attachInfo() {
 }
 
 function createSeatTable() {
+	var tableHTMLStr = ""
 	var $table = $('.studentSeatList');
 	students.sort(sortByName);
 	$.each(students, function(index, stud){
 		if (stud.studentID != "") {
 			var tr = "<tr>";
-			var tdLastName = "<td>" + stud.lastname + "</td>"
-			var tdFirstName = "<td>" + stud.firstname + "</td>"
+			var tdLastName = "<td class=\'lastname\'>" + stud.lastname + "</td>"
+			var tdFirstName = "<td class=\'firstname\'>" + stud.firstname + "</td>"
 			var tdSeat = "<td><input type=\'text\' onchange=\'changeSeat("+ index + ")\' value=\'"+ stud.seat.seatPosition + "\' id=\'" + stud.lastname + stud.studentID + "\'></td>"
 			
 			if (lab) tdSeat = "<td><input type=\'text\' onchange=\'changeStation("+ index + ")\' value=\'"+ stud.seat.seatPosition + "\' id=\'" + stud.lastname + stud.studentID + "\'></td>"
 			
 			tr += tdLastName + tdFirstName + tdSeat + "</tr>"
-			$table.append(tr)
+			tableHTMLStr += tr;
 		}
 	})
+
+	$table.html(tableHTMLStr);
+}
+
+function filterStudents() {
+	var text = $('.search').val().toLowerCase()
+	var td = 3
+	var contains = false
+	//console.log(text)
+	/* Look through each table data and check if any table data contains the text */
+	$('tbody tr td').each(function(index, element){
+		if (index % td == 0) /* Want to look through each row, since each row contains 6 td, reset bool */
+			contains = false;
+		if (index % td < td) {	/* If any table data in a row contains the text, do not make that row hidden */
+			if (!contains) {
+				if ($(element).text().toLowerCase().indexOf(text) == -1) {
+					$(element).parent().addClass('hidden')
+				}
+				else {	/* ONLY mark a row as hidden if none of it's columns contains the text */
+					$(element).parent().removeClass('hidden')
+					contains = true;
+				}
+			}
+		}
+	});
+}
+
+/*This function implements jQuery autocomplete in the searchbox. */
+function searchList() {                
+    //array of list items
+    var listArray = [];
+  
+     $(".lastname").each(function() {
+     	var listText = $(this).text().trim();
+     	listArray.push(listText);
+    });
+
+	$(".firstname").each(function() {
+		var listText = $(this).text().trim();
+		listArray.push(listText);
+    });
+/*
+	$(".email").each(function() {
+		var listText = $(this).text().trim();
+		listArray.push(listText);
+    });*/
+    
+    var uniqueNames = [];
+    $.each(listArray, function(i, el){
+    	if($.inArray(el, uniqueNames) === -1)
+    		uniqueNames.push(el);
+    });
+
+    $('.search').autocomplete({
+        source: uniqueNames
+    });
+	
+	//console.log(listArray)    
 }
 
 function changeStation(studentIndex) {
@@ -181,7 +245,32 @@ function changeStation(studentIndex) {
 	console.log(chosenStud)
 	console.log(oldStation)
 	console.log(emptyStudent)
+	createSeatTable();
 
+}
+
+function setManual(state) {
+	manual = state;
+}
+
+function swap(id) {
+	console.log('clicked')
+	if (!manual) return;
+	click++;
+	$(this).css({"border-style": "solid", "border-color": "#0000ff"});
+	if (click == 1) {
+		id1 = id;
+	}
+	else {
+		if (id == id1) return;
+		id2 = id;
+		console.log("id1: " + id1);
+		console.log("id2: " + id2);
+		changeSeat(id1, id2);
+		$('#id1').css({"border-style": "", "border-color": ""});
+		$('#id2').css({"border-style": "", "border-color": ""});
+		click = 0;
+	}
 }
 
 function changeSeat(studentIndex) {
@@ -217,10 +306,10 @@ function changeSeat(studentIndex) {
 		if (newSeat.isGhost){
 			$('.changeSeatMessage').append("<div class=\'alert alert-danger errorSeatChange\'>Can't assign to a ghost seat</div>")
 			return;
-		} else if (!newSeat.isEmpty) {
+		}/* else if (!newSeat.isEmpty) {
 			$('.changeSeatMessage').append("<div class=\'alert alert-danger errorSeatChange\'>Can't assign to a non-empty seat</div>")
 			return;
-		}
+		}*/
 
 		oldSeat.student = emptyStudent;
 		emptyStudent.seat = oldSeat;
@@ -234,39 +323,46 @@ function changeSeat(studentIndex) {
 		chosenStud.seat =  null
 		emptyStudent = new Student("EMPTY", "EMPTY", "", "", false, false, oldSeat)
 		oldSeat.student = emptyStudent
+		oldSeat.isEmpty = true;
 		students.push(emptyStudent)
 	}
-
-	oldSeat.isEmpty = true;
+	
 	updateObjectInfo(oldSeatID, oldSeat);
 	chosenStud.seat = newSeat;
 
-	$('#'+oldSeatID).css("background","#FF5722");
 	$('.changeSeatMessage').append("<div class=\'alert alert-success successSeatChange\'>Updated seating assignment</div>");
 	if (newSeat != null) students[emptyStudentIndex] = emptyStudent;
 	students[studentIndex] = chosenStud;
-
-	console.log(newSeat)
+	createSeatTable()
+/*	console.log(newSeat)
 	console.log(chosenStud)
 	console.log(oldSeat)
-	console.log(emptyStudent)
+	console.log(emptyStudent)*/
 }
 
 function updateObjectInfo(newSeatID, newSeat) {
 	var studentProfile = "";
 	var studentObj = newSeat.student;
+	console.log("student in " + newSeatID);
+	console.log(studentObj);
+	console.log(newSeat.seatPosition);
 	if (studentObj.studentID != "") {
-		$('#'+newSeatID).css('background',takenColor)
+		$('#'+newSeat.seatPosition).css('background',takenColor);
+		console.log($('#'+newSeatID).css('background'))
 		var name = "<p>Name: "+ studentObj.lastname + ", " + studentObj.firstname+"</p>";
 		var email = "<p>Email: " + studentObj.email + "</p>";
 		var studentID = "<p>ID: " + studentObj.studentID + "</p>";
-		var seatID = "<p>Seat: " + studentObj.seat.seatPosition + "</p>";
+		var seatID = "<p>Seat: " + newSeatID + "</p>";
 		var hand = studentObj.isLeftHanded ? "<p>Left-Handed</p>" : "<p>Right Handed</p>"
 		studentProfile = "<span class=\"objectInfo\">" + name + email + studentID + seatID + hand + "</span>"
 	}
-	else
+	else {
+		$('#'+newSeatID).css("background","#FF5722");
 		studentProfile = "<span class=\"objectInfo\">Empty</span>"
-	$('#' + newSeatID).html(studentProfile);
+	}
+	var span = $('#'+newSeatID + ' span').first().html();
+	var span = "<span class=\'seatNum\'>" + span.toString() + "</span>";
+	$('#' + newSeatID).html(span+studentProfile);
 }
 
 function updateStationObjectInfo(newStationID, newStation) {
@@ -337,14 +433,15 @@ function assignSeatsByRow(seed, colOffset, rowOffset) {
 	var tempList = students;
 	var rightIndex = 0;	// index containing how many students have been assigned in the left handed array
 	var leftIndex = 0;	// index containing how many students have been assigned in the right handed array
-	var nonGhosts = 0;
+	var nonGhosts = 0;	// total number of nonGhost seats in the classroom
+	var totalStudents = students.length;
 	shuffle(tempList,seed);	// Shuffles the list of students
 	
 	var counter = 0
 	// Copies over the map of seats and pushes it into an array in order to loop through it
 	for (var key in finalSeatMap) {
 		if (finalSeatMap.hasOwnProperty(key)) {
-			seatArr.push(finalSeatMap[key])
+			//seatArr.push(finalSeatMap[key])
 			if (!finalSeatMap[key].isGhost) nonGhosts++
 		}
 	}
@@ -352,134 +449,132 @@ function assignSeatsByRow(seed, colOffset, rowOffset) {
 	// Enough space to spread out more
 	console.log("Roster: " + rosterSize)
 	console.log("Seats available: " + nonGhosts)
-	var percentage = rosterSize/nonGhosts;
-	if (percentage >= .80) {
-		rowOffset = 0;
-		colOffset = 1;
-	} else if (percentage >= .60){	// Dont change to rowOffset: 1 colOffset: 2. Causes an infinite while loop
-		rowOffset = 1;
-		colOffset = 1;
-	} else if (percentage >= .40) {
-		rowOffset = 1;
-		colOffset = 1;
-	} else if (percentage >= .20) {
-		rowOffset = 1;
-		colOffset = 1;
-	} else if (percentage >= .0) {
-		rowOffset = 1;
-		colOffset = 3;
-	}
 
-	console.log("percentage: " + percentage + " colOffset: " + colOffset + " rowOffset: " + rowOffset);
 	// Goes through the shuffled student array and begins dividing it into left and right handed students
 	for(var i = 0; i < tempList.length; i++) {
 		if (tempList[i].isLeftHanded)
-			leftStudents.push(tempList[i])
+			leftStudents.push(tempList[i]);
 		else
 			rightStudents.push(tempList[i]);
 	}
 
-	//assign all by row. Seperate each student by specific amounts of rows and cols
-	//console.log("tempList.length: " + tempList.length)
-	for(var j = 0; j < gridCol; j+=(colOffset+1)) {
-		for(var i = gridRow-1; i >= 0; i-=(rowOffset+1)) {
-			var right = true;
-			var tempStudent;
-			var seat = seatArr[i*gridCol+j];
-			if(seat.isGhost) {continue;}
-			if((rightIndex + leftIndex) >= tempList.length) { continue; }
-			if(seat.isLeftHanded) {
-				// If the students is left handed choose from the left handed array
-				// only if there are any left handed students left otherwise choose from
-				// the right handed array
-				if(leftIndex < leftStudents.length) {
-					tempStudent = leftStudents[leftIndex]
-					right = false;
+
+	for (var key in finalSeatMap) {
+		if (finalSeatMap.hasOwnProperty(key)) {
+			seatArr.push(finalSeatMap[key]);
+			if (!finalSeatMap[key].isGhost) nonGhosts++;
+		}
+	}
+
+	var statisfied = false;
+	var colOffset = 1;
+	var rowOffset = 0;
+	var seatsAssigned = 0;
+	var restart = false;
+	var numInspected = 0;
+	var attempts = 0
+	var removeLast = [];
+
+	while (!statisfied) {
+		if (attempts == 0) {colOffset = 1;}
+		else if (attempts == 1) {colOffset = 2;}
+		else if (attempts == 2) {rowOffset = 1;}
+		console.log("attempts:" + attempts);
+		(function() {
+			for (var i = 0; i < gridRow; i +=(rowOffset+1)) {
+				// reset the row
+				for (var j = 0; j < gridCol; j++) {
+					var seat = seatArr[i*gridCol+j];					
+					if (!seat.isEmpty) {
+						if (seat.isAisle) {
+							removeLast.push(seat);
+							continue;
+						}
+						seat.isEmpty = true;
+						seatsAssigned--;
+						if (seatsAssigned == totalStudents) {
+							statisfied = true;
+							return;
+						}
+					}
 				}
-				else
-					tempStudent = rightStudents[rightIndex]
+				// removing aisles last
+				for (var k = 0; k < removeLast.length; k++) {
+					removeLast[k].isEmpty = true;
+					seatsAssigned--;
+				}
+				removeLast = [];
+				// redo the row with new offset
+				for (var j = 0; j < gridCol; j +=(colOffset+1)) {
+					var seat = seatArr[i*gridCol+j];
+					if (seat.isGhost) {continue;}
+					if (seat.isEmpty) {
+						seat.isEmpty = false; 	// this seat is going to be assigned
+						seatsAssigned++;
+					}
+				}
 			}
-			else {
-				// If the student is right handed choose from the right handed array
-				// only if there are any right handed students left otherwise choose from
-				// the left handed array
-				if(rightIndex < rightStudents.length)	
-					tempStudent = rightStudents[rightIndex]
+		})();
+		if (seatsAssigned == totalStudents) statisfied = true;
+		else if (seatsAssigned > totalStudents) {
+			attempts++;
+		}
+		else if (seatsAssigned < totalStudents) {
+			for (var i = gridRow-1; i >= 0; i -=(rowOffset+1)) {
+				for (var j = 0; j < gridCol; j +=(colOffset+1)) {
+					var seat = seatArr[i*gridCol+j]
+					if (seat.isEmpty) {
+						seat.isEmpty = false; 	// this seat is going to be assigned
+						seatsAssigned++;
+					}
+				}
+			}
+		}
+	}
+	// Seating students
+	for(var i = 0; i < seatArr.length; i++) {
+		var right = true;
+		var tempStudent;
+		var seat = seatArr[i];
+		if(seat.isGhost) { continue; }
+		if((rightIndex + leftIndex) >= tempList.length) { continue; }
+		if (!seat.isEmpty) {
+			if(seat.student == null) { 
+				console.log("empty seat")
+				if(seat.isLeftHanded) {
+					// If the students is left handed choose from the left handed array
+					// only if there are any left handed students left otherwise choose from
+					// the right handed array
+					if(leftIndex < leftStudents.length) {
+						tempStudent = leftStudents[leftIndex];
+						right = false;
+					}
+					else
+						tempStudent = rightStudents[rightIndex];
+				}
 				else {
-					tempStudent = leftStudents[leftIndex]
-					right = false;
-				}
-			}
-			// Add students to seats only if there are students to add
-			if (rightIndex + leftIndex < tempList.length) {
-				if (right) rightIndex++;
-				else leftIndex++
-				seat.student = tempStudent;
-				tempStudent.seat = seat;
-				//console.log(tempStudent)
-				counter++
-			}
-		}
-	}
-	console.log(counter + " students assigned")
-	console.log("rightStudents: " + rightStudents.length + " leftStudents: " + leftStudents.length)
-	//var colStartPosition = gridCol-2;
-	var colStartPosition = 0;
-	var rowStartPosition = gridRow-2;
-	// If any students are left, place them in any empty spot
-	while (rightIndex + leftIndex < tempList.length){
-		for(var j = colStartPosition; j < gridCol; j+=colOffset+1) {
-			for(var i = rowStartPosition; i >= 0; i-=rowOffset+1) {
-				var right = true;
-				var tempStudent;
-				var seat = seatArr[i*gridCol+j];
-				if(seat.isGhost) { continue; }
-				if((rightIndex + leftIndex) >= tempList.length) { continue; }
-				if(seat.student == null) { 
-					console.log("empty seat")
-					if(seat.isLeftHanded) {
-						// If the students is left handed choose from the left handed array
-						// only if there are any left handed students left otherwise choose from
-						// the right handed array
-						if(leftIndex < leftStudents.length) {
-							tempStudent = leftStudents[leftIndex]
-							right = false;
-						}
-						else
-							tempStudent = rightStudents[rightIndex]
-					}
+					// If the student is right handed choose from the right handed array
+					// only if there are any right handed students left otherwise choose from
+					// the left handed array
+					if(rightIndex < rightStudents.length)	
+						tempStudent = rightStudents[rightIndex];
 					else {
-						// If the student is right handed choose from the right handed array
-						// only if there are any right handed students left otherwise choose from
-						// the left handed array
-						if(rightIndex < rightStudents.length)	
-							tempStudent = rightStudents[rightIndex]
-						else {
-							tempStudent = leftStudents[leftIndex]
-							right = false;
-						}
+						tempStudent = leftStudents[leftIndex];
+						right = false;
 					}
-					// Add students to seats only if there are students to add
-					if (rightIndex + leftIndex < tempList.length) {
-						if (right) rightIndex++;
-						else leftIndex++
-						seat.student = tempStudent;
-						tempStudent.seat = seat;
-						//console.log(tempStudent)
-						counter++
-					}
+				}
+				// Add students to seats only if there are students to add
+				if (rightIndex + leftIndex < tempList.length) {
+					if (right) rightIndex++;
+					else leftIndex++;
+					seat.student = tempStudent;
+					tempStudent.seat = seat;
+					counter++;
 				}
 			}
 		}
-/*		if (rowOffset > 0) rowOffset--;
-		else {
-			if (colOffset > 0) colOffset--;
-		}*/
-		if (colStartPosition < gridCol-1) colStartPosition++;
-		if (colStartPosition%2 == 1) rowStartPosition = gridRow-1;
-		else rowStartPosition = gridRow-2;
-		console.log("leftIndex: " + leftIndex + " rightIndex: " + rightIndex + " tempList: " + tempList.length)
 	}
+	console.log("leftIndex: " + leftIndex + " rightIndex: " + rightIndex + " tempList: " + tempList.length)
 
 	if (rightIndex + leftIndex < tempList.length) console.log("STILL STUDENTS MISSING")
 	// Fill the remaining seats with empty students
@@ -498,7 +593,7 @@ function assignSeatsByRow(seed, colOffset, rowOffset) {
 }
 
 /* Assigns the students to a station */
-function assignStationsByRow(seed, colOffset, rowOffset) {
+function assignStationsByRow(seed) {
 	var tempList = students;
 	var index = 0
 	var maxStudents = tempList.length;

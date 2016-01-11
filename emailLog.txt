@@ -1,0 +1,46 @@
+y5perez@ucsd.edu
+
+Quiz Seating Assignment
+
+
+Dear Yony Perez, 
+
+Here is your assigned seat for the ________.
+Please arrive early to find your seat.
+If you cannot find your seat, please ask for assistance.
+We have seating charts available in the front of the classroom.
+
+Quiz - ________ at ________ in CSE B250 Filled
+Seat: 37 
+Exam Serial Number: 1 
+
+Please be sure to put your Exam Serial Number on your exam. 
+Note: Exam Serial Number may change in future exams
+
+See you in class,
+________
+
+
+yonatan.perez.0213@gmail.com
+
+Quiz Seating Assignment
+
+
+Dear [fullname], 
+
+Here is your assigned seat for the ________.
+Please arrive early to find your seat.
+If you cannot find your seat, please ask for assistance.
+We have seating charts available in the front of the classroom.
+
+Quiz - ________ at ________ in CSE B250 Filled
+Seat: [seat] 
+Exam Serial Number: [id] 
+
+Please be sure to put your Exam Serial Number on your exam. 
+Note: Exam Serial Number may change in future exams
+
+See you in class,
+________
+
+

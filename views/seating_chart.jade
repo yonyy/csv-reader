@@ -145,6 +145,12 @@ block content
 						div(class="panel-body")
 							p Here are the list of students with their assigned seats. You may choose to change their assigned seat to an available one.
 						div(class="changeSeatMessage")
+						div(class="row")
+							div(class="col-lg-12")
+								div(class="input-group")
+									span(class="input-group-addon")
+										span(class="glyphicon glyphicon-search")
+									input(type="text" class="form-control search", placeholder="Search Student")
 						table(class="table")
 							thead
 								tr
@@ -157,6 +163,9 @@ block content
 				div(class="col-md-offset-6 col-lg-4")
 					button(class="btn btn-default pop-up-button", data-toggle="modal" data-target="#myModal") Download
 		script.
+			$('.search').keyup(function(){
+				filterStudents()
+			});
 			$('.saveCanvas').click(saveCanvas)
 			$('.edit').click(draggable);
 			$("input[type='radio']").on('change', function() {
@@ -174,10 +183,14 @@ block content
 			var i = 0;
 			$('#manualSeatingButton').click(function(){
 				$('.manualSeating').slideToggle("fast");
-				if (i%2 == 1)
+				if (i%2 == 1) {
 					$(this).text('Manually Change Seating Assignments');
-				else
+					setManual(false);
+				}
+				else {
 					$(this).text('Hide');
+					setManual(true);
+				}
 				i++
 			});
 block append script

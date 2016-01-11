@@ -58,16 +58,27 @@ block content
 					label
 						input(type="checkbox", id="left-handed_option", class="option")
 						|  Left-Handed Seat
+				div(class="col-lg-3")
+					label
+						input(type="checkbox", id="aisle_option", class="option")
+						|  Aisle Seat
 				script.
 					$('input.option').on('change', function() {
 						$('input.option').not(this).prop('checked', false);
-						if ($(this).attr('id') == "ghost_option") {
+						var op = $(this).attr('id');
+						if (op == "ghost_option") {
 							if (isGhost)
 								isGhost = false
 							else 
 								isGhost = true;
 							isLeftHanded = false;
 						}
+						else if (op == "aisle_option") {
+							if (isAisle)
+								isAisle = false;
+							else
+								isAisle = true;
+						} 
 						else {
 							if (isLeftHanded)
 								isLeftHanded = false

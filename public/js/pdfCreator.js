@@ -1,5 +1,5 @@
 var row_gap = 5;  // The gap between each column
-var col_gap = 50; // the gap between each row
+var col_gap = 40; // the gap between each row
 var title_marginLeft = 70;  // The x coord of the title
 var title_marginTop = 10; // The y coord of the title
 var end_X = 200;  // The maximum x coord
@@ -17,6 +17,7 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
   // Sorts the students array based off the option selected
   var formatStr = ""
   var gridLayout = false;
+  var lastNameSorted = false;
   var stationLayout = false;
   var maxRowsPerPage = 12
   end_X = 200;  // The maximum x coord
@@ -40,6 +41,7 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
   else if (format == "NameSorted") {
     students.sort(sortByName);
     formatStr = "Last Name Sorted"
+    lastNameSorted = true;
   }
   else if (format == "GridSorted") {
     seatArr.sort(sortByGrid);
@@ -94,6 +96,7 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
           /* Display the empty students along with all students for row and for column charts
            * For alphabetic charts, keep them at the end */
           emptySeats.push(students[i]);
+          console.log(students[i])
         }
         else {  // If not an empty student write it to the pdf
           nonEmptySeats.push(students[i]) // Go down one row
@@ -160,30 +163,40 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
   }
 
   if (!gridLayout) {
-    doc.text(currentX,currentY, "Assigned Seats:")
-    currentY += row_gap;
     var top_end_y = end_Y*nonEmptySeats.length/(nonEmptySeats.length + emptySeats.length)
     var bottom_end_y  = top_end_y + end_Y*emptySeats.length/(nonEmptySeats.length + emptySeats.length)
+    if (lastNameSorted){
+      doc.setFontSize(10)//(rosterFontSize+3)
+      col_gap += 19;
+      top_end_y = end_Y+10;
+    }
+
+    doc.text(currentX,currentY, "Assigned Seats:")
+    currentY += row_gap;
 
     for (var i = 0; i < nonEmptySeats.length; i++) {
-      doc.text(currentX, currentY, createString(nonEmptySeats[i]))
+      doc.text(currentX, currentY, createString(nonEmptySeats[i]).substring(0,32))
       currentY += row_gap
       checkBoundaries(end_X, top_end_y)
     };
 
-    startY =  top_end_y + row_gap;
-    currentX = startX
-    currentY = startY
-    
-    doc.text(currentX, currentY, "Available Seats:")
-    /* Writing the empty students to the pdf */
-    emptySeats.sort(sortByRow);
-    currentY += row_gap;
-    for(var i = 0; i < emptySeats.length; i++) {
-      //console.log(currentY)
-      doc.text(currentX, currentY, createString(emptySeats[i]));
-      currentY += row_gap; // Same logic as above
-      checkBoundaries(end_X, bottom_end_y)
+    if (emptySeats.length == 0) {
+      startY =  top_end_y + row_gap;
+      currentX = startX
+      currentY = startY
+    }
+    checkBoundaries(end_X, top_end_y)  
+    if (!lastNameSorted) {  
+      doc.text(currentX, currentY, "Available Seats:")
+      /* Writing the empty students to the pdf */
+      emptySeats.sort(sortByRow);
+      currentY += row_gap;
+      for(var i = 0; i < emptySeats.length; i++) {
+        //console.log(currentY)
+        doc.text(currentX, currentY, createString(emptySeats[i]));
+        currentY += row_gap; // Same logic as above
+        checkBoundaries(end_X, bottom_end_y)
+      }
     }
   }
   /* Writing class info to pdf */
@@ -218,11 +231,11 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
 
 function checkBoundaries(endx, endy) {
   /* Begin new column is reaches the end */
-  if (currentY > endy && currentX < endx) {
+  if (currentY+10 > endy && currentX+15 < endx) {
     currentY = startY;
     currentX += col_gap;
   } /* If the current x is greater than the x-max, add new page */
-  else if (currentY > endy && currentX > endx) {
+  else if (currentY+10 > endy && currentX+15 > endx) {
     doc.addPage();
     currentX = startX = 15;
     currentY = startY = 10;

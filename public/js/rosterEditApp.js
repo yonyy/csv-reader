@@ -141,17 +141,18 @@ angular.module('app', ['ngRoute'])
 	    	}
 
 	    	studentArray = vm.sortStudents(studentArray);
-	    	var differences = vm.students.filter(function(value){return studentArray.indexOf(value) < 0;});
-	    	differences = differences.concat(studentArray.filter(function(value){
+	    	vm.removed = vm.students.filter(function(value){return studentArray.indexOf(value) < 0});
+	    	vm.added = studentArray.filter(function(value){return vm.students.indexOf(value) < 0});
+/*	    	differences = differences.concat(studentArray.filter(function(value){
 	    		return vm.students.indexOf(value) < 0
-	    	}))
+	    	}))*/
 
-	    	for (var i = 0; i < differences.length; i++) {
+/*	    	for (var i = 0; i < differences.length; i++) {
 	    		if (vm.students.indexOf(differences[i]) < 0)
 	    			vm.added.push(differences[i]);
 	    		else
 	    			vm.removed.push(differences[i]);
-	    	}
+	    	}*/
 
 	    	if (examIndex == -1) {
 				for(var i = 0; i < studentArray.length; i++) {

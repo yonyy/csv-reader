@@ -14,7 +14,9 @@ router.use(methodOverride(function(req, res){
         return method
       }
 }));
-
+router.get('/', function(req, res, next) {
+	res.redirect('/')
+});
 router.post('/', function(req, res, next) {
 /*	var className = req.body.className;
 	var totalStudents = req.body.totalStudents;

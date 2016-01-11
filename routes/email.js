@@ -14,7 +14,9 @@ router.use(methodOverride(function(req, res){
         return method
       }
 }));
-
+router.get('/', function(req, res, next) {
+	res.redirect('/')
+});
 router.post('/', function(req, res, next) {
 	var roster = req.body.roster;
 	var className = JSON.stringify(req.body.className);
