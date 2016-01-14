@@ -38,7 +38,7 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
     students.sort(sortByColumns);
     formatStr = "Column Sorted"
   }
-  else if (format == "NameSorted") {
+  else if (format == "LastNameSorted") {
     students.sort(sortByName);
     formatStr = "Last Name Sorted"
     lastNameSorted = true;
@@ -90,13 +90,13 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
       if (currentY <= end_Y) {  // Add students in the current column
         if (students[i] == null || students[i].seat == null){ 
           continue;  // Dont write null students
-          console.log(students[i].firstname + " " + students[i].lastname + " has no assigned seat")
+          //console.log(students[i].firstname + " " + students[i].lastname + " has no assigned seat")
         }
         if (students[i].studentID == "") {  // If it is an empty student push it to the array
           /* Display the empty students along with all students for row and for column charts
            * For alphabetic charts, keep them at the end */
           emptySeats.push(students[i]);
-          console.log(students[i])
+          //console.log(students[i])
         }
         else {  // If not an empty student write it to the pdf
           nonEmptySeats.push(students[i]) // Go down one row
@@ -163,10 +163,13 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
   }
 
   if (!gridLayout) {
-    var top_end_y = end_Y*nonEmptySeats.length/(nonEmptySeats.length + emptySeats.length)
-    var bottom_end_y  = top_end_y + end_Y*emptySeats.length/(nonEmptySeats.length + emptySeats.length)
+    var ratio1 = end_Y*nonEmptySeats.length/totalSeats
+    var ratio2 = end_Y*emptySeats.length/totalSeats
+    var top_end_y = ratio1 + 10;
+    var bottom_end_y  = top_end_y + ratio2;
+
     if (lastNameSorted){
-      doc.setFontSize(10)//(rosterFontSize+3)
+      doc.setFontSize(8)//(rosterFontSize+3)
       col_gap += 19;
       top_end_y = end_Y+10;
     }
@@ -179,14 +182,12 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
       currentY += row_gap
       checkBoundaries(end_X, top_end_y)
     };
-
-    if (emptySeats.length == 0) {
-      startY =  top_end_y + row_gap;
+    console.log('finished top half')
+    if (!lastNameSorted) {
+      startY =  top_end_y;// + row_gap;
       currentX = startX
       currentY = startY
-    }
-    checkBoundaries(end_X, top_end_y)  
-    if (!lastNameSorted) {  
+      checkBoundaries(end_X, bottom_end_y) 
       doc.text(currentX, currentY, "Available Seats:")
       /* Writing the empty students to the pdf */
       emptySeats.sort(sortByRow);
@@ -196,11 +197,15 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
         doc.text(currentX, currentY, createString(emptySeats[i]));
         currentY += row_gap; // Same logic as above
         checkBoundaries(end_X, bottom_end_y)
-      }
+      } 
+    } else {
+      currentY += 10*row_gap;
+      checkBoundaries(end_X, top_end_y)
     }
   }
+
   /* Writing class info to pdf */
-  currentY += 3*row_gap
+  if (!lastNameSorted) currentY += 3*row_gap
   if (!gridLayout) checkBoundaries(end_X,end_Y)
   var seatPerStation = (seatArr[0].numPerStation != null) ? seatArr[0].numPerStation : 1
   var totalStudentStr = "Total Students: " + totalStudents;
@@ -231,11 +236,12 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
 
 function checkBoundaries(endx, endy) {
   /* Begin new column is reaches the end */
-  if (currentY+10 > endy && currentX+15 < endx) {
+  if (currentY+10 > endy && currentX+32 < endx) {
     currentY = startY;
     currentX += col_gap;
+    console.log('switch row at ' + currentY)
   } /* If the current x is greater than the x-max, add new page */
-  else if (currentY+10 > endy && currentX+15 > endx) {
+  else if (currentY+10 > end_Y && currentX+32 > endx) {
     doc.addPage();
     currentX = startX = 15;
     currentY = startY = 10;

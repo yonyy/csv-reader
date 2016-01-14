@@ -96,13 +96,13 @@ function createSeatTable() {
 	var tableHTMLStr = ""
 	var $table = $('.studentSeatList');
 	students.sort(sortByName);
+
 	$.each(students, function(index, stud){
 		if (stud.studentID != "") {
 			var tr = "<tr>";
 			var tdLastName = "<td class=\'lastname\'>" + stud.lastname + "</td>"
 			var tdFirstName = "<td class=\'firstname\'>" + stud.firstname + "</td>"
 			var tdSeat = "<td><input type=\'text\' onchange=\'changeSeat("+ index + ")\' value=\'"+ stud.seat.seatPosition + "\' id=\'" + stud.lastname + stud.studentID + "\'></td>"
-			
 			if (lab) tdSeat = "<td><input type=\'text\' onchange=\'changeStation("+ index + ")\' value=\'"+ stud.seat.seatPosition + "\' id=\'" + stud.lastname + stud.studentID + "\'></td>"
 			
 			tr += tdLastName + tdFirstName + tdSeat + "</tr>"
@@ -474,14 +474,38 @@ function assignSeatsByRow(seed, colOffset, rowOffset) {
 	var numInspected = 0;
 	var attempts = 0
 	var removeLast = [];
-
+	var rowStart = 0;
+	var clear = false;
 	while (!statisfied) {
-		if (attempts == 0) {colOffset = 1;}
-		else if (attempts == 1) {colOffset = 2;}
-		else if (attempts == 2) {rowOffset = 1;}
+		if (attempts == 10) {
+			alert('terminated')
+			break;
+		}
+		if (attempts == 0) {
+			colOffset = 1;
+			rowStart = 0;
+			clear = false;
+		}
+		else if (attempts == 1) {
+			colOffset = 2;
+			rowStart = 0;
+			clear = false;
+		}
+		else if (attempts == 2) {
+			colOffset = 2;
+			rowOffset = 1;
+			rowStart = 1;
+			clear = true;
+		}
+		else if (attempts == 3) {
+			colOffset = 2;
+			rowOffset = 1;
+			rowStart = 0;
+			clear = true;
+		}
 		console.log("attempts:" + attempts);
 		(function() {
-			for (var i = 0; i < gridRow; i +=(rowOffset+1)) {
+			for (var i = rowStart; i < gridRow; i +=(rowOffset+1)) {
 				// reset the row
 				for (var j = 0; j < gridCol; j++) {
 					var seat = seatArr[i*gridCol+j];					
@@ -491,8 +515,9 @@ function assignSeatsByRow(seed, colOffset, rowOffset) {
 							continue;
 						}
 						seat.isEmpty = true;
-						seatsAssigned--;
+						if (seatsAssigned > 0) seatsAssigned--;
 						if (seatsAssigned == totalStudents) {
+							console.log('statisfied')
 							statisfied = true;
 							return;
 						}
@@ -501,38 +526,70 @@ function assignSeatsByRow(seed, colOffset, rowOffset) {
 				// removing aisles last
 				for (var k = 0; k < removeLast.length; k++) {
 					removeLast[k].isEmpty = true;
-					seatsAssigned--;
+					if (seatsAssigned > 0) seatsAssigned--;
+					if (seatsAssigned == totalStudents) {
+						console.log('statisfied')
+						statisfied = true;
+						return;
+					}
 				}
 				removeLast = [];
 				// redo the row with new offset
-				for (var j = 0; j < gridCol; j +=(colOffset+1)) {
-					var seat = seatArr[i*gridCol+j];
-					if (seat.isGhost) {continue;}
-					if (seat.isEmpty) {
-						seat.isEmpty = false; 	// this seat is going to be assigned
-						seatsAssigned++;
+				if (!clear) {
+					for (var j = 0; j < gridCol; j +=(colOffset+1)) {
+						seatsAssigned = assignEmpty(i,j,seatsAssigned);
 					}
-				}
+				}	
 			}
 		})();
+		console.log(seatsAssigned);
+		var lastAvailRow = 0;
+		var lastAvailCol = 0;
 		if (seatsAssigned == totalStudents) statisfied = true;
-		else if (seatsAssigned > totalStudents) {
-			attempts++;
-		}
-		else if (seatsAssigned < totalStudents) {
-			for (var i = gridRow-1; i >= 0; i -=(rowOffset+1)) {
-				for (var j = 0; j < gridCol; j +=(colOffset+1)) {
-					var seat = seatArr[i*gridCol+j]
-					if (seat.isEmpty) {
-						seat.isEmpty = false; 	// this seat is going to be assigned
-						seatsAssigned++;
+		var fillCounter = 0;
+		var tempRowOff = rowOffset;
+		var tempColOff = colOffset;
+		while (seatsAssigned < totalStudents) {
+			console.log('loop')
+			if (fillCounter > 50) {
+				alert('too many loops');
+				break;
+			}
+			(function() {
+				for (var i = gridRow-1; i >= 0; i -=(tempRowOff+1)) {
+					for (var j = 0; j < gridCol; j++) {
+//						console.log(seat[i*gridCol+j])
+						if (seatArr[i*gridCol+j].isEmpty) {
+							lastAvailRow = i;
+							lastAvailCol = j;
+							console.log('first empty as row : ' + lastAvailRow + ' col: ' + lastAvailCol);
+							console.log(seatArr[lastAvailRow*gridCol+lastAvailCol]);
+							return
+						}
 					}
 				}
+			})();
+			for (var i = lastAvailRow; i >= 0; i -=(tempRowOff+1)) {
+				for (var j = lastAvailCol; j < gridCol; j +=(tempColOff+1)) {
+					seatsAssigned = assignEmpty(i,j,seatsAssigned);
+/*					if (seatsAssigned == totalStudents) {
+						console.log('statisfied')
+						statisfied = true;
+						return;
+					}*/
+				}
+			}
+			fillCounter++;
+			if (fillCounter % 3 == 0) {
+				if (tempRowOff > 0) tempRowOff--;
+			} else {
+				if (tempColOff > 0) tempColOff--;
 			}
 		}
+		attempts++;
 	}
 	// Seating students
-	for(var i = 0; i < seatArr.length; i++) {
+	for(var i = seatArr.length-1; i >= 0; i--) {
 		var right = true;
 		var tempStudent;
 		var seat = seatArr[i];
@@ -590,6 +647,16 @@ function assignSeatsByRow(seed, colOffset, rowOffset) {
 		}
 	}
 	console.log(counter + " students assigned")
+}
+
+function assignEmpty(i,j,seatsAssigned) {
+	var seat = seatArr[i*gridCol+j]
+	if (seat.isGhost) {return seatsAssigned;}
+	if (seat.isEmpty) {
+		seat.isEmpty = false; 	// this seat is going to be assigned
+		seatsAssigned++;
+	}
+	return seatsAssigned
 }
 
 /* Assigns the students to a station */

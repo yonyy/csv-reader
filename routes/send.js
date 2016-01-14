@@ -44,7 +44,6 @@ router.post('/', function(req, res, next) {
 		host: 'smtp.ucsd.edu',
 		secure: true, // use SSL
 		port : 465, // port for secure SMTP
-		greetingTimeout : 300,
 		auth: {
 			user: userEmail,
 			pass: userPass
@@ -83,6 +82,7 @@ router.post('/', function(req, res, next) {
 					transporter.sendMail(mailOptions, function(error, info){
 						if(error) {
 							status = false;
+							console.log("Error sending to: " + toList[i])
 							console.log(error);
 					    } else {
 					    	sentTotal++;
@@ -95,7 +95,7 @@ router.post('/', function(req, res, next) {
 			callback(null,sentTotal)
 		},
 		function saveLog(callback) {
-			fs.writeFile('emailLog.txt', emailLog, function (err) {
+			fs.writeFile('../emailLog.txt', emailLog, function (err) {
 			  if (err) throw err;
 			  console.log('It\'s saved!');
 			  res.download('emailLog.txt');
