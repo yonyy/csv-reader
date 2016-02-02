@@ -156,6 +156,7 @@ block content
 							$('.seatMap').val(JSON.stringify(seatMap))
 							globalClassroom.leftSeats = leftSeats
 							globalClassroom.ghostSeats = ghostSeats
+							globalClassroom.aisleSeats = aisleSeats
 							globalClassroom.totalSeats = actualTotal
 							$('.classroom').val(JSON.stringify(globalClassroom))
 							sessionStorage.setItem('classroom', JSON.stringify(globalClassroom))

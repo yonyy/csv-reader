@@ -6,6 +6,7 @@ var classroomSchema = new mongoose.Schema({
 	classType: String,
 	ghostSeats: Array,
 	leftSeats: Array,
+	aisleSeats: Array,
 	totalSeats: Number,
 	numPerStation: Number,
 	seatOrder : Array,

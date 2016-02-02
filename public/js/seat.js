@@ -14,6 +14,7 @@ var seatMap = {}	// seatMap to allow quick access to the seat object based of it
 var globalClassroom = {}	// global classroom object. Once classroom is finalized, the passed in classroom is updated to this one
 var ghostSeats = []	// array to hold positions of ghosts seats. Assigend to global classroom once all seats are assigned
 var leftSeats = []	// array to hold position of left seats. Assigned to global classroom once all seats are assigned
+var aisleSeats = [];
 
 function Seat(isGhost,isLeftHanded,student,isEmpty,seatPosition) {
 	this.isGhost = isGhost;
@@ -54,7 +55,7 @@ function createSeats(classroom) {
 
 	// This section run if user has selected an uploaded classroom
 	// It over writes the current status of the seat to a left seat
-	leftSeats = classroom.leftSeats
+	leftSeats = classroom.leftSeats;
 	//console.log(leftSeats)
 	for (var i = 0; i < leftSeats.length; i++) {
 		var seatId = "#"+leftSeats[i]
@@ -62,6 +63,19 @@ function createSeats(classroom) {
 		var seatObj = seatMap[leftSeats[i]]
 		seatObj["isGhost"] = false;
 		seatObj["isLeftHanded"] = true;		
+	}
+
+	//updated schema to contain aisle seats. previous database may have 
+	// classrooms that dont have this property
+	if (typeof(classroom.aisleSeats) !== 'undefined') {
+		aisleSeats = classroom.aisleSeats;
+		for (var i = 0; i < aisleSeats.length; i++) {
+			var seatId = "#"+aisleSeats[i];
+			$(seatId).css("background-color", aisleColor);
+			var seatObj = seatMap[aisleSeats[i]];
+			seatObj["isAisle"] = true;
+			seatObj["isGhost"] = false;
+		};
 	}
 }
 
@@ -103,7 +117,9 @@ function updateSeat(id, expectedSeats, totalStud) {
 	else if (isAisle) {
 		if (!seatObj.isAisle) {
 			seatObj["isAisle"] = true;
+			seatObj["isGhost"] = false;
 			$('#'+id).css("background-color", aisleColor);
+			aisleSeats.push(id);
 		}
 	}
 	else if (!isLeftHanded && !isGhost && !isAisle) {
@@ -122,6 +138,10 @@ function updateSeat(id, expectedSeats, totalStud) {
     	index = ghostSeats.indexOf(id);
 		if (index > -1)
     		ghostSeats.splice(index, 1);
+
+    	index = aisleSeats.indexOf(id);
+		if (index > -1)
+    		aisleSeats.splice(index, 1);
 	}
 	//console.log(seatObj)
 	//console.log($('#'+id).html());

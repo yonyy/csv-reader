@@ -9,7 +9,6 @@ block append link
 
 block append script
 	script(src="https://code.jquery.com/ui/1.11.4/jquery-ui.js")
-	script(src="js/draggable.js")
 block prepend bodyLink
 	- if (classType == "lab")
 		body(onload="loadGrid(#{roster}, #{seed}, \"lab\")")
@@ -193,9 +192,11 @@ block content
 				}
 				i++
 			});
+
 block append script
 	script(src="js/html2canvas.js")
 	script(src="js/sort.js")
+	script(src="js/draggable.js")
 	script(src="//mrrio.github.io/jsPDF/dist/jspdf.debug.js")
 	script(src="//cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.0/seedrandom.min.js")
 	script(src="js/jquery.redirect.js")

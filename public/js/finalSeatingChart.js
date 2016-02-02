@@ -44,8 +44,16 @@ function loadGrid(roster, seed, classType) {
 	//console.log(students)
 	$('.finalGridContainer').append(grid);
 	//$('.seat_item').attr("onclick","swap($(this).attr('id'))");
-	$('.station_item').attr("onclick","displaySeatInfo($(this).attr('id'))");
-	$('.seat_item').attr("onclick","displaySeatInfo($(this).attr('id'))");
+	//$('.station_item').attr("onclick","displaySeatInfo($(this).attr('id'))");
+	//$('.seat_item').attr("onclick","displaySeatInfo($(this).attr('id'))");
+	$('.station_item').attr("onclick","");
+	$('.seat_item').attr("onclick","");
+	$('.seat_item').attr("onmousedown","mouseDown($(this).attr('id'))");
+	$('.seat_item').attr("onmouseup", "mouseUp($(this).attr('id'))");
+	$('.seat_item').each(function (value, index) {
+		$(this).css('left', 0);
+	});
+
 	if (classType == "lab") {
 		lab = true
 		assignStationsByRow(seed);
@@ -102,8 +110,8 @@ function createSeatTable() {
 			var tr = "<tr>";
 			var tdLastName = "<td class=\'lastname\'>" + stud.lastname + "</td>"
 			var tdFirstName = "<td class=\'firstname\'>" + stud.firstname + "</td>"
-			var tdSeat = "<td><input type=\'text\' onchange=\'changeSeat("+ index + ")\' value=\'"+ stud.seat.seatPosition + "\' id=\'" + stud.lastname + stud.studentID + "\'></td>"
-			if (lab) tdSeat = "<td><input type=\'text\' onchange=\'changeStation("+ index + ")\' value=\'"+ stud.seat.seatPosition + "\' id=\'" + stud.lastname + stud.studentID + "\'></td>"
+			var tdSeat = "<td><input type=\'text\' onchange=\'changeSeat("+ index + ")\' value=\'"+ stud.seat.seatPosition + "\' id=\'" + stud.lastname.replace(/\s/g, '') + stud.studentID + "\'></td>"
+			if (lab) tdSeat = "<td><input type=\'text\' onchange=\'changeStation("+ index + ")\' value=\'"+ stud.seat.seatPosition + "\' id=\'" + stud.lastname.replace(/\s/g, '') + stud.studentID + "\'></td>"
 			
 			tr += tdLastName + tdFirstName + tdSeat + "</tr>"
 			tableHTMLStr += tr;
@@ -281,7 +289,7 @@ function changeSeat(studentIndex) {
 	var oldSeatID = chosenStud.seat.seatPosition;
 	var oldSeat = finalSeatMap[oldSeatID];
 
-	var newSeatID = $('#' + chosenStud.lastname + chosenStud.studentID).val();
+	var newSeatID = $('#' + chosenStud.lastname.replace(/\s/g, '') + chosenStud.studentID).val();
 	var newSeat = null;
 	var emptyStudentIndex = -1;
 	var emptyStudent = null;
@@ -423,7 +431,7 @@ function attachStationInfo() {
 }
 
 function displaySeatInfo(id) {
-	console.log(finalSeatMap[id]);
+	//console.log(finalSeatMap[id]);
 }
 
 /* Assigns the students to a seat by row. In addition, this is currently used to evenly space out students 1 row and 1 seat apart from each other. */
@@ -476,19 +484,22 @@ function assignSeatsByRow(seed, colOffset, rowOffset) {
 	var removeLast = [];
 	var rowStart = 0;
 	var clear = false;
-	while (!statisfied) {
-		if (attempts == 10) {
+	var flop = 0
+	while (seatsAssigned < totalStudents || !statisfied) {
+		if (flop == 23) {
 			alert('terminated')
 			break;
 		}
 		if (attempts == 0) {
 			colOffset = 1;
+			rowOffset = 0;
 			rowStart = 0;
 			clear = false;
 		}
 		else if (attempts == 1) {
 			colOffset = 2;
 			rowStart = 0;
+			rowOffset = 0;
 			clear = false;
 		}
 		else if (attempts == 2) {
@@ -505,9 +516,16 @@ function assignSeatsByRow(seed, colOffset, rowOffset) {
 		}
 		console.log("attempts:" + attempts);
 		(function() {
-			for (var i = rowStart; i < gridRow; i +=(rowOffset+1)) {
-				// reset the row
-				for (var j = 0; j < gridCol; j++) {
+			// remove seats
+			for (var i = rowStart; i < gridRow; i +=(1)) {
+				var m = 0;
+				// finding first unempty seat in row
+/*				for (m = 0; m < gridCol; m++) {
+					var seat = seatArr[i*gridCol+m];					
+					if (!seat.isEmpty) break;				
+				}*/
+				// starting from first unempty seat and clearing
+				for (var j = m; j < gridCol; j+=(colOffset+1)) {
 					var seat = seatArr[i*gridCol+j];					
 					if (!seat.isEmpty) {
 						if (seat.isAisle) {
@@ -534,12 +552,17 @@ function assignSeatsByRow(seed, colOffset, rowOffset) {
 					}
 				}
 				removeLast = [];
-				// redo the row with new offset
-				if (!clear) {
-					for (var j = 0; j < gridCol; j +=(colOffset+1)) {
+				//if (seatsAssigned < totalStudents) return;
+			}
+		})();
+		(function () {
+			// redo the rows with new offset starting at top row
+			if (seatsAssigned == totalStudents) return;
+			for (var i = rowStart; i < gridRow; i +=(rowOffset+1)) {
+				for (var j = 0; j < gridCol; j+=(colOffset+1)) {
+					if (!clear)
 						seatsAssigned = assignEmpty(i,j,seatsAssigned);
-					}
-				}	
+				}
 			}
 		})();
 		console.log(seatsAssigned);
@@ -558,35 +581,39 @@ function assignSeatsByRow(seed, colOffset, rowOffset) {
 			(function() {
 				for (var i = gridRow-1; i >= 0; i -=(tempRowOff+1)) {
 					for (var j = 0; j < gridCol; j++) {
-//						console.log(seat[i*gridCol+j])
 						if (seatArr[i*gridCol+j].isEmpty) {
 							lastAvailRow = i;
 							lastAvailCol = j;
-							console.log('first empty as row : ' + lastAvailRow + ' col: ' + lastAvailCol);
+							console.log('first empty at row : ' + lastAvailRow + ' col: ' + lastAvailCol);
 							console.log(seatArr[lastAvailRow*gridCol+lastAvailCol]);
 							return
 						}
 					}
 				}
 			})();
-			for (var i = lastAvailRow; i >= 0; i -=(tempRowOff+1)) {
-				for (var j = lastAvailCol; j < gridCol; j +=(tempColOff+1)) {
-					seatsAssigned = assignEmpty(i,j,seatsAssigned);
-/*					if (seatsAssigned == totalStudents) {
-						console.log('statisfied')
-						statisfied = true;
-						return;
+			(function() {
+				var div = 8;
+				for (var i = lastAvailRow; i >= 0; i -=(tempRowOff+1)) {
+					for (var j = lastAvailCol; j < gridCol; j +=(tempColOff+1)) {
+						seatsAssigned = assignEmpty(i,j,seatsAssigned);
+					}
+/*					if (i*gridCol+j >= nonGhosts/div) {
+						if (seatsAssigned >= totalStudents) return;
+						else { 
+								if (div/2 != 0) div = div/2;
+						} 
 					}*/
 				}
-			}
-			fillCounter++;
-			if (fillCounter % 3 == 0) {
-				if (tempRowOff > 0) tempRowOff--;
-			} else {
-				if (tempColOff > 0) tempColOff--;
-			}
+				fillCounter++;
+				if (fillCounter % 3 == 0) {
+					if (tempRowOff > 0) tempRowOff--;
+				} else {
+					if (tempColOff > 0) tempColOff--;
+				}
+			})();
 		}
-		attempts++;
+		flop++;
+		attempts = (attempts+1) % 4;
 	}
 	// Seating students
 	for(var i = seatArr.length-1; i >= 0; i--) {

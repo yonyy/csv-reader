@@ -98,7 +98,7 @@ router.post('/', function(req, res, next) {
 			fs.writeFile('../emailLog.txt', emailLog, function (err) {
 			  if (err) throw err;
 			  console.log('It\'s saved!');
-			  res.download('emailLog.txt');
+			  //res.download('emailLog.txt');
 			});
 			callback(null,emailLog)
 		},

@@ -30,6 +30,7 @@
 .seat_item {
   background: #FF5722;
 }
+
 .seat_alphabet, .cornerGrid {
   position: absolute;
 }

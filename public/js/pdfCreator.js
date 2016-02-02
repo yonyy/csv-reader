@@ -9,9 +9,9 @@ var startX = 10; // The x coord to begin writing the table of students
 var startY = 15;  // The y coord to begin writing the table of students
 var pdfFileName = "";
 var doc = null;
-var currentX = 0
-var currentY = 0
-
+var currentX = 0;
+var currentY = 0;
+var newPage = false;
 /*console.log(students);*/
 function generatePDF(format, filename, title, totalSeats, totalStudents) {
   // Sorts the students array based off the option selected
@@ -20,6 +20,8 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
   var lastNameSorted = false;
   var stationLayout = false;
   var maxRowsPerPage = 12
+  row_gap = 5;  // The gap between each column
+  col_gap = 40; // the gap between each row
   end_X = 200;  // The maximum x coord
   end_Y = 280;  // the maximum y coord
   startX = 10; // The x coord to begin writing the table of students
@@ -38,7 +40,7 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
     students.sort(sortByColumns);
     formatStr = "Column Sorted"
   }
-  else if (format == "LastNameSorted") {
+  else if (format == "NameSorted") {
     students.sort(sortByName);
     formatStr = "Last Name Sorted"
     lastNameSorted = true;
@@ -170,7 +172,7 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
 
     if (lastNameSorted){
       doc.setFontSize(8)//(rosterFontSize+3)
-      col_gap += 19;
+      col_gap += 10;
       top_end_y = end_Y+10;
     }
 
@@ -180,11 +182,14 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
     for (var i = 0; i < nonEmptySeats.length; i++) {
       doc.text(currentX, currentY, createString(nonEmptySeats[i]).substring(0,32))
       currentY += row_gap
-      checkBoundaries(end_X, top_end_y)
+      checkBoundaries(end_X-50, top_end_y)
     };
     console.log('finished top half')
     if (!lastNameSorted) {
-      startY =  top_end_y;// + row_gap;
+      if (newPage) {
+        startY = currentY + row_gap;
+        bottom_end_y = end_Y;
+      } else startY =  top_end_y;// + row_gap;
       currentX = startX
       currentY = startY
       checkBoundaries(end_X, bottom_end_y) 
@@ -205,7 +210,7 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
   }
 
   /* Writing class info to pdf */
-  if (!lastNameSorted) currentY += 3*row_gap
+  if (!lastNameSorted) currentY += 2*row_gap
   if (!gridLayout) checkBoundaries(end_X,end_Y)
   var seatPerStation = (seatArr[0].numPerStation != null) ? seatArr[0].numPerStation : 1
   var totalStudentStr = "Total Students: " + totalStudents;
@@ -239,10 +244,12 @@ function checkBoundaries(endx, endy) {
   if (currentY+10 > endy && currentX+32 < endx) {
     currentY = startY;
     currentX += col_gap;
+    newPage = false;
     console.log('switch row at ' + currentY)
   } /* If the current x is greater than the x-max, add new page */
   else if (currentY+10 > end_Y && currentX+32 > endx) {
     doc.addPage();
+    newPage = true;
     currentX = startX = 15;
     currentY = startY = 10;
   }
