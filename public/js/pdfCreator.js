@@ -134,7 +134,7 @@ function generatePDF(format, filename, title, totalSeats, totalStudents) {
           cellContent = tempStation.seatPosition.toString() + "\n"
           var partners = tempStation.students;
           for (var k = 0; k < partners.length; k++) {
-            cellContent += partners[k].firstname + ", " + partners[k].lastname
+            cellContent += partners[k].lastname + ", " + partners[k].firstname;
             if (partners[k].studentID != "")
                cellContent += " ______\n"
             else

@@ -72,7 +72,7 @@ router.post('/', function(req, res, next) {
 					expectedRecievers++;
 					console.log(toList[i]);
 					var mailOptions = {
-						from: userEmail, // sender address
+						from: 'UCSD Seating Charts <seatingcharts@no-reply.com>', // sender address
 						to: toList[i], // list of receivers
 						subject: subject, // Subject line
 						text: parsedBodyText // plaintext body
