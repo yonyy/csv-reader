@@ -519,11 +519,7 @@ function assignSeatsByRow(seed, colOffset, rowOffset) {
 			// remove seats
 			for (var i = rowStart; i < gridRow; i +=(1)) {
 				var m = 0;
-				// finding first unempty seat in row
-/*				for (m = 0; m < gridCol; m++) {
-					var seat = seatArr[i*gridCol+m];					
-					if (!seat.isEmpty) break;				
-				}*/
+
 				// starting from first unempty seat and clearing
 				for (var j = m; j < gridCol; j+=(colOffset+1)) {
 					var seat = seatArr[i*gridCol+j];					
@@ -596,13 +592,11 @@ function assignSeatsByRow(seed, colOffset, rowOffset) {
 				for (var i = lastAvailRow; i >= 0; i -=(tempRowOff+1)) {
 					for (var j = lastAvailCol; j < gridCol; j +=(tempColOff+1)) {
 						seatsAssigned = assignEmpty(i,j,seatsAssigned);
+						if (seatsAssigned == totalStudents) {
+							statisfied = true;
+							return;
+						}
 					}
-/*					if (i*gridCol+j >= nonGhosts/div) {
-						if (seatsAssigned >= totalStudents) return;
-						else { 
-								if (div/2 != 0) div = div/2;
-						} 
-					}*/
 				}
 				fillCounter++;
 				if (fillCounter % 3 == 0) {

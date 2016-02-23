@@ -95,11 +95,10 @@ router.post('/', function(req, res, next) {
 			callback(null,sentTotal)
 		},
 		function saveLog(callback) {
-			fs.writeFile('../emailLog.txt', emailLog, function (err) {
+/*			fs.writeFile('../emailLog.txt', emailLog, function (err) {
 			  if (err) throw err;
 			  console.log('It\'s saved!');
-			  //res.download('emailLog.txt');
-			});
+			});*/
 			callback(null,emailLog)
 		},
 		function sendStatus(callback) {

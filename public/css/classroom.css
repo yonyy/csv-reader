@@ -29,6 +29,7 @@
 
 .seat_item {
   background: #FF5722;
+  left: 0px;
 }
 
 .seat_alphabet, .cornerGrid {
